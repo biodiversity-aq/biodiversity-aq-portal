@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load static wagtailcore_tags spirit_tags %}
+
+{% block body_class %}template-homepage{% endblock %}
+
+{% block extra_css %}
+
+{% endblock extra_css %}
+
+{% block content %}
+
+
+
+{% autoescape off %}
+{{ page.body }}
+{% endautoescape %}
+{% endblock content %}

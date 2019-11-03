@@ -1,0 +1,60 @@
+﻿{% load static wagtailuserbar leaflet_tags %}
+
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>
+        {% block title %}
+        {% if self.seo_title %}{{ self.seo_title }}{% else %}{{ self.title }}{% endif %}
+        {% endblock %}
+        {% block title_suffix %}
+        {% with self.get_site.site_name as site_name %}
+        {% if site_name %}- {{ site_name }}{% endif %}
+        {% endwith %}
+        {% endblock %}
+    </title>
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    {# Global stylesheets #}
+    {% leaflet_css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/custom_home.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/custom.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
+
+    {% block extra_css %}
+    {# Override this in templates to add extra stylesheets #}
+    {% endblock %}
+
+
+    {% leaflet_js %}
+
+
+</head>
+
+<body class="{% block body_class %}{% endblock %}">
+    {% wagtailuserbar %}
+    {% include "header.html" %}
+
+
+    {% block content %}{% endblock %}
+
+
+    {% include "footer.html" %}
+    {# Global javascript #}
+    <script type="text/javascript" src="{% static 'js/polarrr.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/jquery.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
+    <!--<link rel="stylesheet" type="text/css" href="//wpcc.io/lib/1.0.2/cookieconsent.min.css" />
+        <script src="//wpcc.io/lib/1.0.2/cookieconsent.min.js"></script>
+        <script>window.addEventListener("load", function () { window.wpcc.init({ "border": "normal", "colors": { "popup": { "background": "#222222", "text": "#ffffff", "border": "#b4eae4" }, "button": { "background": "#b4eae4", "text": "#000000" } }, "position": "top", "pushdown": true, "fontsize": "large", "content": { "href": "#", "message": "POLAAAR uses cookies to ensure that you have the best user experience! By clicking accept, you agree to the terms of the privacy policy", "link": "#", "button": "Accept" } }) });</script>
+    -->
+    <script type="text/javascript">var bannerLink = '<a href="/policy/">Learn more </a>'</script>
+    <script type="text/javascript" src="{% static 'js/cookie-consent.js' %}"></script>
+    {% block extra_js %}
+
+    {% endblock %}
+</body>
+</html>
