@@ -96,12 +96,17 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.stackexchange',
     'allauth.socialaccount.providers.twitter',    
 
+    'wagtail.contrib.sitemaps',
+    'wagtail.contrib.routable_page',
+    'django_social_share',
+    'puput',
+    'colorful',
+
     'django_countries',
     'djconfig',
     'data',
     'polaaar',
-    'users',
-    'blog'
+    'users'
     
        
 ]
@@ -323,3 +328,8 @@ LEAFLET_CONFIG = {
     'DEFAULT_ZOOM':1,    
     
     }
+
+
+#############################################
+#### Requirement for Puput blog app 
+PUPUT_AS_PLUGIN = True
