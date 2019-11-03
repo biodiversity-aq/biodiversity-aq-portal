@@ -22,7 +22,7 @@ urlpatterns = [
 
     url(r'^search/$', search_views.search, name='search'),
 
-    #url(r'data/',include('data.urls')),
+    url(r'data/',include('data.urls')),
     url(r'polaaar/',include('polaaar.urls')),
     #url(r'users/',include('users.urls')),
 
