@@ -1,0 +1,11 @@
+# pycharm
+.idea
+
+# local sql script
+*.sql
+
+# virtual env directory
+venv
+
+# local settings
+biodiversity/settings/local.py
