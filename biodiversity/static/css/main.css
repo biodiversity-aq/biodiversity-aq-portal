@@ -16,15 +16,16 @@ body {
 ******************/
 /* blue background of header*/
 .navbar-default {
-    background: #0099CC;
-    min-height: 60px;
-    border-color: transparent;
+
 }
 
 /* remove margin at the bottom of header */
 .navbar {
     margin-bottom: 0px;
     padding: 0 20px;
+    background: #0099CC;
+    min-height: 60px;
+    border-color: transparent;
 }
 
 /* global-header logo*/

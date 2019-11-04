@@ -312,11 +312,6 @@ FORMS_EXTRA_FIELDS = (
     (100, "captcha.fields.ReCaptchaField","ReCaptcha"),
     )
 
-#SECURE_PROXY_SSL_HEADER = (
-#    "HTTP_X_FORWARDED_PROTO", 
-#    "https"
-#    )
-
 
 
 #########################################################################################
@@ -333,3 +328,8 @@ LEAFLET_CONFIG = {
 #############################################
 #### Requirement for Puput blog app 
 PUPUT_AS_PLUGIN = True
+
+
+##############################################
+#### This is set to eliminate a simple_server.py error related to: https://github.com/wagtail/wagtail/issues/4254
+DATA_UPLOAD_MAX_NUMBER_FIELDS = 10000
