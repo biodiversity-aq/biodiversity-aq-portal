@@ -176,10 +176,10 @@ else:
     DATABASES = {
         'default': {
             'ENGINE': 'django.contrib.gis.db.backends.postgis',
-            'NAME': 'd64sktqer0m6f4',
-            'USER': 'wkwsoslvxzjbuc',
-            'PASSWORD': '73f719e6dbe125c4d1a74323928d2538feccd366ed1939dba8f71c4b33a0c4d9',
-            'HOST': 'ec2-54-247-178-166.eu-west-1.compute.amazonaws.com',
+            'NAME': 'd86hngmf7e303f',
+            'USER': 'hwyoarfegnhrwn',
+            'PASSWORD': '286e142ad8f2d8aa4d5ad529c43bbe847f4037ddc4f065f51bf18366cfac4cd5',
+            'HOST': 'ec2-54-217-234-157.eu-west-1.compute.amazonaws.com',
             'PORT': '5432'
         }
     }
@@ -312,11 +312,6 @@ FORMS_EXTRA_FIELDS = (
     (100, "captcha.fields.ReCaptchaField","ReCaptcha"),
     )
 
-#SECURE_PROXY_SSL_HEADER = (
-#    "HTTP_X_FORWARDED_PROTO", 
-#    "https"
-#    )
-
 
 
 #########################################################################################
@@ -333,3 +328,8 @@ LEAFLET_CONFIG = {
 #############################################
 #### Requirement for Puput blog app 
 PUPUT_AS_PLUGIN = True
+
+
+##############################################
+#### This is set to eliminate a simple_server.py error related to: https://github.com/wagtail/wagtail/issues/4254
+DATA_UPLOAD_MAX_NUMBER_FIELDS = 10000
