@@ -1,36 +1,12 @@
 {% load static %}
-<footer class="footer-fixed-bottom-wrap" style="margin-top:5%;">
-    <div class="text-center" id="hostedby">
-        Hosted by <a href="https://www.biodiversity.be">Belgian Biodiversity Platform</a>
-    </div>
-    <div class="footer-menu container-fluid">
-        <div class="row">
-            <div class="col-3">
-                <h4><a href="/data-source/">Data Source</a></h4>
-            </div>
-            <div class="col-3">
-                <h4><a href="/policy/">Policies</a></h4>
-            </div>
-            <div class="col-3">
-                <h4><a href="/contact/">Contact</a></h4>
-            </div>
-            <div class="col-3">
-                <h4><a href="/help/">Help</a></h4>
-            </div>
-        </div>        
-    </div><!-- end footer-menu container-->
-    <!-- BEGIN GLOBAL FOOTER -->
-    <!-- LOGOS -->
-    <div class="footer-logos container-fluid">
-        <div class="footer-logos container">
-            <a href="https://www.biodiversity.be/"><img src="{% static 'logos/logo_BBPF_white.png'%}" class="partners-logo"></a>
-            <a href="http://lifewatch.be/"><img src="{% static 'logos/logo_lifewatch_transp.png'%}" class="partners-logo"></a>
-            <a href="https://www.scar.org/"><img src="{% static 'logos/SCAR%20logo_white_transp.svg'%}" class="partners-logo"></a>
-            <a href="http://marinespecies.org/"><img src="{% static 'logos/logo-WORMS-white-background-transp.png'%}" class="partners-logo"></a>
-            <a href="https://obis.org/"><img src="{% static 'logos/obis_logo_white.svg'%}" class="partners-logo"></a>
-            <a href="https://www.gbif.org/"><img src="{% static 'logos/GBIF-2015-mark-white.svg'%}" class="partners-logo"></a>
-            <a href="https://odnature.naturalsciences.be"><img src="{% static 'logos/rbins.png'%}" class="partners-logo"></a>
-        </div><!-- end footer-logos container -->
-    </div><!-- end footer-logos container-fluid -->
-    <!-- END GLOBAL FOOTER -->
-</footer>
+<nav class="navbar fixed-bottom navbar-expand-lg">
+    <ul class="nav mx-auto">
+        <li class="nav-item"><a href="https://www.biodiversity.be/"><img src="{% static 'logos/logo_BBPF_white.png'%}" class="partners-logo"></a></li>
+        <li class="nav-item"><a href="http://lifewatch.be/"><img src="{% static 'logos/logo_lifewatch_transp.png'%}" class="partners-logo"></a></li>
+        <li class="nav-item"><a href="https://www.scar.org/"><img src="{% static 'logos/SCAR%20logo_white_transp.svg'%}" class="partners-logo"></a></li>
+        <li class="nav-item"><a href="http://marinespecies.org/"><img src="{% static 'logos/logo-WORMS-white-background-transp.png'%}" class="partners-logo"></a></li>
+        <li class="nav-item"><a href="https://obis.org/"><img src="{% static 'logos/obis_logo_white.svg'%}" class="partners-logo"></a></li>
+        <li class="nav-item"><a href="https://www.gbif.org/"><img src="{% static 'logos/GBIF-2015-mark-white.svg'%}" class="partners-logo"></a></li>
+        <li class="nav-item"><a href="https://odnature.naturalsciences.be"><img src="{% static 'logos/rbins.png'%}" class="partners-logo"></a></li>
+    </ul><!-- end footer-logos container -->
+</nav>
