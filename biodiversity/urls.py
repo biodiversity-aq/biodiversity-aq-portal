@@ -1,6 +1,7 @@
 from django.conf import settings
-from django.conf.urls import include, url
+from django.conf.urls import include
 from django.contrib import admin
+from django.urls import re_path, path
 
 from wagtail.admin import urls as wagtailadmin_urls
 from wagtail.core import urls as wagtail_urls
@@ -15,22 +16,22 @@ import polaaar.urls
 import users.urls
 
 urlpatterns = [
-    url(r'^django-admin/', admin.site.urls),
+    re_path(r'^django-admin/', admin.site.urls),
 
-    url(r'^admin/', include(wagtailadmin_urls)),
-    url(r'^documents/', include(wagtaildocs_urls)),
+    re_path(r'^admin/', include(wagtailadmin_urls)),
+    re_path(r'^documents/', include(wagtaildocs_urls)),
 
-    url(r'^search/$', search_views.search, name='search'),
+    re_path(r'^search/$', search_views.search, name='search'),
 
-    url(r'data/',include('data.urls')),
-    url(r'polaaar/',include('polaaar.urls')),
-    #url(r'users/',include('users.urls')),
+    path('data/', include('data.urls')),
+    re_path(r'polaaar/', include('polaaar.urls')),
+    # re_path(r'users/',include('users.urls')),
 
-    url(r'',include(puput_urls)),
+    re_path(r'', include(puput_urls)),
     # For anything not caught by a more specific rule above, hand over to
     # Wagtail's page serving mechanism. This should be the last pattern in
     # the list:
-    url(r'', include(wagtail_urls)),
+    re_path(r'', include(wagtail_urls)),
 
     # Alternatively, if you want Wagtail pages to be served from a subpath
     # of your site, rather than the site root:
