@@ -1,0 +1,14 @@
+{% load i18n %}{% autoescape off %}
+{% blocktrans trimmed %}
+ You've opted to change your e-mail for Seabirds.net! No worries!
+{% endblocktrans %}
+
+{% trans "Please go to the following link to confirm your email change:" %}
+
+{{ protocol }}://{{ domain }}{% url 'spirit:user:email-change-confirm' token=token %}
+
+{% trans "Thanks for using seabirds.net" %}
+
+{% trans "--- Remember, seabirds and waterbirds are the only animals to have mastered land, sea and air ---" %}
+
+{% endautoescape %}

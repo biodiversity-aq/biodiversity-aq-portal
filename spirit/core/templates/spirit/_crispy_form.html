@@ -1,0 +1,6 @@
+{% load crispy_forms_tags %}
+
+{% if next %}<input type="hidden" name="next" value="{{ next }}" />{% endif %}
+
+
+{% crispy form %}

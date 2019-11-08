@@ -16,78 +16,44 @@
     <div class="collapse navbar-collapse" id="menu-list">
         <ul id="user-account" class="navbar-nav ml-auto">
 
-            <li class="nav-item">
-                <a class="nav-link" href="#">Log in</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Register</a>
-            </li>
+
+            {% if user.is_authenticated %}
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Dropdown
+                    {{user.st.nickname}}
                 </a>
-            
-            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
 
-                    <a class="dropdown-item" href="/">Home</a>
-                    <a class="dropdown-item" href="http://ipt.biodiversity.aq/">IPT</a>
-                    <a class="dropdown-item" href="/data">DATA</a>
-                    <a class="dropdown-item" href="/polaaar">POLAAAR</a>
-                    <a class="dropdown-item" href="http://ras.biodiversity.aq/">RAS</a>
-                    <a class="dropdown-item" href="http://afg.biodiversity.aq/">AFG</a>
-                    <a class="dropdown-item" href="http://atlas.biodiversity.aq/">ATLAS</a>                    
-                    <a class="dropdown-item" href="/news">BLOGS</a>
-                    <a class="dropdown-item" href="http://keys.biodiversity.aq/">KEYS</a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href='/accounts/user/register'> Profile</a>
+                    {% if user.st.is_administrator %}
+                    <a class="dropdown-item" href="/admin">Wagtail Admin</a>
+                    <a class="dropdown-item" href="/django-admin">Django Admin</a>
+                    {% endif %}
+                    <a class="dropdown-item"
+                       href="{% url "spirit:user:auth:logout" %}?next={% firstof request.get_full_path|urlencode '/' %}"> Log out</a>
 
 
                 </div>
             </li>
+
+
+            {% spaceless %}
+
+            {% endspaceless %}
+
+            {% else %}
+
+            <li class="nav-item">
+                <a class="nav-link" href="{% url "spirit:user:auth:login" %}?next={% firstof request.get_full_path|urlencode '/' %}"><span class="spot"></span> Log in</a>                
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url "spirit:user:auth:register" %}?next={% firstof request.get_full_path|urlencode '/' %}"><span class="spot"></span> Register</a>                
+            </li>
+
+            {% endif %}
+
         </ul>
 
     </div>
 
 </nav>
-<!--
-
-<div class="navbar navbar-default navbar-fixed-top">
-    <div class="navbar-header">
-        <span>
-            <a class="navbar-brand" href="/">
-                <img src="{% static 'logos/logo-biodiversityaq-white.png' %}" class="brand">
-            </a>
-        </span>
-        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#menu-list" aria-expanded="false" aria-controls="#navbar-collapse-button" id="navbar-collapse-button">
-            <span class="glyphicon glyphicon-menu-hamburger"></span>
-        </button>
-    </div>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item active">
-                    <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Link</a>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Dropdown
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="#">Action</a>
-                        <a class="dropdown-item" href="#">Another action</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#">Something else here</a>
-                    </div>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link disabled" href="#">Disabled</a>
-                </li>
-            </ul>
-            <form class="form-inline my-2 my-lg-0">
-                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-            </form>
-        </div>
-</div>
-
--->

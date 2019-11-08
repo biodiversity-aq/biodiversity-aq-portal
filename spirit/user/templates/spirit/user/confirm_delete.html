@@ -1,0 +1,37 @@
+{% extends "spirit/_base.html" %}
+
+{% load i18n %}
+
+{% block title %}{% trans "Preferences" %}{% endblock %}
+
+{% block content %}
+<style>
+    .vertical-center {
+        margin: 0 auto;
+        position: absolute;
+        top: 150px;                
+    }
+
+</style>
+
+<div class="row">
+    <div class="col-sm-12 align-middle">
+
+        <h1 class="headline" style="text-align:center">{% trans "Confirm delete" %}</h1>
+
+        <h3 style="text-align:center">{{user}}, We are sorry to see you go, are you sure you want to delete your profile?</h3>
+
+        <div class="profile-preferences">
+            <a class="button"
+               href="{% url "spirit:user:delete-profile" %}"><i class="fa fa-check"></i>{% trans " Yes, delete my account" %}</a>
+        </div>
+
+        <div class="profile-preferences">
+            <a class="button"
+               href="{% url "spirit:user:detail" pk=user.pk slug=user.st.slug %}"><i class="fa fa-undo"></i>{% trans "No, back to my profile" %}</a>
+        </div>
+        
+    </div>
+</div>
+
+{% endblock %}

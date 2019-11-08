@@ -69,33 +69,7 @@ INSTALLED_APPS = [
     'captcha',
     'storages',
     'crispy_forms',
-
-
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
-    # ... include the providers you want to enable:
     
-    'allauth.socialaccount.providers.disqus',
-    'allauth.socialaccount.providers.dropbox',
-    'allauth.socialaccount.providers.facebook',
-    'allauth.socialaccount.providers.foursquare',
-    'allauth.socialaccount.providers.github',
-    'allauth.socialaccount.providers.gitlab',
-    'allauth.socialaccount.providers.google',
-    'allauth.socialaccount.providers.instagram',
-    'allauth.socialaccount.providers.linkedin',
-    'allauth.socialaccount.providers.linkedin_oauth2',
-    'allauth.socialaccount.providers.microsoft',
-    'allauth.socialaccount.providers.orcid',
-    'allauth.socialaccount.providers.paypal',
-    'allauth.socialaccount.providers.pinterest',
-    'allauth.socialaccount.providers.reddit',
-    'allauth.socialaccount.providers.slack',
-    'allauth.socialaccount.providers.spotify',
-    'allauth.socialaccount.providers.stackexchange',
-    'allauth.socialaccount.providers.twitter',    
-
     'wagtail.contrib.sitemaps',
     'wagtail.contrib.routable_page',
     'django_social_share',
@@ -106,7 +80,12 @@ INSTALLED_APPS = [
     'djconfig',
     'data',
     'polaaar',
-    'users'
+    'spirit.core',
+    'spirit.admin',    
+
+    'spirit.user',
+    'spirit.user.admin',
+    'spirit.user.auth'
     
        
 ]
@@ -119,12 +98,15 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'djconfig.middleware.DjConfigMiddleware',
 
     'wagtail.core.middleware.SiteMiddleware',
     'wagtail.contrib.redirects.middleware.RedirectMiddleware',
 ]
 
 ROOT_URLCONF = 'biodiversity.urls'
+
+
 
 TEMPLATES = [
     {
@@ -135,10 +117,15 @@ TEMPLATES = [
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
+                'django.template.context_processors.debug',
+                'django.template.context_processors.i18n',
+                'django.template.context_processors.media',
+                'django.template.context_processors.static',
+                'django.template.context_processors.tz',
+                'django.template.context_processors.request',
                 'django.contrib.messages.context_processors.messages',
+                'djconfig.context_processors.config',
             ],
         },
     },
@@ -216,6 +203,7 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
 
 
 # Internationalization
@@ -333,3 +321,44 @@ PUPUT_AS_PLUGIN = True
 ##############################################
 #### This is set to eliminate a simple_server.py error related to: https://github.com/wagtail/wagtail/issues/4254
 DATA_UPLOAD_MAX_NUMBER_FIELDS = 10000
+
+
+
+############################################
+#### DJANGO ALLAUTH SETTINGS
+
+#ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS =1
+#ACCOUNT_EMAIL_REQUIRED = True
+#ACCOUNT_EMAIL_VERIFICATION = "mandatory"
+#ACCOUNT_LOGIN_ATTEMPTS_LIMIT = 5
+#ACCOUNT_LOGIN_ATTEMPTS_TIMEOUT = 86400 # 1 day in seconds
+#ACCOUNT_LOGOUT_REDIRECT_URL ='/accounts/login/'
+#LOGIN_REDIRECT_URL = '/accounts/email/' 
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+        'LOCATION': 'spirit_cache',
+    },
+    'st_rate_limit': {
+        'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+        'LOCATION': 'spirit_rl_cache',
+        'TIMEOUT': None
+    }
+}
+AUTHENTICATION_BACKENDS = [
+    'spirit.user.auth.backends.UsernameAuthBackend',
+    
+    'spirit.user.auth.backends.EmailAuthBackend',
+]
+
+
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
+        'PATH': os.path.join(BASE_DIR, 'st_search'),
+    },
+}
+LOGIN_URL = 'spirit:user:auth:login'
+LOGIN_REDIRECT_URL = 'spirit:user:update'
+LOGOUT_REDIRECT_URL = '/'
+ST_CASE_INSENSITIVE_USERNAMES = False

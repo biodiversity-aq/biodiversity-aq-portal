@@ -12,19 +12,21 @@ from search import views as search_views
 
 import data.urls
 import polaaar.urls
-import users.urls
+#import users.urls
+import spirit.urls
 
 urlpatterns = [
     url(r'^django-admin/', admin.site.urls),
 
     url(r'^admin/', include(wagtailadmin_urls)),
     url(r'^documents/', include(wagtaildocs_urls)),
+    url(r'^accounts/', include('spirit.urls')),
 
     url(r'^search/$', search_views.search, name='search'),
 
     url(r'data/',include('data.urls')),
     url(r'polaaar/',include('polaaar.urls')),
-    #url(r'users/',include('users.urls')),
+    
 
     url(r'',include(puput_urls)),
     # For anything not caught by a more specific rule above, hand over to
