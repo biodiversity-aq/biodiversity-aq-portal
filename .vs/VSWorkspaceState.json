@@ -1,6 +1,17 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\biodiversity",
+    "\\biodiversity\\settings",
+    "\\biodiversity\\static",
+    "\\biodiversity\\static\\css",
+    "\\biodiversity\\templates",
+    "\\biodiversity\\templates\\puput",
+    "\\data",
+    "\\data\\templates",
+    "\\polaaar",
+    "\\users"
   ],
+  "SelectedNode": "\\biodiversity\\templates\\footer.html",
   "PreviewInSolutionExplorer": false
 }

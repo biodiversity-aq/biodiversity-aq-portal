@@ -1,0 +1,88 @@
+{% load spirit_tags %}
+
+{{ config.template_footer|safe }}
+
+{% spaceless %}
+  <footer class="footer">
+    <div class="container-fluid" id="footcontainer">
+        <div class="row">
+            <div class="col-sm-4">
+                <div class="row">
+                    <div class="col-sm-12" id="para1"></div>
+                    <div class="col-sm-12"><p class="footerwords">follow us on social media</p></div>
+                    <div class="col-sm-12">
+                        <a target="_blank" href="https://www.facebook.com/World.Seabird.Union/" class="footersocial fa fa-facebook"></a>
+                        <a target="_blank" href="https://twitter.com/seabirders" class="footersocial fa fa-twitter"></a>
+                        <a target="_blank" href="https://www.youtube.com/channel/UCnjWVJvGQk2IY8_W5GBCMEg" class="footersocial fa fa-youtube"></a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <h3 class="footerwords">Seabirds.net</h3>
+                    </div>
+                    <div class="col-sm-12">
+                        <p class="footerwords">Seabirds.net is dedicated to faciliating communications and connections between seabird researchers from around the world. Thank you for using our site.
+                         -- World Seabird Union</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="col-sm-12 float-right">
+                    <a class="footlink" href="/">Home</a>
+                </div>
+                <div class="col-sm-12 float-right">
+                    <a class="footlink" href="/seabirders">Seabirders</a>
+                </div>
+                <div class="col-sm-12 float-right">
+                    <a class="footlink" href="/seabird_information_network">Seabird Information Network</a>
+                </div>
+                <div class="col-sm-12 float-right">
+                    <a class="footlink" href="/seabird_meetings">Meetings</a>
+                </div>
+                <div class="col-sm-12 float-right">
+                    <a class="footlink" href="mailto:wsuadmin@seabirds.net">Contact us</a>
+                </div>
+                <div class="col-sm-12 float-right">
+                    <a class="footlink" href="/privacy-policy/">Privacy policy</a>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="row">
+
+            <div class="col-sm-12">
+
+                <p class="footerwords" style="text-align:center;font-size:11pt"><i>--- Remember, the only animals to conquer land, sea and air are seabirds (and waterfowl) ---</i></p>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+    <div class="row" style="padding-top:10px;padding-bottom:0px;background-color:slategray">
+        <div class="col-sm-12">
+            <p class="footerwords" style="font-size:10pt; margin-bottom:5px">&copy; World Seabird Union, 2019</p>
+        </div>
+    </div>
+
+  </footer>
+{% endspaceless %}
+
+  <script>
+      document.getElementById("para1").innerHTML = formatAMPM();
+
+      function formatAMPM() {
+          var d = new Date(),
+              minutes = d.getMinutes().toString().length == 1 ? '0' + d.getMinutes() : d.getMinutes(),
+              hours = d.getHours().toString().length == 1 ? '0' + d.getHours() : d.getHours(),
+              ampm = d.getHours() >= 12 ? 'pm' : 'am',
+              months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+              days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+          return days[d.getDay()] + ' ' + months[d.getMonth()] + ' ' + d.getDate() + ' ' + d.getFullYear() + ' ' + hours + ':' + minutes + ampm;
+      }
+  </script>
