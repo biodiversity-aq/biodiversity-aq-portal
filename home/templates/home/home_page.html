@@ -1,22 +1,19 @@
-{% extends "base.html" %}
-{% load static leaflet_tags %}
-
+{% extends "home/base.html" %}
+{% load menu_tags %}
 
 {% block body_class %}homepage{% endblock %}
 
-{% block extra_css %}
-{% leaflet_css %}
-{% endblock extra_css %}
+
+{% block inner_header_menu %}
+    {% main_menu %}
+{% endblock %}
 
 {% block content %}
-
+    {% main_menu  max_levels=3 %}
+    {{ page.title }}
+    {{ page.body }}
 
 {% block extra_js %}
-
-
-
-
-
 {% endblock extra_js %}
 
 

@@ -8,13 +8,14 @@ from wagtail.images.blocks import ImageChooserBlock
 
 from djconfig import config
 
+
 class HomePage(Page):
    
     body = StreamField([
-        ('insert_html',blocks.RawHTMLBlock(required=False,help_text='This is a standard HTML block. Anything written in HTML here will be rendered in a DIV element')),
+        ('insert_html', blocks.RawHTMLBlock(required=False, help_text='This is a standard HTML block. Anything written in HTML here will be rendered in a DIV element')),
         ('paragraph', blocks.RichTextBlock()),
         ('image', ImageChooserBlock())        
-        ],blank=True)
+        ], blank=True)
 
     #sidebar = StreamField([])
     

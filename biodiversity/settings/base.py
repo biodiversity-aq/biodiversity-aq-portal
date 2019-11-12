@@ -72,6 +72,7 @@ INSTALLED_APPS = [
     
     'wagtail.contrib.sitemaps',
     'wagtail.contrib.routable_page',
+    'wagtailmenus',
     'django_social_share',
     'puput',
     'colorful',
@@ -126,6 +127,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.messages.context_processors.messages',
                 'djconfig.context_processors.config',
+
+                'wagtailmenus.context_processors.wagtailmenus',
             ],
         },
     },
