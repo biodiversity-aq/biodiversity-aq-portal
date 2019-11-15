@@ -79,14 +79,8 @@ INSTALLED_APPS = [
     'django_countries',
     'djconfig',
     'data',
-    'polaaar',
-    'spirit.core',
-    'spirit.admin',    
+    'polaaar'
 
-    'spirit.user',
-    'spirit.user.admin',
-    'spirit.user.auth'
-    
        
 ]
 
@@ -141,7 +135,7 @@ if socket.gethostname() == "DESKTOP-8K2LJ17":
     DATABASES = {
         'default': {
             'ENGINE': 'django.contrib.gis.db.backends.postgis',
-            'NAME': 'biodiversity_aq',
+            'NAME': 'biodiversity_aq2',
             'USER': 'biodiversity_aq_admin',
             'PASSWORD': 'bi0diversity',   ##'p0l@radmin!1',
             'HOST': '',
@@ -334,31 +328,7 @@ DATA_UPLOAD_MAX_NUMBER_FIELDS = 10000
 #ACCOUNT_LOGIN_ATTEMPTS_TIMEOUT = 86400 # 1 day in seconds
 #ACCOUNT_LOGOUT_REDIRECT_URL ='/accounts/login/'
 #LOGIN_REDIRECT_URL = '/accounts/email/' 
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
-        'LOCATION': 'spirit_cache',
-    },
-    'st_rate_limit': {
-        'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
-        'LOCATION': 'spirit_rl_cache',
-        'TIMEOUT': None
-    }
-}
-AUTHENTICATION_BACKENDS = [
-    'spirit.user.auth.backends.UsernameAuthBackend',
-    
-    'spirit.user.auth.backends.EmailAuthBackend',
-]
 
 
-HAYSTACK_CONNECTIONS = {
-    'default': {
-        'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
-        'PATH': os.path.join(BASE_DIR, 'st_search'),
-    },
-}
-LOGIN_URL = 'spirit:user:auth:login'
-LOGIN_REDIRECT_URL = 'spirit:user:update'
+LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
-ST_CASE_INSENSITIVE_USERNAMES = False

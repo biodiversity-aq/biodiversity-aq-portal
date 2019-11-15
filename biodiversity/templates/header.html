@@ -20,17 +20,17 @@
             {% if user.is_authenticated %}
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    {{user.st.nickname}}
+                    {{user.username}}
                 </a>
 
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" href='/accounts/user/register'> Profile</a>
-                    {% if user.st.is_administrator %}
+                    <a class="dropdown-item" href='#'> Profile</a>
+                    {% if user.is_administrator %}
                     <a class="dropdown-item" href="/admin">Wagtail Admin</a>
                     <a class="dropdown-item" href="/django-admin">Django Admin</a>
                     {% endif %}
                     <a class="dropdown-item"
-                       href="{% url "spirit:user:auth:logout" %}?next={% firstof request.get_full_path|urlencode '/' %}"> Log out</a>
+                       href="{% url 'logout' %}"> Log out</a>
 
 
                 </div>
@@ -44,10 +44,10 @@
             {% else %}
 
             <li class="nav-item">
-                <a class="nav-link" href="{% url "spirit:user:auth:login" %}?next={% firstof request.get_full_path|urlencode '/' %}"><span class="spot"></span> Log in</a>                
+                <a class="nav-link" href="{% url 'login' %}"><span class="spot"></span> Log in</a>                
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="{% url "spirit:user:auth:register" %}?next={% firstof request.get_full_path|urlencode '/' %}"><span class="spot"></span> Register</a>                
+                <a class="nav-link" href="#"><span class="spot"></span> Register</a>                
             </li>
 
             {% endif %}

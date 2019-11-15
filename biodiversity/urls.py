@@ -13,14 +13,14 @@ from search import views as search_views
 import data.urls
 import polaaar.urls
 #import users.urls
-import spirit.urls
+#import spirit.urls
 
 urlpatterns = [
     url(r'^django-admin/', admin.site.urls),
 
     url(r'^admin/', include(wagtailadmin_urls)),
     url(r'^documents/', include(wagtaildocs_urls)),
-    url(r'^accounts/', include('spirit.urls')),
+    url(r'^accounts/', include('django.contrib.auth.urls')),
 
     url(r'^search/$', search_views.search, name='search'),
 

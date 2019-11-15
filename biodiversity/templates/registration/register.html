@@ -1,0 +1,42 @@
+{% extends "_base.html" %}
+
+{% load i18n %}
+
+{% block title %}{% trans "Register" %}{% endblock %}
+
+{% block head-extra %}
+  <script>
+
+    document.addEventListener('DOMContentLoaded', function() {
+
+      document.querySelectorAll('input[name=honeypot]')
+        .forEach(function(elm) {
+          elm.style.display = 'none';
+        });
+      document.querySelectorAll('label[for=id_honeypot]')
+        .forEach(function(elm) {
+          elm.style.display = 'none';
+        });
+
+    });
+
+  </script>
+{% endblock %}
+
+{% block content %}
+
+  <h1 class="headline">{% trans "Register" %}</h1>
+  <h2>After you have registered and activated your account you will be able to edit your profile</h2>
+  <p><strong>Don't forget to check your SPAM folder in case your activation e-mail gets sent there</strong></p>
+  
+  <form action="." method="post">
+    {% csrf_token %}
+    {% include "_form.html" %}    
+
+    <script src='https://www.google.com/recaptcha/api.js'></script>
+    <div class="g-recaptcha" data-sitekey="6Ldh6nMUAAAAAOQS5HAoktR4H9vYoUrEbkyGInWW"></div>
+
+    <input class="button" type="submit" name="post" value="{% trans "Register" %}" />
+  </form>
+
+{% endblock %}
