@@ -38,7 +38,6 @@ INSTALLED_APPS = [
     'djgeojson',
     'leaflet',
 
-
     'wagtail.contrib.forms',
     'wagtail.contrib.redirects',
     'wagtail.embeds',
@@ -64,6 +63,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'accounts.apps.AccountsConfig',
+
 
     'gunicorn',
     'captcha',
@@ -135,7 +136,7 @@ if socket.gethostname() == "DESKTOP-8K2LJ17":
     DATABASES = {
         'default': {
             'ENGINE': 'django.contrib.gis.db.backends.postgis',
-            'NAME': 'biodiversity_aq2',
+            'NAME': 'biodiversity_aq',
             'USER': 'biodiversity_aq_admin',
             'PASSWORD': 'bi0diversity',   ##'p0l@radmin!1',
             'HOST': '',
@@ -332,3 +333,13 @@ DATA_UPLOAD_MAX_NUMBER_FIELDS = 10000
 
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
+AUTH_USER_MODEL = 'accounts.UserProfile'
+
+
+ADMINS = (
+    #('You', 'wsuadmin@seabirds.net'),
+    ('Grant','grwhumphries@blackbawks.net')
+)
+
+
+SENDER_MAIL = 'Seabirds.net <no-reply@seabirds.net>'

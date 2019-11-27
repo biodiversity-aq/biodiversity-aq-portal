@@ -2,16 +2,16 @@
   "ExpandedNodes": [
     "",
     "\\biodiversity",
-    "\\biodiversity\\settings",
-    "\\biodiversity\\static",
-    "\\biodiversity\\static\\css",
     "\\biodiversity\\templates",
-    "\\biodiversity\\templates\\puput",
-    "\\data",
-    "\\data\\templates",
-    "\\polaaar",
-    "\\users"
+    "\\biodiversity\\templates\\registration",
+    "\\spirit",
+    "\\spirit\\user",
+    "\\spirit\\user\\auth",
+    "\\spirit\\user\\auth\\templates",
+    "\\spirit\\user\\auth\\templates\\spirit",
+    "\\spirit\\user\\auth\\templates\\spirit\\user",
+    "\\spirit\\user\\auth\\templates\\spirit\\user\\auth"
   ],
-  "SelectedNode": "\\biodiversity\\templates\\footer.html",
+  "SelectedNode": "\\biodiversity\\templates\\registration\\password_reset_email.html",
   "PreviewInSolutionExplorer": false
 }

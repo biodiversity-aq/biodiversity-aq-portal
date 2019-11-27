@@ -1,0 +1,15 @@
+{% load i18n %}{% autoescape off %}
+{% blocktrans trimmed %}
+  You're receiving this email because you've registered on biodiversity.aq! 
+{% endblocktrans %}
+
+{% trans "Please go to the following link to activate your account:" %}
+
+{{ protocol }}://{{ domain }}{% url 'accounts:registration-activation' pk=user_id token=token %}
+
+{% trans "Once the account has been activated you will be able to update your profile after your first login" %}
+
+{% trans "Thanks for signing up to Biodiversity.aq!" %}
+
+
+{% endautoescape %}

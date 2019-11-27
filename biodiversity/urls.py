@@ -10,17 +10,23 @@ from puput import urls as puput_urls
 
 from search import views as search_views
 
+from django.contrib.auth import views as auth_views
+
+import accounts
 import data.urls
 import polaaar.urls
 #import users.urls
 #import spirit.urls
+
 
 urlpatterns = [
     url(r'^django-admin/', admin.site.urls),
 
     url(r'^admin/', include(wagtailadmin_urls)),
     url(r'^documents/', include(wagtaildocs_urls)),
-    url(r'^accounts/', include('django.contrib.auth.urls')),
+    url(r'^accounts/', include('accounts.urls')), 
+    url(r'^accounts/', include('django.contrib.auth.urls'), name='accounts'),
+
 
     url(r'^search/$', search_views.search, name='search'),
 

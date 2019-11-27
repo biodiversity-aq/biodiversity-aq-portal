@@ -13,10 +13,16 @@
       {% csrf_token %}
       {% include "_form.html" %}
 
+        {% if form.errors %}
+            <p><small style="color:darkred">Have you made sure that your account is authenticated?</small></p>
+        {% endif %}   
+
       <input class="button" type="submit" name="post" value="{% trans "Login" %}" />
     </form>
   </div>
 
+<p><a href="{% url 'password_reset' %}">Forgot your password?</a></p
+<p><a href="{% url 'accounts:register' %}">Sign up here</a></p>
 
 
 {% endblock %}
