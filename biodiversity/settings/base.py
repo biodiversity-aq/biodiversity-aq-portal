@@ -70,6 +70,7 @@ INSTALLED_APPS = [
     'captcha',
     'storages',
     'crispy_forms',
+    'import_export',
     
     'wagtail.contrib.sitemaps',
     'wagtail.contrib.routable_page',
