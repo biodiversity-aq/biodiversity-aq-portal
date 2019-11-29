@@ -136,3 +136,63 @@ body {
     display: inline-block;
     padding-left: 20px; /* add space between logos */
 }
+
+
+
+.fadeinclass {
+    margin-top: 25px;
+    font-size: 21px;
+    text-align: center;
+    animation: fadein 3s;
+    -moz-animation: fadein 3s; /* Firefox */
+    -webkit-animation: fadein 3s; /* Safari and Chrome */
+    -o-animation: fadein 3s; /* Opera */
+}
+
+@keyframes fadein {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 0.8;
+    }
+}
+
+@-moz-keyframes fadein { /* Firefox */
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 0.8;
+    }
+}
+
+@-webkit-keyframes fadein { /* Safari and Chrome */
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 0.8;
+    }
+}
+
+@-o-keyframes fadein { /* Opera */
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 0.8;
+    }
+}
+
+.floatbox {
+    -webkit-box-shadow: 10px 10px 26px 1px rgba(0,0,0,0.75);
+    -moz-box-shadow: 10px 10px 26px 1px rgba(0,0,0,0.75);
+    box-shadow: 10px 10px 26px 1px rgba(0,0,0,0.75);
+    font-size: 1em;
+    opacity: 0.8;
+}
