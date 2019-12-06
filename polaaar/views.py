@@ -13,10 +13,16 @@ from django.db.models import Prefetch
 
 
 def home(request):
-
     return render(request, 'polaaar_home.html')
 
 
 def polaaar_data(request):
-
     return render(request, 'polaaar_data.html')
+
+
+def polaaar_search(request):
+    return render(request, 'polaaar_search.html')
+
+
+def polaaar_submit(request):
+    return render(request, 'polaaar_submit.html')
