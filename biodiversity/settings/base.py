@@ -23,6 +23,8 @@ SERIALIZATION_MODULES = {
 }
 
 
+
+
 GEOS_LIBRARY_PATH = environ.get('GEOS_LIBRARY_PATH')
 GDAL_LIBRARY_PATH = environ.get('GDAL_LIBRARY_PATH')
 
@@ -133,7 +135,7 @@ WSGI_APPLICATION = 'biodiversity.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
-if socket.gethostname() == "DESKTOP-8K2LJ17":
+if socket.gethostname() == "DESKTOP-8K2LJ17" or "HDLT15":
     DATABASES = {
         'default': {
             'ENGINE': 'django.contrib.gis.db.backends.postgis',

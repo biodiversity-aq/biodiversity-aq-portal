@@ -2,12 +2,11 @@
   "ExpandedNodes": [
     "",
     "\\biodiversity",
-    "\\biodiversity\\settings",
     "\\biodiversity\\templates",
     "\\biodiversity\\templates\\registration",
     "\\polaaar",
     "\\polaaar\\templates"
   ],
-  "SelectedNode": "\\biodiversity\\settings\\base.py",
+  "SelectedNode": "\\polaaar\\templates\\polaaar_submit.html",
   "PreviewInSolutionExplorer": false
 }

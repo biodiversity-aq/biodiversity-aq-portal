@@ -12,21 +12,61 @@ Polaaar search
 {% leaflet_css %}
 {% endblock extra_css %}
 
-{% block content %}
+{% block content %}d
+<div class="container-fluid" style="background-image: url({% static 'imgs/BB_backgrnd.png' %});background-size: cover;
+background-repeat: no-repeat">
+    <div class="row" style="padding-top:20px;padding-bottom:60px; border-width:0px;">
+        <div class="col-12">
+            <h1 style="background-color:white">How would you like to search?</h1>
+            <div class="btn-group btn-group-toggle" data-toggle="buttons" style="width:100%">
+                <label class="btn btn-elegant form-check-label" onclick="envfunc()">
+                    <input class="form-check-input" type="radio" name="options" value="environment" autocomplete="off">Environmental
+                </label>
+                <label class="btn btn-elegant form-check-label" onclick="mimfunc()">
+                    <input class="form-check-input" type="radio" name="options" value="mimarks" autocomplete="off"> MiMARKS
+                </label>
+                <label class="btn btn-elegant form-check-label" onclick="seqfunc()">
+                    <input class="form-check-input" type="radio" name="options" value="sequence" autocomplete="off"> Sequence set
+                </label>
+                <label class="btn btn-elegant form-check-label" onclick="spafunc()">
+                    <input class="form-check-input" type="radio" name="options" value="spatial" autocomplete="off"> Spatial search
+                </label>
+            </div>
 
-<div class="container">
-    <div class="row" style="padding-top:20px; border-width:0px;">
-
-        
+        </div>
     </div>
 
+
 </div>
+
+<div class="container">
+
+    <div id="searchcontent"></div>
+
+</div>
+ 
+
 
 
 {% block extra_js %}
 
 
+<script>
 
+    function envfunc() {
+        $("#searchcontent").load('../envsearch')
+    };
+    function mimfunc() {
+        $("#searchcontent").load('../mimsearch')
+    };
+    function seqfunc() {
+        $("#searchcontent").load('../seqsearch')
+    };
+    function spafunc() {
+        $("#searchcontent").load('../spasearch')
+    };
+
+</script>
 
 
 {% endblock extra_js %}

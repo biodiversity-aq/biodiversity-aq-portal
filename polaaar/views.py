@@ -19,10 +19,36 @@ def home(request):
 def polaaar_data(request):
     return render(request, 'polaaar_data.html')
 
-
+#########################################################
+### Search views
 def polaaar_search(request):
     return render(request, 'polaaar_search.html')
 
 
+def env_search(request):
+    return render(request, 'polaaarsearch/environment.html')
+
+def mim_search(request):
+    return render(request, 'polaaarsearch/mimarks.html')
+
+def seq_search(request):
+    return render(request, 'polaaarsearch/sequences.html')
+
+def spatial_search(request):
+    return render(request, 'polaaarsearch/spatial.html')
+
+
+
+
+
+
+
+#########################################################
+### Submit views
 def polaaar_submit(request):
     return render(request, 'polaaar_submit.html')
+
+
+
+
+#########################################################
