@@ -135,30 +135,33 @@ WSGI_APPLICATION = 'biodiversity.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
-if socket.gethostname() == "DESKTOP-8K2LJ17" or "HDLT15":
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.contrib.gis.db.backends.postgis',
-            'NAME': 'biodiversity_aq',
-            'USER': 'biodiversity_aq_admin',
-            'PASSWORD': 'bi0diversity',   ##'p0l@radmin!1',
-            'HOST': '',
-            'PORT': '5432'
-        }
-    }
-elif socket.gethostname() == 'DESKTOP-5JDHM1B':
-     DATABASES = {
-        'default': {
-            'ENGINE': 'django.contrib.gis.db.backends.postgis',
-            'NAME': 'biodiversity_aq',
-            'USER': 'biodiversity_aq_admin',
-            'PASSWORD': 'bi0diversity',
-            'HOST': '',
-            'PORT': '5433'
-        }
-    }
-else:        
-    DATABASES = {
+#if socket.gethostname() == "DESKTOP-8K2LJ17" or "HDLT15":
+#    DATABASES = {
+#        'default': {
+#            'ENGINE': 'django.contrib.gis.db.backends.postgis',
+#            'NAME': 'biodiversity_aq',
+#            'USER': 'biodiversity_aq_admin',
+#            'PASSWORD': 'bi0diversity',   ##'p0l@radmin!1',
+#            'HOST': '',
+#            'PORT': '5432'
+#        }
+#    }
+#elif socket.gethostname() == 'DESKTOP-5JDHM1B':
+#     DATABASES = {
+#        'default': {
+#            'ENGINE': 'django.contrib.gis.db.backends.postgis',
+#            'NAME': 'biodiversity_aq',
+#            'USER': 'biodiversity_aq_admin',
+#            'PASSWORD': 'bi0diversity',
+#            'HOST': '',
+#            'PORT': '5433'
+#        }
+#    }
+#else:        
+    
+
+DEBUG=True
+DATABASES = {
         'default': {
             'ENGINE': 'django.contrib.gis.db.backends.postgis',
             'NAME': 'd86hngmf7e303f',
@@ -180,9 +183,6 @@ else:
     "HTTP_X_FORWARDED_PROTO", 
     "https"
     )
-
-DEBUG=True
-
 
 
 # Password validation
