@@ -39,16 +39,17 @@ def spatial_search(request):
 
 
 
-
-
-
-
 #########################################################
 ### Submit views
 def polaaar_submit(request):
     return render(request, 'polaaar_submit.html')
 
 
+def dc_submit(request):
+    return render(request, 'polaaarsubmit/submit_dc.html')
+
+def mim_submit(request):
+    return render(request, 'polaaarsubmit/submit_mim.html')
 
 
 #########################################################

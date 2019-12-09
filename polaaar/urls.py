@@ -15,7 +15,11 @@ urlpatterns = [
     path('envsearch/',views.env_search,name='env_search'),
     path('mimsearch/',views.mim_search,name='mim_search'),
     path('seqsearch/',views.seq_search,name='seq_search'),
-    path('spasearch/',views.spatial_search,name='spa_search')
+    path('spasearch/',views.spatial_search,name='spa_search'),
+
+    path('dcsubmit/',views.dc_submit,name='dc_submit'),
+    path('mimsubmit/',views.mim_submit,name='mim_submit')
+
 
  
 ]
