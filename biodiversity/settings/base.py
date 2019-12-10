@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os, socket
 from os import environ
+from .secrets import *
 
 PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BASE_DIR = os.path.dirname(PROJECT_DIR)
@@ -22,6 +23,11 @@ SERIALIZATION_MODULES = {
     "geojson": "django.contrib.gis.serializers.geojson", 
 }
 
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = SECRET_KEY
+
+# SECURITY WARNING: define the correct hosts in production!
+ALLOWED_HOSTS = ['*'] 
 
 
 
