@@ -40,14 +40,23 @@ background-repeat: no-repeat;">
             </div>
             <div class="col-12 col-lg-2 fadeinclass">
                 <a role="button" href="{% url 'polaaar:polaaar_data' %}" class="btn btn-primary btn-lg" style="width:100%">
-                    Explore <i class="fas fa-binoculars pl-1"></i>
+                    Enter <i class="fas fa-binoculars pl-1"></i>
                 </a>
+
+                {% if user.is_authenticated %}
+                
+
+                {% else %}
                 <a role="button" href="{% url 'login' %}?next={{request.path}}" class="btn btn-lime btn-lg" style="width:100%">
                     Login <i class="fas fa-user pl-1"></i>
                 </a>
                 <a role="button" href="/accounts/register" class="btn btn-deep-orange btn-lg" style="width:100%">
                     Register <i class="fas fa-user-plus pl-1"></i>
                 </a>
+
+
+                {% endif %}
+
             </div>
         </div>
 

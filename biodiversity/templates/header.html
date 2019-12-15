@@ -1,19 +1,25 @@
 {% load static %}
+{#<<<<<<< HEAD#}
+<nav class="navbar fixed-top navbar-dark navbar-expand-md">
+    <span><a class="navbar-brand" href="/"><img src="{% static 'logos/logo-biodiversityaq-white.png' %}" alt="biodiversity.aq logo" height="60"></a></span>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarCollapse">
+        <!-- menu list -->
+        <ul class="navbar-nav">
+            <li class="nav-item"><a class="nav-link" href="#">WWW</a></li>
+            <li class="nav-item"><a class="nav-link" href="http://ipt.biodiversity.aq/">IPT</a></li>
+            <li class="nav-item"><a class="nav-link" href="{% url 'data:home' %}">DATA</a></li>
+            <li class="nav-item"><a class="nav-link" href="{% url 'polaaar:home' %}">POLAAAR</a></li>
+            <li class="nav-item"><a class="nav-link" href="http://afg.biodiversity.aq/">AFG</a></li>
+            <li class="nav-item"><a class="nav-link" href="http://atlas.biodiversity.aq/">ATLAS</a></li>
+            <li class="nav-item"><a class="nav-link" href="http://ras.biodiversity.aq/">RAS</a></li>
+            <li class="nav-item"><a class="nav-link" href="http://blogs.biodiversity.aq/">BLOGS</a></li>
+        </ul>
+        <!-- user menu -->
 
-<nav class="navbar fixed-top navbar-expand-lg">
 
-    <div class="navbar-header">
-        <span>
-            <a class="navbar-brand" href="/">
-                <img src="{% static 'logos/logo-biodiversityaq-white.png' %}" class="brand">
-            </a>
-        </span>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-    </div>
-
-    <div class="collapse navbar-collapse" id="menu-list">
         <ul id="user-account" class="navbar-nav ml-auto">
 
 
@@ -46,10 +52,10 @@
             {% else %}
 
             <li class="nav-item">
-                <a class="nav-link" href="{% url 'login' %}?next={{request.path}}"><span class="spot"></span> Log in</a>                
+                <a class="nav-link" href="{% url 'login' %}?next={{request.path}}"><span class="spot"></span> Log in</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="{% url 'accounts:register' %}"><span class="spot"></span> Register</a>                
+                <a class="nav-link" href="{% url 'accounts:register' %}"><span class="spot"></span> Register</a>
             </li>
 
             {% endif %}
@@ -57,5 +63,4 @@
         </ul>
 
     </div>
-
 </nav>
