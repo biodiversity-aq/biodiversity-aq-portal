@@ -141,7 +141,7 @@ WSGI_APPLICATION = 'biodiversity.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
-if socket.gethostname() == "DESKTOP-8K2LJ17" or "HDLT15":
+if socket.gethostname() == "DESKTOP-8K2LJ17":
     DATABASES = {
         'default': {
             'ENGINE': 'django.contrib.gis.db.backends.postgis',
