@@ -141,56 +141,55 @@ WSGI_APPLICATION = 'biodiversity.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
-#if socket.gethostname() == "DESKTOP-8K2LJ17" or "HDLT15":
-#    DATABASES = {
-#        'default': {
-#            'ENGINE': 'django.contrib.gis.db.backends.postgis',
-#            'NAME': 'biodiversity_aq',
-#            'USER': 'biodiversity_aq_admin',
-#            'PASSWORD': 'bi0diversity',   ##'p0l@radmin!1',
-#            'HOST': '',
-#            'PORT': '5432'
-#        }
-#    }
-#elif socket.gethostname() == 'DESKTOP-5JDHM1B':
-#     DATABASES = {
-#        'default': {
-#            'ENGINE': 'django.contrib.gis.db.backends.postgis',
-#            'NAME': 'biodiversity_aq',
-#            'USER': 'biodiversity_aq_admin',
-#            'PASSWORD': 'bi0diversity',
-#            'HOST': '',
-#            'PORT': '5433'
-#        }
-#    }
-#else:        
-    
-
-DEBUG=True
-DATABASES = {
+if socket.gethostname() == "DESKTOP-8K2LJ17" or "HDLT15":
+    DATABASES = {
         'default': {
             'ENGINE': 'django.contrib.gis.db.backends.postgis',
-            'NAME': 'd86hngmf7e303f',
-            'USER': 'hwyoarfegnhrwn',
-            'PASSWORD': '286e142ad8f2d8aa4d5ad529c43bbe847f4037ddc4f065f51bf18366cfac4cd5',
-            'HOST': 'ec2-54-217-234-157.eu-west-1.compute.amazonaws.com',
+            'NAME': 'biodiversity_aq',
+            'USER': 'biodiversity_aq_admin',
+            'PASSWORD': 'bi0diversity',   ##'p0l@radmin!1',
+            'HOST': '',
             'PORT': '5432'
         }
     }
-
-import dj_database_url
+elif socket.gethostname() == 'DESKTOP-5JDHM1B':
+     DATABASES = {
+        'default': {
+            'ENGINE': 'django.contrib.gis.db.backends.postgis',
+            'NAME': 'biodiversity_aq',
+            'USER': 'biodiversity_aq_admin',
+            'PASSWORD': 'bi0diversity',
+            'HOST': '',
+            'PORT': '5433'
+        }
+    }
+else:        
     
-#db_from_env = dj_database_url.config(conn_max_age=500)
-#DATABASES['default'].update(db_from_env)
-DATABASES['default'] = dj_database_url.config()
-DATABASES['default']['ENGINE'] = 'django.contrib.gis.db.backends.postgis'
+    
+    DATABASES = {
+            'default': {
+                'ENGINE': 'django.contrib.gis.db.backends.postgis',
+                'NAME': 'd86hngmf7e303f',
+                'USER': 'hwyoarfegnhrwn',
+                'PASSWORD': '286e142ad8f2d8aa4d5ad529c43bbe847f4037ddc4f065f51bf18366cfac4cd5',
+                'HOST': 'ec2-54-217-234-157.eu-west-1.compute.amazonaws.com',
+                'PORT': '5432'
+            }
+        }
 
-SECURE_PROXY_SSL_HEADER = (
-"HTTP_X_FORWARDED_PROTO", 
-"https"
+    import dj_database_url
+    
+    #db_from_env = dj_database_url.config(conn_max_age=500)
+    #DATABASES['default'].update(db_from_env)
+    DATABASES['default'] = dj_database_url.config()
+    DATABASES['default']['ENGINE'] = 'django.contrib.gis.db.backends.postgis'
+
+    SECURE_PROXY_SSL_HEADER = (
+    "HTTP_X_FORWARDED_PROTO", 
+    "https"
 )
 
-
+DEBUG=True
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
 

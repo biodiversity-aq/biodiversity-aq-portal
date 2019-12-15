@@ -4,12 +4,10 @@
     "\\accounts",
     "\\biodiversity",
     "\\biodiversity\\settings",
-    "\\biodiversity\\static",
-    "\\biodiversity\\static\\css",
     "\\biodiversity\\templates",
-    "\\polaaar",
+    "\\biodiversity\\templates\\registration",
     "\\polaaar\\templates"
   ],
-  "SelectedNode": "\\accounts\\models.py",
+  "SelectedNode": "\\biodiversity\\settings\\dev.py",
   "PreviewInSolutionExplorer": false
 }
