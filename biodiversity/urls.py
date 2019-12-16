@@ -31,10 +31,6 @@ urlpatterns = [
     path('www/', include('home.urls')),
     # re_path(r'users/',include('users.urls')),
 
-    url(r'^data/',include('data.urls')),
-    url(r'^polaaar/',include('polaaar.urls')),
-    
-
     url(r'',include(puput_urls)),
     # For anything not caught by a more specific rule above, hand over to
     # Wagtail's page serving mechanism. This should be the last pattern in
