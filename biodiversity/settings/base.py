@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os, socket
 from os import environ
+from .secrets import *
 
 PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BASE_DIR = os.path.dirname(PROJECT_DIR)
@@ -21,6 +22,13 @@ BASE_DIR = os.path.dirname(PROJECT_DIR)
 SERIALIZATION_MODULES = {
     "geojson": "django.contrib.gis.serializers.geojson", 
 }
+
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = SECRET_KEY
+
+# SECURITY WARNING: define the correct hosts in production!
+ALLOWED_HOSTS = ['*'] 
+
 
 
 GEOS_LIBRARY_PATH = environ.get('GEOS_LIBRARY_PATH')
@@ -37,7 +45,6 @@ INSTALLED_APPS = [
     'search',
     'djgeojson',
     'leaflet',
-
 
     'wagtail.contrib.forms',
     'wagtail.contrib.redirects',
@@ -64,11 +71,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'accounts.apps.AccountsConfig',
+
 
     'gunicorn',
     'captcha',
     'storages',
     'crispy_forms',
+    'import_export',
     
     'wagtail.contrib.sitemaps',
     'wagtail.contrib.routable_page',
@@ -79,14 +89,8 @@ INSTALLED_APPS = [
     'django_countries',
     'djconfig',
     'data',
-    'polaaar',
-    'spirit.core',
-    'spirit.admin',    
+    'polaaar'
 
-    'spirit.user',
-    'spirit.user.admin',
-    'spirit.user.auth'
-    
        
 ]
 
@@ -160,16 +164,19 @@ elif socket.gethostname() == 'DESKTOP-5JDHM1B':
         }
     }
 else:        
+    
+    
     DATABASES = {
-        'default': {
-            'ENGINE': 'django.contrib.gis.db.backends.postgis',
-            'NAME': 'd86hngmf7e303f',
-            'USER': 'hwyoarfegnhrwn',
-            'PASSWORD': '286e142ad8f2d8aa4d5ad529c43bbe847f4037ddc4f065f51bf18366cfac4cd5',
-            'HOST': 'ec2-54-217-234-157.eu-west-1.compute.amazonaws.com',
-            'PORT': '5432'
+            'default': {
+                'ENGINE': 'django.contrib.gis.db.backends.postgis',
+                'NAME': 'd86hngmf7e303f',
+                'USER': 'hwyoarfegnhrwn',
+                'PASSWORD': '286e142ad8f2d8aa4d5ad529c43bbe847f4037ddc4f065f51bf18366cfac4cd5',
+                'HOST': 'ec2-54-217-234-157.eu-west-1.compute.amazonaws.com',
+                'PORT': '5432'
+            }
         }
-    }
+
     import dj_database_url
     
     #db_from_env = dj_database_url.config(conn_max_age=500)
@@ -180,12 +187,9 @@ else:
     SECURE_PROXY_SSL_HEADER = (
     "HTTP_X_FORWARDED_PROTO", 
     "https"
-    )
+)
 
 DEBUG=True
-
-
-
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
 
@@ -334,31 +338,17 @@ DATA_UPLOAD_MAX_NUMBER_FIELDS = 10000
 #ACCOUNT_LOGIN_ATTEMPTS_TIMEOUT = 86400 # 1 day in seconds
 #ACCOUNT_LOGOUT_REDIRECT_URL ='/accounts/login/'
 #LOGIN_REDIRECT_URL = '/accounts/email/' 
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
-        'LOCATION': 'spirit_cache',
-    },
-    'st_rate_limit': {
-        'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
-        'LOCATION': 'spirit_rl_cache',
-        'TIMEOUT': None
-    }
-}
-AUTHENTICATION_BACKENDS = [
-    'spirit.user.auth.backends.UsernameAuthBackend',
-    
-    'spirit.user.auth.backends.EmailAuthBackend',
-]
 
 
-HAYSTACK_CONNECTIONS = {
-    'default': {
-        'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
-        'PATH': os.path.join(BASE_DIR, 'st_search'),
-    },
-}
-LOGIN_URL = 'spirit:user:auth:login'
-LOGIN_REDIRECT_URL = 'spirit:user:update'
+LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
-ST_CASE_INSENSITIVE_USERNAMES = False
+AUTH_USER_MODEL = 'accounts.UserProfile'
+
+
+ADMINS = (
+    #('You', 'wsuadmin@seabirds.net'),
+    ('Grant','grwhumphries@blackbawks.net')
+)
+
+
+SENDER_MAIL = 'Seabirds.net <no-reply@seabirds.net>'

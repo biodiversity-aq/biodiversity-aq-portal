@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load static leaflet_tags %}
+
+{% block title %}
+Polaaar search
+{% endblock title %}
+
+
+{% block body_class %}{% endblock %}
+
+{% block extra_css %}
+{% leaflet_css %}
+{% endblock extra_css %}
+
+{% block content %}
+
+        {% if user.is_authenticated %}
+<div class="container-fluid" style="background-image: url({% static 'imgs/BB_backgrnd.png' %});background-size: cover;
+background-repeat: no-repeat">
+    <div class="row" style="padding-top:20px;padding-bottom:160px; border-width:0px;">
+
+    </div>
+
+</div>
+
+
+
+{% else %}
+<div class="row" style="padding-top:20px; border-width:0px;">
+    <div class="col-12">
+        <h1> Sorry, you must be <a href="{% url 'login' %}?next={{request.path}}">Logged In</a> to view this page</h1>
+    </div>
+    {% endif %}
+
+</div>
+
+
+{% block extra_js %}
+
+
+
+
+
+{% endblock extra_js %}
+
+
+
+{% endblock content %}
