@@ -1,17 +1,15 @@
 {
   "ExpandedNodes": [
     "",
+    "\\accounts",
     "\\biodiversity",
     "\\biodiversity\\settings",
     "\\biodiversity\\static",
     "\\biodiversity\\static\\css",
     "\\biodiversity\\templates",
-    "\\biodiversity\\templates\\puput",
-    "\\data",
-    "\\data\\templates",
     "\\polaaar",
-    "\\users"
+    "\\polaaar\\templates"
   ],
-  "SelectedNode": "\\biodiversity\\templates\\footer.html",
+  "SelectedNode": "\\accounts\\models.py",
   "PreviewInSolutionExplorer": false
 }

@@ -50,7 +50,6 @@ h2 {
 /* remove padding, otherwise offcanvas is not completely hidden when shrink screen */
 .container-fluid {
     padding: 0px;
-    min-height: 90%;
 }
 
 /* style for tooltip on map */

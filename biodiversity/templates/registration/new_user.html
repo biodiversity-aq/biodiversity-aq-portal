@@ -1,0 +1,13 @@
+{% load i18n %}{% autoescape off %}
+{% blocktrans trimmed %}
+  A new users has signed up on Biodiversity.aq, but they need to be verified.
+{% endblocktrans %}
+
+{% trans "Please go to the following link to view the new user and verify their account:" %}
+
+{{ protocol }}://{{ domain }}/django-admin/
+
+{% trans "Once the account has been verified, they will be able to use the site" %}
+
+
+{% endautoescape %}

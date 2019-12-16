@@ -13,5 +13,43 @@ from django.db.models import Prefetch
 
 
 def home(request):
-
     return render(request, 'polaaar_home.html')
+
+
+def polaaar_data(request):
+    return render(request, 'polaaar_data.html')
+
+#########################################################
+### Search views
+def polaaar_search(request):
+    return render(request, 'polaaar_search.html')
+
+
+def env_search(request):
+    return render(request, 'polaaarsearch/environment.html')
+
+def mim_search(request):
+    return render(request, 'polaaarsearch/mimarks.html')
+
+def seq_search(request):
+    return render(request, 'polaaarsearch/sequences.html')
+
+def spatial_search(request):
+    return render(request, 'polaaarsearch/spatial.html')
+
+
+
+#########################################################
+### Submit views
+def polaaar_submit(request):
+    return render(request, 'polaaar_submit.html')
+
+
+def dc_submit(request):
+    return render(request, 'polaaarsubmit/submit_dc.html')
+
+def mim_submit(request):
+    return render(request, 'polaaarsubmit/submit_mim.html')
+
+
+#########################################################
