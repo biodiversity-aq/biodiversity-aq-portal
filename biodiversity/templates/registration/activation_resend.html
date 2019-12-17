@@ -1,4 +1,4 @@
-{% extends "spirit/_base.html" %}
+{% extends "base.html" %}
 
 {% load i18n %}
 
@@ -11,7 +11,7 @@
   <div class="login">
     <form action="." method="post">
       {% csrf_token %}
-      {% include "spirit/_form.html" %}
+      {% include "_form.html" %}
 
       <input class="button" type="submit" name="post" value="{% trans "Resend email" %}" />
     </form>
