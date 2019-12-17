@@ -1,0 +1,5 @@
+<nav class="nav justify-content-center blue-grey lighten-5 py-2 text-dark" style="font-size:18px;">
+    {% for menu_item in menu_items %}
+        <a class="nav-link" href="{{ menu_item.href }}">{{ menu_item.text }}</a>
+    {%  endfor %}
+</nav>

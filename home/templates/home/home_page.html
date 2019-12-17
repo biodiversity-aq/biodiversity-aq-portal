@@ -1,11 +1,6 @@
 {% extends "home/base.html" %}
 {% load menu_tags %}
 
-{% block body_class %}homepage{% endblock %}
-
-
-
-
 {% block content %}
     {% main_menu template="menu/main/menu.html" %}
     {{ page.title }}
@@ -13,7 +8,5 @@
 
 {% block extra_js %}
 {% endblock extra_js %}
-
-
 
 {% endblock content %}
