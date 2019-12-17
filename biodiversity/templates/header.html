@@ -1,14 +1,13 @@
 {% load static %}
 
 <nav class="navbar navbar-dark navbar-expand-md">
-    <span><a class="navbar-brand" href="/"><img src="{% static 'logos/logo-biodiversityaq-white.png' %}" alt="biodiversity.aq logo" height="60"></a></span>
+    <span><a class="navbar-brand" href="{% url 'www:home' %}"><img src="{% static 'logos/logo-biodiversityaq-white.png' %}" alt="biodiversity.aq logo" height="60"></a></span>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarCollapse">
         <!-- menu list -->
         <ul class="navbar-nav">
-            <li class="nav-item"><a class="nav-link" href="{% url 'www:home' %}">WWW</a></li>
             <li class="nav-item"><a class="nav-link" href="http://ipt.biodiversity.aq/">IPT</a></li>
             <li class="nav-item"><a class="nav-link" href="{% url 'data:home' %}">DATA</a></li>
             <li class="nav-item"><a class="nav-link" href="{% url 'polaaar:home' %}">POLAAAR</a></li>
