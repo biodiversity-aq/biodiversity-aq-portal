@@ -1,5 +1,9 @@
-<nav class="nav justify-content-center blue-grey lighten-5 py-2 text-dark" style="font-size:18px;">
+<nav class="nav justify-content-center blue-grey lighten-5 py-2" style="font-size:17px;">
     {% for menu_item in menu_items %}
-        <a class="nav-link" href="{{ menu_item.href }}">{{ menu_item.text }}</a>
+        {% if menu_item.link_page_id == page.id %}
+            <a class="nav-link text-dark" href="{{ menu_item.href }}">{{ menu_item.text }}</a>
+        {% else %}
+            <a class="nav-link blue-grey-text" href="{{ menu_item.href }}">{{ menu_item.text }}</a>
+        {% endif %}
     {%  endfor %}
 </nav>
