@@ -61,15 +61,6 @@
   }
 },
 {
-  "model": "home.card",
-  "pk": 7,
-  "fields": {
-    "html": "[]",
-    "title": null,
-    "description": ""
-  }
-},
-{
   "model": "home.section",
   "pk": 1,
   "fields": {
