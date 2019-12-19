@@ -12,3 +12,8 @@ header,
     -o-background-size: cover;
     background-size: cover;
 }
+
+/*override styles.all.min.css*/
+h2{
+    font-size: 2rem;
+}
