@@ -355,3 +355,5 @@ ADMINS = (
 
 
 SENDER_MAIL = 'Seabirds.net <no-reply@seabirds.net>'
+
+FIXTURE_DIRS = ['fixtures',]
