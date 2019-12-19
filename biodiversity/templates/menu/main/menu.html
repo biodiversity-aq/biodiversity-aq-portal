@@ -1,9 +1,9 @@
-<nav class="nav justify-content-center blue-grey lighten-5 py-2" style="font-size:17px;">
+<nav class="navbar navbar-expand-md navbar-dark bg-dark justify-content-center py-2" style="font-size:17px;">
     {% for menu_item in menu_items %}
         {% if menu_item.link_page_id == page.id %}
-            <a class="nav-link text-dark" href="{{ menu_item.href }}">{{ menu_item.text }}</a>
+            <a class="nav-link active" href="{{ menu_item.href }}">{{ menu_item.text }}</a>
         {% else %}
-            <a class="nav-link blue-grey-text" href="{{ menu_item.href }}">{{ menu_item.text }}</a>
+            <a class="nav-link" href="{{ menu_item.href }}">{{ menu_item.text }}</a>
         {% endif %}
     {%  endfor %}
 </nav>

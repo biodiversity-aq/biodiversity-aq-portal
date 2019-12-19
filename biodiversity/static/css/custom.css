@@ -43,10 +43,6 @@
     height: 500px;
 }
 
-h2 {
-    color: #1F78B4;
-}
-
 /* remove padding, otherwise offcanvas is not completely hidden when shrink screen */
 .container-fluid {
     padding: 0px;
@@ -75,4 +71,9 @@ h2 {
 .more-spacing {
     padding-top: 5%;
     margin-top: -2%;
+}
+
+/*override top border in styles.all.min.css*/
+.row, .row:last-child{
+    border: none;
 }

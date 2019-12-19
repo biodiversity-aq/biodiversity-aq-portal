@@ -28,7 +28,6 @@ urlpatterns = [
 
     path('data/', include('data.urls')),
     re_path(r'polaaar/', include('polaaar.urls')),
-    path('', include('home.urls')),
     # re_path(r'users/',include('users.urls')),
 
     url(r'',include(puput_urls)),
