@@ -155,7 +155,7 @@ if socket.gethostname() == "DESKTOP-8K2LJ17":
             'PORT': '5432'
         }
     }
-elif socket.gethostname() == 'DESKTOP-5JDHM1B':
+elif socket.gethostname() == 'HDLT15':
      DATABASES = {
         'default': {
             'ENGINE': 'django.contrib.gis.db.backends.postgis',
@@ -163,7 +163,7 @@ elif socket.gethostname() == 'DESKTOP-5JDHM1B':
             'USER': 'biodiversity_aq_admin',
             'PASSWORD': 'bi0diversity',
             'HOST': '',
-            'PORT': '5433'
+            'PORT': '5432'
         }
     }
 else:        

@@ -5,6 +5,8 @@
 {% block title %}{% trans "Login" %}{% endblock %}
 
 {% block content %}
+<div class="container">
+
 
   <h1 class="headline">{% trans "Login" %}</h1>
 
@@ -23,6 +25,6 @@
 
 <p><a href="{% url 'password_reset' %}">Forgot your password?</a></p>
 <p><a href="{% url 'accounts:register' %}">Sign up here</a></p>
-
+</div>
 
 {% endblock %}

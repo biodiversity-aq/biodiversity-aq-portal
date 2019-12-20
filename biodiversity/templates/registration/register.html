@@ -24,21 +24,21 @@
 {% endblock %}
 
 {% block content %}
+<div class="container">
+    <h1 class="headline">{% trans "Register" %}</h1>
+    <h2>After you have registered, please check your e-mail for an activation e-mail</h2>
+    <p><strong>Don't forget to check your SPAM folder in case your activation e-mail gets sent there</strong></p>
 
-<h1 class="headline">{% trans "Register" %}</h1>
-<h2>After you have registered, please check your e-mail for an activation e-mail</h2>
-<p><strong>Don't forget to check your SPAM folder in case your activation e-mail gets sent there</strong></p>
-
-<form action="." method="post">
-    {% csrf_token %}
-    <!--{{ form.as_p }}-->
-    {% include "_crispy_form.html" %}
-
-
+    <form action="." method="post">
+        {% csrf_token %}
+        <!--{{ form.as_p }}-->
+        {% include "_crispy_form.html" %}
 
 
-    <!--<input class="button" type="submit" name="post" value="{% trans " Register" %}" />-->
-</form>
 
+
+        <!--<input class="button" type="submit" name="post" value="{% trans " Register" %}" />-->
+    </form>
+</div>
 {% endblock %}
 
