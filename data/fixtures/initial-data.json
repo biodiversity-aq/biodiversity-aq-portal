@@ -1,0 +1,107 @@
+[
+	{
+		"model": "home.homepage",
+		"pk": 3,
+		"fields": {
+			"body": "[{\"type\": \"paragraph\", \"value\": \"<p>Free and open access to Antarctic biodiversity data</p>\", \"id\": \"3c3c89da-cd20-40de-a226-2ee9136db06d\"}]"
+		}
+	},
+	{
+		"model": "home.card",
+		"pk": 1,
+		"fields": {
+			"html": "[{\"type\": \"insert_html\", \"value\": \"<i class=\\\"fa fa-cloud-download fa-5x blue-text\\\"></i>\", \"id\": \"9cdb6f53-a008-48a1-a028-b46347f5fa05\"}]",
+			"title": "Access",
+			"description": "Retrieve and access Antarctic biodiversity data"
+		}
+	},
+	{
+		"model": "home.card",
+		"pk": 2,
+		"fields": {
+			"html": "[{\"type\": \"insert_html\", \"value\": \"<i class=\\\"fa fa-chart-bar fa-5x blue-text\\\"></i>\", \"id\": \"83d94120-dc2c-4278-9535-6dfa52d1349d\"}]",
+			"title": "Analyze",
+			"description": "Tools to facilitate Antarctic biodiversity data analysis"
+		}
+	},
+	{
+		"model": "home.card",
+		"pk": 3,
+		"fields": {
+			"html": "[{\"type\": \"insert_html\", \"value\": \"<i class=\\\"fa fa-file-code fa-5x blue-text\\\"></i>\", \"id\": \"834a39f3-0462-4fc2-a966-6bbd0c4a5b0a\"}]",
+			"title": "Develop",
+			"description": "Develop your own marine virtual lab"
+		}
+	},
+	{
+		"model": "home.card",
+		"pk": 4,
+		"fields": {
+			"html": "[{\"type\": \"insert_html\", \"value\": \"<i class=\\\"fa fa-upload fa-5x blue-text\\\"></i>\", \"id\": \"8ad149f2-882d-4644-87fa-73c0b958e792\"}]",
+			"title": "Publish data",
+			"description": "Publish your biodiversity data into standard format using Integrated Publishing Toolkit"
+		}
+	},
+	{
+		"model": "home.card",
+		"pk": 5,
+		"fields": {
+			"html": "[{\"type\": \"insert_html\", \"value\": \"<i class=\\\"fa fa-database fa-5x blue-text\\\"></i>\", \"id\": \"2f93cd09-5d7b-4c16-acb0-133a563b18a6\"}]",
+			"title": "Data portal",
+			"description": "Discover and access Antarctic biodiversity data"
+		}
+	},
+	{
+		"model": "home.card",
+		"pk": 6,
+		"fields": {
+			"html": "[{\"type\": \"insert_html\", \"value\": \"<i class=\\\"fas fa-dna fa-5x blue-text\\\"></i>\", \"id\": \"5fd3a006-46bd-468b-95a4-0c002c30329d\"}]",
+			"title": "Microbial data",
+			"description": "Access Antarctic microbial data at POLAAAR"
+		}
+	},
+	{
+		"model": "home.section",
+		"pk": 1,
+		"fields": {
+			"title": "Antarctic Virtual Lab",
+			"description": "",
+			"card": [
+				1,
+				2,
+				3
+			]
+		}
+	},
+	{
+		"model": "home.section",
+		"pk": 2,
+		"fields": {
+			"title": "Applications",
+			"description": "Applications associated with Antarctic biodiversity portal",
+			"card": [
+				4,
+				5,
+				6
+			]
+		}
+	},
+	{
+		"model": "home.sectionplacement",
+		"pk": 1,
+		"fields": {
+			"sort_order": 0,
+			"page": 3,
+			"section": 1
+		}
+	},
+	{
+		"model": "home.sectionplacement",
+		"pk": 2,
+		"fields": {
+			"sort_order": 1,
+			"page": 3,
+			"section": 2
+		}
+	}
+]

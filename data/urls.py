@@ -1,12 +1,12 @@
 from __future__ import unicode_literals
 
-from django.conf.urls import include, url
+from django.urls import path
 from . import views
 
 
 app_name = 'data'
 urlpatterns = [
    
-    url(r'^$', views.home, name='home'),
+    path('', views.home, name='home'),
  
 ]

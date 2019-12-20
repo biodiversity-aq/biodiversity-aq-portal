@@ -1,0 +1,21 @@
+# pycharm
+.idea
+
+#  visual studio files
+.vs
+
+# Byte-compiled / optimized / DLL files
+*.pyc
+__pycache__/
+
+# local sql script
+*.sql
+
+# virtual env directory
+venv
+
+# local settings
+biodiversity/settings/local.py
+
+# media directories
+media

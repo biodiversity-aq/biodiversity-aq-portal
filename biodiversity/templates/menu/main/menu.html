@@ -1,0 +1,9 @@
+<nav class="navbar navbar-expand-md navbar-dark bg-dark justify-content-center py-2" style="font-size:17px;">
+    {% for menu_item in menu_items %}
+        {% if menu_item.link_page_id == page.id %}
+            <a class="nav-link active" href="{{ menu_item.href }}">{{ menu_item.text }}</a>
+        {% else %}
+            <a class="nav-link" href="{{ menu_item.href }}">{{ menu_item.text }}</a>
+        {% endif %}
+    {%  endfor %}
+</nav>

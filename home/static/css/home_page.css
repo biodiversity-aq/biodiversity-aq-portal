@@ -1,0 +1,19 @@
+html,
+body,
+header,
+#intro {
+    height: 90%;
+}
+
+#intro {
+    background: url("http://afg.biodiversity.aq/system/images/585/huge/184-xxvii-044-odontaster-validus-a-jpg.jpg?1462285382")no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+/*override styles.all.min.css*/
+h2{
+    font-size: 2rem;
+}

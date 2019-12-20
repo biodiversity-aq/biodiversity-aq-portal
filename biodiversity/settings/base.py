@@ -82,6 +82,7 @@ INSTALLED_APPS = [
     
     'wagtail.contrib.sitemaps',
     'wagtail.contrib.routable_page',
+    'wagtailmenus',
     'django_social_share',
     'puput',
     'colorful',
@@ -130,6 +131,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.messages.context_processors.messages',
                 'djconfig.context_processors.config',
+
+                'wagtailmenus.context_processors.wagtailmenus',
             ],
         },
     },
@@ -152,7 +155,7 @@ if socket.gethostname() == "DESKTOP-8K2LJ17":
             'PORT': '5432'
         }
     }
-elif socket.gethostname() == 'DESKTOP-5JDHM1B':
+elif socket.gethostname() == 'HDLT15':
      DATABASES = {
         'default': {
             'ENGINE': 'django.contrib.gis.db.backends.postgis',
@@ -160,7 +163,7 @@ elif socket.gethostname() == 'DESKTOP-5JDHM1B':
             'USER': 'biodiversity_aq_admin',
             'PASSWORD': 'bi0diversity',
             'HOST': '',
-            'PORT': '5433'
+            'PORT': '5432'
         }
     }
 else:        
@@ -352,3 +355,5 @@ ADMINS = (
 
 
 SENDER_MAIL = 'Seabirds.net <no-reply@seabirds.net>'
+
+FIXTURE_DIRS = ['fixtures',]

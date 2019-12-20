@@ -27,12 +27,9 @@
     <!-- Material Design Bootstrap -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.8.11/css/mdb.min.css" rel="stylesheet">
 
-
-
-    <link rel="stylesheet" type="text/css" href="{% static 'css/custom_home.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'css/custom.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/styles.all.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/custom.css' %}">
 
     {% block extra_css %}
     {# Override this in templates to add extra stylesheets #}
@@ -49,7 +46,9 @@
     {% include "header.html" %}
 
 
+    {% block inner_header %}{% endblock %}
     {% block content %}{% endblock %}
+    {% block inner_footer %}{% endblock %}
 
 
     {% include "footer.html" %}
