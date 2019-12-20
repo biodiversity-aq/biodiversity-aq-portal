@@ -15,9 +15,46 @@ Polaaar search
 {% block content %}
 
         {% if user.is_authenticated %}
-<div class="container-fluid" style="background-image: url({% static 'imgs/BB_backgrnd.png' %});background-size: cover;
-background-repeat: no-repeat">
+<div class="container-fluid">
     <div class="row" style="padding-top:20px;padding-bottom:160px; border-width:0px;">
+
+        <div class="col-12" style="text-align:center">
+            <h1>Do you have some data to submit?</h1>
+        </div>
+
+        <div class="col-6" style="text-align:center">
+
+            <a href="#"><img style="background-color:white;border:solid black 2px;border-radius:100px" src="{% static 'imgs/dna_clipart.png' %}" /></a>
+
+            <h2>Submit sequence data <i class="fas fa-dna pl-1"></i></h2>
+
+
+            <a role="button" href="https://press3.mcs.anl.gov/gensc/mixs/" class="btn btn-lime btn-lg" style="width:50%">
+                MIxS instructions
+            </a>
+            <a role="button" href="#" class="btn btn-deep-orange btn-lg" style="width:50%">
+                Get the XLSX
+            </a>
+
+        </div>
+
+        <div class="col-6" style="text-align:center">
+
+            <a href="#"><img style="background-color:white;border:solid black 2px;border-radius:100px" src="{% static 'imgs/leaf.png' %}" /></a>
+
+            <h2>Submit environmental data <i class="fas fa-leaf pl-1"></i></h2>
+
+
+            <a role="button" href="https://press3.mcs.anl.gov/gensc/mixs/" class="btn btn-lime btn-lg" style="width:50%">
+                MIxS instructions
+            </a>
+            <a role="button" href="#" class="btn btn-deep-orange btn-lg" style="width:50%">
+                Get the XLSX
+            </a>
+
+        </div>
+
+
 
     </div>
 

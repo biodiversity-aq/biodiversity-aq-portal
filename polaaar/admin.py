@@ -168,8 +168,8 @@ class ParentEventAdmin(ModelAdmin):
     menu_order = 101
     add_to_settings_menu=False
     exclude_from_explorer=False
-    search_fields=('event_creator__username','event_creator__first_name','event_creator__last_name','event_name')        
-    list_display = ('Project_name','event_name','description')
+    search_fields=('event_creator__username','event_creator__first_name','event_creator__last_name','parent_event_name')        
+    list_display = ('Project_name','parent_event_name','description')
  
     def Project_name(self,obj):
         return obj.project.project_name
@@ -467,8 +467,8 @@ class ProjectMetadataAdminImpExp(ImportExportModelAdmin):
 
 class ParentEventAdminImpExp(ImportExportModelAdmin):
     resource_class = ParentEventResource
-    search_fields=('event_creator__username','event_creator__first_name','event_creator__last_name','event_name')        
-    list_display = ('Project_name','event_name','description')
+    search_fields=('event_creator__username','event_creator__first_name','event_creator__last_name','parent_event_name')        
+    list_display = ('Project_name','parent_event_name','description')
  
     def Project_name(self,obj):
         return obj.project.project_name

@@ -110,8 +110,7 @@ class CustomUserCreationForm(UserCreationForm):
         #terms_and_conditions = reverse_lazy("terms_and_conditions")
         #user = kwargs.pop('instance')
             
-        self.fields['gdpr'].label = mark_safe(_("Do you consent to Biodiversity.aq storing your personal data? Please read the "
-                                                      "<a target='_blank' href='/privacy-policy'>Terms and Conditions</a> <strong>(Required)</strong>")) #% (terms_and_conditions)
+        #self.fields['gdpr'].label = mark_safe(_("Do you consent to Biodiversity.aq storing your personal data? Please read the <a target='_blank' href='/privacy-policy'>Terms and Conditions</a> <strong>(Required)</strong>")) #% (terms_and_conditions)
         self.helper.layout = Layout(
             
       

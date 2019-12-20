@@ -183,7 +183,7 @@ class ProjectMetadata(models.Model):
 ################################################################################
 
 class ParentEvent(models.Model):
-    event_name = models.CharField(max_length=255)                               ## User's project name or cruise name, etc...
+    parent_event_name = models.CharField(max_length=255)                               ## User's project name or cruise name, etc...
     event_type = models.ForeignKey(_("EventType"),on_delete=models.DO_NOTHING)  ## Drawn from the Event_type table
        
     description = models.TextField()                                            ## Description of the event
@@ -198,9 +198,9 @@ class ParentEvent(models.Model):
     project = models.ForeignKey(_("ProjectMetadata"),blank=True,null=True,on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.event_type.name +': '+ self.event_name
+        return self.event_type.name +': '+ self.parent_event_name
     class Meta:
-        ordering=['event_name']
+        ordering=['parent_event_name']
 
 #### End of parent event models block
 ####################################################################################################
@@ -224,8 +224,6 @@ class Event(models.Model):
                                       blank=True,
                                       null=True)
     
-    
-    resource_relationship = models.TextField(blank=True,null=True)
     samplingProtocol = models.TextField(blank=True,null=True)
 
     occurrence = models.ManyToManyField(_("Occurrence"),blank=True)
@@ -344,7 +342,7 @@ class Sequences(models.Model):
     seqData_runNumber = models.CharField(max_length=50,blank=True,null=True)
     seqData_sampleNumber = models.CharField(max_length=50,blank=True,null=True)
     seqData_numberOfBases = models.IntegerField(blank=True,null=True)
-
+    seqData_numberOfSequences = models.IntegerField(blank=True,null=True)
 
     def __str__(self):
         return self.sequence_name
