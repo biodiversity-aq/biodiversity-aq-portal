@@ -15,12 +15,13 @@ from django.utils.translation import ugettext as _
 
 from .models import UserProfile
 from .email import *
-from .forms import CustomUserCreationForm
+from .forms import * 
 
 
 def register(request):
     if request.method == 'POST':
-        form = CustomUserCreationForm(request.POST)
+        #form = CustomUserCreationForm(request.POST)
+        form = UserForm(request.POST)
         if form.is_valid():
 #             ''' Begin reCAPTCHA validation '''
 #            #recaptcha_response = request.POST.get('g-recaptcha-response')
@@ -49,7 +50,8 @@ def register(request):
 
             return redirect('login')
     else:
-        form = CustomUserCreationForm()
+        #form = CustomUserCreationForm()
+        form = UserForm()
     return render(request, 'registration/register.html', {'form': form})
 
 

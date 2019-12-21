@@ -9,20 +9,21 @@ from django.conf import settings
 
 from django_countries.fields import CountryField
 
-from .managers import CustomUserManager
+#from .managers import CustomUserManager
 
 BOOLEAN_YN = (
 (True, u'Yes'),
 (False, u'No'),  
 )
 
-class UserProfile(AbstractUser):
+#class UserProfile(AbstractUser):
+class UserProfile(models.Model):
     #pass
     # add additional fields in here
-    #user = models.OneToOneField(
-    #    settings.AUTH_USER_MODEL,
-    #    verbose_name=_("profile"),        
-    #    on_delete=models.CASCADE)
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL,
+        verbose_name=_("profile"),        
+        on_delete=models.CASCADE)
 
     full_name = models.CharField(_("fullname"),max_length=100,blank=True,null=True)
     timezone = models.CharField(_("time zone"), max_length=32, default='UTC',null=True,blank=True)
@@ -49,7 +50,7 @@ class UserProfile(AbstractUser):
    
     REQUIRED_FIELDS = ['email']
 
-    objects = CustomUserManager()
+    #objects = CustomUserManager()
 
     def __str__(self):
         return self.first_name + ' ' + self.last_name

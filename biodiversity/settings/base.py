@@ -345,8 +345,12 @@ DATA_UPLOAD_MAX_NUMBER_FIELDS = 10000
 
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
-AUTH_USER_MODEL = 'accounts.UserProfile'
 
+#############################
+### old settings for abstractuser
+
+#AUTH_USER_MODEL = 'accounts.UserProfile'
+###############################
 
 ADMINS = (
     #('You', 'wsuadmin@seabirds.net'),

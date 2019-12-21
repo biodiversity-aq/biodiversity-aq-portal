@@ -6,7 +6,7 @@ from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from .models import UserProfile
 from django.utils.safestring import mark_safe
 from django.db import models
-
+from django.contrib.auth import get_user_model
 from crispy_forms.bootstrap import InlineField,InlineCheckboxes, StrictButton,InlineRadios
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Submit, Row, Column, ButtonHolder,HTML
@@ -20,8 +20,63 @@ BOOLEAN_YN = (
 (False, u'No'),  
 )
 
+User = get_user_model()
+
+class UserForm(forms.ModelForm):
+    
+    password2 = forms.CharField(widget=forms.PasswordInput(),
+                                label=_("Please re-enter the password"))
+
+    class Meta:
+        model = User
+        fields = ('username', 'first_name', 'last_name','email','password')
+
+
+        # Add this to check if both passwords are matching or not       
+    def clean(self):
+        cleaned_data = super(UserForm, self).clean()
+        password1 = cleaned_data.get('password')
+        password2 = cleaned_data.get('password2')
+        if password1 != password2:
+            raise forms.ValidationError('Passwords do not match!')
+    
+    # Add this to check if the email already exists in your database or not    
+    def clean_email(self):
+        username = self.cleaned_data.get('username')
+        email = self.cleaned_data.get('email')
+        if email and User.objects.filter(email=email).exclude(username=username).count():          
+            raise forms.ValidationError('This email is already in use! Try another email.')
+        return email
+    
+    ## Add this to check if the username already exists in your database or not
+    def clean_username(self):
+        username = self.cleaned_data.get('username')
+        email = self.cleaned_data.get('email')
+        if username and User.objects.filter(username=username).exclude(email=email).count():
+            raise forms.ValidationError('This username has already been taken!')
+        return username
+
+    def __init__(self, *args, **kwargs):                  
+        super(UserForm, self).__init__(*args, **kwargs)        
+        self.helper = FormHelper(self)
+        self.helper.layout = Layout(
+            Row(Column('username',css_class='form-group col-sm-4'),
+                Column('first_name',css_class='form-group col-sm-4'),
+                Column('last_name',css_class='form-group col-sm-4'),
+                Column('email',css_class='form-group col-sm-12'),
+                Column('password',css_class='form-group col-sm-6'),
+                Column('password2',css_class='form-group col-sm-6')
+            ),
+            HTML('<script src="https://www.google.com/recaptcha/api.js"></script>'),
+            HTML('<div class="g-recaptcha" data-sitekey="6LcJP8MUAAAAAO5XOSWJD8RHE5w91cOIferaWhge"></div>'),
+            ButtonHolder(
+                Submit("submit", "Register",css_class="btn btn-deep-orange btn-lg")
+            )             
+            )
      
-class CustomUserCreationForm(UserCreationForm):  
+#class CustomUserCreationForm(UserCreationForm):  
+
+class CustomUserCreationForm(forms.ModelForm):
 
     #email2 = forms.CharField(
     #    label=_("Email confirmation"),
@@ -61,45 +116,18 @@ class CustomUserCreationForm(UserCreationForm):
 
     class Meta:
         model = UserProfile
-        fields = ('username', 'first_name', 'last_name','email','password1','password2',
+        fields = (#'username', 'first_name', 'last_name','email','password1','password2',
                   'position','institution','resident_country','home_country','introduction','gdpr','email_contact')
-        labels = {
-            
+        labels = {            
             "gdpr": _("Do you give consent for biodiversity.aq to store your personal data? We will never use it for commercial purposes or sell it to any third party (required)"),
             "resident_country": _("Country of current residence (optional)"),
             "home_country": _("Home country (optional)"),
-
-            "introduction":_("Why are you using our site? (max 1500 characters)"),           
-            
+            "introduction":_("Why are you using our site? (max 1500 characters)"),                       
             "email_contact":_("Is it okay for us to send you an e-mail once in a while with updates or news? (This happens very infrequently)")            
         }
 
-    # Add this to check if both passwords are matching or not
 
-       
 
-    def clean(self):
-        cleaned_data = super(CustomUserCreationForm, self).clean()
-        password1 = cleaned_data.get('password1')
-        password2 = cleaned_data.get('password2')
-        if password1 != password2:
-            raise forms.ValidationError('Passwords do not match!')
-    # Add this to check if the email already exists in your database or not
-    
-    def clean_email(self):
-        username = self.cleaned_data.get('username')
-        email = self.cleaned_data.get('email')
-        if email and UserProfile.objects.filter(email=email).exclude(username=username).count():          
-            raise forms.ValidationError('This email is already in use! Try another email.')
-        return email
-    
-    ## Add this to check if the username already exists in your database or not
-    def clean_username(self):
-        username = self.cleaned_data.get('username')
-        email = self.cleaned_data.get('email')
-        if username and UserProfile.objects.filter(username=username).exclude(email=email).count():
-            raise forms.ValidationError('This username has already been taken!')
-        return username
 
 
     def __init__(self, *args, **kwargs):
@@ -111,16 +139,8 @@ class CustomUserCreationForm(UserCreationForm):
         #user = kwargs.pop('instance')
             
         #self.fields['gdpr'].label = mark_safe(_("Do you consent to Biodiversity.aq storing your personal data? Please read the <a target='_blank' href='/privacy-policy'>Terms and Conditions</a> <strong>(Required)</strong>")) #% (terms_and_conditions)
-        self.helper.layout = Layout(
-            
-      
-            Row(Column('username',css_class='form-group col-sm-4'),
-                Column('first_name',css_class='form-group col-sm-4'),
-                Column('last_name',css_class='form-group col-sm-4'),
-                Column('email',css_class='form-group col-sm-12'),
-                Column('password1',css_class='form-group col-sm-6'),
-                Column('password2',css_class='form-group col-sm-6'),
-            ),
+        self.helper.layout = Layout(                  
+
             Row(InlineRadios('gdpr')),
             Row(InlineRadios('email_contact')),
             Row(                
@@ -137,10 +157,10 @@ class CustomUserCreationForm(UserCreationForm):
             ButtonHolder(
                 Submit("submit", "Register",css_class="button")
             )                                                       
-            )
+        )
 
-class CustomUserChangeForm(UserChangeForm):
+#class CustomUserChangeForm(UserChangeForm):
 
-    class Meta:
-        model = UserProfile
-        fields = ('username', 'email')
+#    class Meta:
+#        model = UserProfile
+#        fields = ('username', 'email')
