@@ -30,8 +30,13 @@ class CustomLoginView(LoginView):
         return super().form_valid(form)
 
     def get_redirect_url(self):
-        print('called')
+        print('called', self.request.user, vars(self.request))
         return '/'
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        print('FORM KWARGS', kwargs)
+        return kwargs
 
 
 
