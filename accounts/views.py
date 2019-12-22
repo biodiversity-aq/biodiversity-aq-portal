@@ -42,7 +42,7 @@ class CustomLoginView(LoginView):
         username = data.get('username')
         password = data.get('password')
         print(username, password, data)
-        user = authenticate(username=username, password=password)
+        user = authenticate(request=request, username=username, password=password)
         print('LOGGED IN', user)
         login(self.request, user)
         return self.form_valid(form)
