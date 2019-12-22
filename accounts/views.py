@@ -23,7 +23,9 @@ from django.contrib.auth.views import LoginView
 class CustomLoginView(LoginView):
 
     def form_valid(self, form):
-        from django.contrib.auth import login
+        from django.contrib.auth import login, authenticate
+
+
         user = form.get_user()
         ret = login(self.request, form.get_user())
         print('LOGIN', user, ret, self.request)
@@ -34,6 +36,16 @@ class CustomLoginView(LoginView):
         return '/'
 
     def post(self, request, *args, **kwargs):
+        from django.contrib.auth import authenticate, login
+        kwargs = self.get_form_kwargs()
+        data = kwargs['data']
+        username = data.get('username')
+        password = data.get('password')
+        user = authenticate(username=username, password=password)
+        print('LOGGED IN', user)
+        login(self.request, user)
+        return self.form_valid(form)
+
         form = self.get_form()
         print('VALID', form, form.is_valid())
         return super().post(request, *args, **kwargs)
