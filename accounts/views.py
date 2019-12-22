@@ -23,7 +23,10 @@ from django.contrib.auth.views import LoginView
 class CustomLoginView(LoginView):
 
     def form_valid(self, form):
-        print(form)
+        from django.contrib.auth import login
+        user = form.get_user()
+        ret = login(self.request, form.get_user())
+        print('LOGIN', user, ret, self.request)
         return super().form_valid(form)
 
     def get_redirect_url(self):
