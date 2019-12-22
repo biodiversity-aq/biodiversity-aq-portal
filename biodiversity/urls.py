@@ -17,13 +17,16 @@ import accounts
 import data.urls
 import polaaar.urls
 
+
+from accounts.views import CustomLoginView
+
 urlpatterns = [
     re_path(r'^django-admin/', admin.site.urls),
 
 
     url(r'^admin/', include(wagtailadmin_urls)),
     url(r'^documents/', include(wagtaildocs_urls)),
-    url(r'accounts/login/', accounts.views.CustomLoginView.as_view()),
+    url(r'accounts/login/', CustomLoginView.as_view()),
     #url(r'^accounts/', include('accounts.urls')), 
     url(r'^accounts/', include('django.contrib.auth.urls'), name='accounts'),
 
