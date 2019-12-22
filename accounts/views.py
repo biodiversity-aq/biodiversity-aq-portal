@@ -41,6 +41,7 @@ class CustomLoginView(LoginView):
         data = kwargs['data']
         username = data.get('username')
         password = data.get('password')
+        print(username, password, data)
         user = authenticate(username=username, password=password)
         print('LOGGED IN', user)
         login(self.request, user)
