@@ -45,6 +45,7 @@ class CustomLoginView(LoginView):
         user = authenticate(request=request, username=username, password=password)
         print('LOGGED IN', user)
         login(self.request, user)
+        form = self.get_form()
         return self.form_valid(form)
 
         form = self.get_form()
