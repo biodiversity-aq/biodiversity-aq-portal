@@ -1,5 +1,6 @@
 {% extends "base.html" %}
-{% load static leaflet_tags %}
+{% load static leaflet_tags geojson_tags %}
+
 
 {% block title %}
 Polaaar data
@@ -23,7 +24,7 @@ Polaaar data
                     <h2>POLAAAR datasets can be found in the following locations: </h2>
                 </div>
                 <div class="col-12">
-                    {% leaflet_map "landing_map" %}
+                    {% leaflet_map "landing_map" callback="window.map_init"  %}
                 </div>
             </div>
         </div>
@@ -38,7 +39,7 @@ Polaaar data
                     <a role="button" href="{% url 'polaaar:polaaar_search' %}" class="btn btn-light-blue btn-lg" style="width:100%">
                         Search the database <i class="fas fa-search pl-1"></i>
                     </a>
-                    <a role="button" href="#" class="btn btn-light-blue btn-lg" style="width:100%">
+                    <a role="button" href="http://share.biodiversity.aq/MARS/Vision/mARSVision.pdf" class="btn btn-light-blue btn-lg" style="width:100%">
                         Read the vision paper <i class="fas fa-book-reader pl-1"></i>
                     </a>
                     {% if user.is_authenticated %}
@@ -85,7 +86,12 @@ Polaaar data
 
 
 {% endblock extra_js %}
-
+<script type="text/javascript">
+      var collection = {{ qs_results|geojsonfeature|safe }};
+      function map_init(map, options) {
+          L.geoJson(collection).addTo(map);
+      }
+</script>
 
 
 {% endblock content %}

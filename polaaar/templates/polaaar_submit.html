@@ -16,28 +16,42 @@ Polaaar search
 
         {% if user.is_authenticated %}
 <div class="container-fluid">
-    <div class="row" style="padding-top:20px;padding-bottom:160px; border-width:0px;">
+    <div class="row justify-content-center" style="padding-top:20px;padding-bottom:160px; border-width:0px;">
 
         <div class="col-12" style="text-align:center">
             <h1>Do you have some data to submit?</h1>
         </div>
 
-        <div class="col-6" style="text-align:center">
+        <div class="col-12 text-center" style="text-align:center">
 
             <a href="#"><img style="background-color:white;border:solid black 2px;border-radius:100px" src="{% static 'imgs/dna_clipart.png' %}" /></a>
 
-            <h2>Submit sequence data <i class="fas fa-dna pl-1"></i></h2>
+            <h2>Submit data to POLAAAR <i class="fas fa-dna pl-1"></i></h2>
 
 
-            <a role="button" href="https://press3.mcs.anl.gov/gensc/mixs/" class="btn btn-lime btn-lg" style="width:50%">
+            <a role="button" href="https://press3.mcs.anl.gov/gensc/mixs/" class="btn btn-lime btn-lg" style="width:30%;">
                 MIxS instructions
             </a>
-            <a role="button" href="#" class="btn btn-deep-orange btn-lg" style="width:50%">
+            <a role="button" href="{% static 'files/Template_SeqDataPolaaar_v1.xlsx' %}" class="btn btn-deep-orange btn-lg" style="width:30%;">
                 Get the XLSX
             </a>
 
         </div>
 
+        <div class="col-12" style="text-align:center">
+
+            <ul>
+                <li><h2>Click the above button to download the xlsx sheet</h2></li>
+                <li><h2>Read all the instructions in the ReadMe tab of the spreadsheet</h2></li>
+                <li><h2>Fill in the <span style="color:darkorange">dark orange cells</span> at minimum</h2></li>
+                <li><h1>Once completed, please e-mail your form to <a href="mailto:msweetlove@naturalscience.be">msweetlove@naturalscience.be</a> or <a href="mailto:avandeputte@naturalscience.be">avandeputte@naturalscience.be</a></h1></li>
+            </ul>
+            
+
+        </div>
+
+
+        <!--
         <div class="col-6" style="text-align:center">
 
             <a href="#"><img style="background-color:white;border:solid black 2px;border-radius:100px" src="{% static 'imgs/leaf.png' %}" /></a>
@@ -52,7 +66,7 @@ Polaaar search
                 Get the XLSX
             </a>
 
-        </div>
+        </div>-->
 
 
 

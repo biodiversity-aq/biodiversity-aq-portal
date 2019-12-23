@@ -135,7 +135,7 @@ class CustomUserCreationForm(UserCreationForm):
             HTML('<script src="https://www.google.com/recaptcha/api.js"></script>'),
             HTML('<div class="g-recaptcha" data-sitekey="6LcJP8MUAAAAAO5XOSWJD8RHE5w91cOIferaWhge"></div>'),
             ButtonHolder(
-                Submit("submit", "Register",css_class="button")
+                Submit("submit", "Register",css_class="btn btn-deep-orange btn-lg")
             )                                                       
             )
 

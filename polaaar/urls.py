@@ -16,6 +16,7 @@ urlpatterns = [
     path('mimsearch/',views.mim_search,name='mim_search'),
     path('seqsearch/',views.seq_search,name='seq_search'),
     path('spasearch/',views.spatial_search,name='spa_search'),
+    path('projsearch/',views.proj_search,name='proj_search'),
 
     path('dcsubmit/',views.dc_submit,name='dc_submit'),
     path('mimsubmit/',views.mim_submit,name='mim_submit')

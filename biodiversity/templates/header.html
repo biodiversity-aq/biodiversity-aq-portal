@@ -10,7 +10,18 @@
             <ul class="navbar-nav">
                 <li class="nav-item"><a class="nav-link" href="http://ipt.biodiversity.aq/">IPT</a></li>
                 <li class="nav-item"><a class="nav-link" href="{% url 'data:home' %}">DATA</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'polaaar:home' %}">POLAAAR</a></li>
+                
+                
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        POLAAAR
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="{% url 'polaaar:home' %}">Home</a>
+                        <a class="dropdown-item" href="{% url 'polaaar:polaaar_submit_data' %}">Submit</a>
+                        <a class="dropdown-item" href="{% url 'polaaar:polaaar_search' %}">Search</a>                       
+                    </div>                                    
+                </li>
                 <li class="nav-item"><a class="nav-link" href="http://afg.biodiversity.aq/">AFG</a></li>
                 <li class="nav-item"><a class="nav-link" href="http://atlas.biodiversity.aq/">ATLAS</a></li>
                 <li class="nav-item"><a class="nav-link" href="http://ras.biodiversity.aq/">RAS</a></li>

@@ -10,6 +10,10 @@ from django.contrib import messages
 from django.utils.translation import ugettext as _
 from django.http import HttpResponsePermanentRedirect
 from django.db.models import Prefetch
+from django.contrib.gis.db.models.functions import AsGeoJSON, Centroid 
+
+
+from polaaar.models import *
 
 
 def home(request):
@@ -17,7 +21,11 @@ def home(request):
 
 
 def polaaar_data(request):
-    return render(request, 'polaaar_data.html')
+
+    qs_results = ProjectMetadata.objects.annotate(geom=AsGeoJSON(Centroid('geomet')))
+
+
+    return render(request, 'polaaar_data.html',{'qs_results':qs_results})
 
 #########################################################
 ### Search views
@@ -27,6 +35,11 @@ def polaaar_search(request):
 
 def env_search(request):
     return render(request, 'polaaarsearch/environment.html')
+
+def proj_search(request):
+    qs = ProjectMetadata.objects.all()
+    return render(request, 'polaaarsearch/projects.html',{'qs':qs})
+
 
 def mim_search(request):
     return render(request, 'polaaarsearch/mimarks.html')

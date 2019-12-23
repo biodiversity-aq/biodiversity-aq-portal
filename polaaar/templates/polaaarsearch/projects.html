@@ -1,0 +1,39 @@
+<div class="row" style="border-width:0px;">
+    <div class="col-12">
+
+
+        <h1>test</h1>
+        <table id="myTable" class="display">
+            <thead>
+                <tr>
+                    <th>Project name</th>                    
+                    <th>project abstract</th>
+                    <th>start date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for i in qs %}
+                <tr>
+                    <td>{{i.project_name}}</td>                    
+                    <td>{{i.abstract}}</td>
+                    <td>{{i.start_date}}</td>
+                </tr>               
+                {% endfor %}
+            </tbody>
+        </table>
+
+
+
+
+    </div>
+</div>
+
+
+
+
+<script>
+    $(document).ready(function () {
+        $('#myTable').DataTable();
+    });
+
+</script>

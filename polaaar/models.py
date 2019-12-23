@@ -35,6 +35,7 @@ CONTINENTS = [
 ## endpoints. This way, the data can be linked at any taxa level.
 
 TAXA = (
+    ('superKingdom','superKingdom'),
     ('Kingdom','Kingdom'),
     ('SubKingdom','SubKingdom'),
     ('Phylum','Phylum'),
@@ -158,7 +159,7 @@ class ProjectMetadata(models.Model):
     EML_URL = models.URLField(blank=True,null=True)                             ## URL to GBIF generated EML file
     abstract = models.TextField(blank=True,null=True)                           ## Abstract for the event, if available
     
-    bounding_box = models.PolygonField(srid=4326, blank=True, null=True)
+    geomet = models.PolygonField(srid=4326, blank=True, null=True)
     
     is_public = models.BooleanField()
     associated_references = models.ManyToManyField(_("Reference"),blank=True)
@@ -236,7 +237,7 @@ class Event(models.Model):
     
 
     def __str__(self):
-        return self.parent_event.event_name +', '+ self.sample_name
+        return self.parent_event.parent_event_name +', '+ self.sample_name
     class Meta:
         ordering = ['-collection_date','-collection_time']
 
@@ -261,8 +262,7 @@ class Occurrence(models.Model):
     associated_sequences = models.ManyToManyField(_("Sequences"),blank=True)
 
     def __str__(self):
-        return self.occurrenceID +': '+ self.taxon.name
-
+        return self.occurrenceID + ': ' + self.taxon.name
 ### End of occurrences model block
 ####################################################################################################
 ### Metadata model
@@ -371,7 +371,7 @@ class sampling_method(models.Model):
 
 class units(models.Model):    
     name = models.CharField(max_length=255,null=True,blank=True)
-    html_tag = models.CharField(max_length=200)
+    html_tag = models.CharField(max_length=200,null=True,blank=True)
     def __str__(self):
         return self.name
     class Meta:

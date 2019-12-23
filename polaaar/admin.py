@@ -169,10 +169,10 @@ class ParentEventAdmin(ModelAdmin):
     add_to_settings_menu=False
     exclude_from_explorer=False
     search_fields=('event_creator__username','event_creator__first_name','event_creator__last_name','parent_event_name')        
-    list_display = ('Project_name','parent_event_name','description')
+    list_display = ('parent_event_name','description') #'Project_name',
  
-    def Project_name(self,obj):
-        return obj.project.project_name
+    #def Project_name(self,obj):
+    #    return obj.project.project_name
 
 
 
@@ -190,7 +190,7 @@ class EventAdmin(ModelAdmin):
     list_display=('Parent_Event','sample_name','collection_date')
 
     def Parent_Event(self,obj):
-        return obj.parent_event.event_name
+        return obj.parent_event.parent_event_name
 
 class EventTypeAdmin(ModelAdmin):
     model=EventType
@@ -468,10 +468,10 @@ class ProjectMetadataAdminImpExp(ImportExportModelAdmin):
 class ParentEventAdminImpExp(ImportExportModelAdmin):
     resource_class = ParentEventResource
     search_fields=('event_creator__username','event_creator__first_name','event_creator__last_name','parent_event_name')        
-    list_display = ('Project_name','parent_event_name','description')
+    list_display = ('parent_event_name','description')#'Project_name',
  
-    def Project_name(self,obj):
-        return obj.project.project_name
+    #def Project_name(self,obj):
+    #    return obj.project.project_name
 
 class EventAdminImpExp(ImportExportModelAdmin):
     resource_class = EventResource
@@ -481,7 +481,7 @@ class EventAdminImpExp(ImportExportModelAdmin):
     list_display=('Parent_Event','sample_name','collection_date')
 
     def Parent_Event(self,obj):
-        return obj.parent_event.event_name
+        return obj.parent_event.parent_event_name
 
 class EventTypeAdminImpExp(ImportExportModelAdmin):
     resource_class = EventTypeResource
