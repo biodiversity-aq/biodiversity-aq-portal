@@ -34,7 +34,22 @@ def polaaar_search(request):
 
 
 def env_search(request):
-    return render(request, 'polaaarsearch/environment.html')
+    qs = Variable.objects.all()       
+    qsenv = Environment.objects.all()
+    return render(request, 'polaaarsearch/environment.html',{'qs':qs,'qsenv':qsenv})
+
+
+def env_searched(request):
+    qs = Variable.objects.all()
+    if request.method=='GET':
+        var = request.GET.get('var','')
+        
+        #qsenv = Environment.objects.filter(env_variable__name = var)        
+        qsenv = Event.objects.filter(environment__env_variable__name = var)
+                
+        return render(request,'polaaarsearch/env_searched.html',{'qs':qs,'qsenv':qsenv})
+
+
 
 def proj_search(request):
     qs = ProjectMetadata.objects.all()
@@ -45,7 +60,10 @@ def mim_search(request):
     return render(request, 'polaaarsearch/mimarks.html')
 
 def seq_search(request):
-    return render(request, 'polaaarsearch/sequences.html')
+
+    qs = Sequences.objects.all()
+
+    return render(request, 'polaaarsearch/sequences.html',{'qs':qs})
 
 def spatial_search(request):
     return render(request, 'polaaarsearch/spatial.html')

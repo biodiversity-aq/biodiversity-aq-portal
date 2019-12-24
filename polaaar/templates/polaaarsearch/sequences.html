@@ -1,5 +1,36 @@
 <div class="row" style="border-width:0px;">
     <div class="col-12">
-        <h1>Sequences</h1>
+
+
+
+        <table id="myTable" class="display">
+            <thead>
+                <tr>
+                    <th>Sequence name</th>
+                    <th>Gene</th>
+                    <th>URL</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for i in qs %}
+                <tr>
+                    <td>{{i.sequence_name}}</td>
+                    <td>{{i.target_gene}}</td>
+                    <td>{{i.seqData_url}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
     </div>
 </div>
+
+
+
+
+<script>
+    $(document).ready(function () {
+        $('#myTable').DataTable();
+    });
+
+</script>

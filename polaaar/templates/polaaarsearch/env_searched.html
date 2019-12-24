@@ -1,0 +1,36 @@
+
+<table id="myTable" class="display">
+    <thead>
+        <tr>
+            <th>Project name</th>
+            <th>sample name</th>
+            <th>Location</th>
+            <th>Metadata?</th>
+            <th>Occurrence data?</th>
+            <th>Environmental data?</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for i in qsenv %}
+        <tr>
+            <td>{{i.parent_event.project.project_name}}</td>
+            <td>{{i.parent_event.parent_event_name}}</td>
+            <td>{{i.metadata.geo_loc_name}}</td>
+            <td>{{i.metadata_exists}}</td>
+            <td>{{i.occurrence_exists}}</td>
+            <td>{{i.environment_exists}}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+
+
+
+
+<script>
+    $(document).ready(function () {
+        $('#myTable').DataTable();
+    });
+
+</script>
