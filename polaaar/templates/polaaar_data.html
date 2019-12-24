@@ -86,12 +86,10 @@ Polaaar data
 
 
 {% endblock extra_js %}
-<script type="text/javascript">
+<!--<script type="text/javascript">
       var collection = {{ qs_results|geojsonfeature|safe }};
       function map_init(map, options) {
           L.geoJson(collection).addTo(map);
       }
-</script>
-
-
+</script>-->
 {% endblock content %}

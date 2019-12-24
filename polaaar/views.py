@@ -22,10 +22,10 @@ def home(request):
 
 def polaaar_data(request):
 
-    qs_results = ProjectMetadata.objects.annotate(geom=AsGeoJSON(Centroid('geomet')))
+    #qs_results = ProjectMetadata.objects.annotate(geom=AsGeoJSON(Centroid('geomet')))
 
 
-    return render(request, 'polaaar_data.html',{'qs_results':qs_results})
+    return render(request, 'polaaar_data.html')#,{'qs_results':qs_results})
 
 #########################################################
 ### Search views
