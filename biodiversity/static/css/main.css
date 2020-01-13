@@ -16,6 +16,10 @@
     padding: 5px 20px; /* add space between logos */
 }
 
+/*stick footer to the bottom */
+body {
+    margin-bottom: 0;  /* required to override body margin in styles.all.min.css */
+}
 
 
 .fadeinclass {
