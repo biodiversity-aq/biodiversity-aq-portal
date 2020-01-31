@@ -1,4 +1,4 @@
-﻿{% load static wagtailuserbar leaflet_tags %}
+﻿{% load static wagtailuserbar leaflet_tags menu_tags %}
 
 <!DOCTYPE html>
 <html class="no-js" lang="en">
@@ -49,8 +49,7 @@
 
 <body class="{% block body_class %}{% endblock %}">
     {% wagtailuserbar %}
-    {% include "header.html" %}
-
+    {% main_menu template="menus/main/menu.html" %}
 
     {% block inner_header %}{% endblock %}
     {% block content %}{% endblock %}
