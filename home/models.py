@@ -2,9 +2,11 @@ from django.db import models
 
 from wagtail.core.models import Page, Orderable
 from wagtail.core import blocks
-from wagtail.core.fields import RichTextField, StreamField
+from wagtail.core.fields import StreamField
 from wagtail.admin.edit_handlers import FieldPanel, StreamFieldPanel, InlinePanel
 from wagtail.images.blocks import ImageChooserBlock
+from wagtailmenus.models import MenuPage
+from wagtailmenus.panels import menupage_panel
 from wagtail.snippets.edit_handlers import SnippetChooserPanel
 from wagtail.snippets.models import register_snippet
 
@@ -14,7 +16,12 @@ from taggit.models import TaggedItemBase
 from taggit.managers import TaggableManager
 
 
-class HomePage(Page):
+class HomePage(MenuPage):
+    """
+    Subclass MenuPage because the important page will just becomes toggles in multi-level menus
+    https://wagtailmenus.readthedocs.io/en/stable/overview.html#solves-the-problem-of-important-page-links-becoming-just-toggles-in-multi-level-menus
+
+    """
    
     body = StreamField([
         ('insert_html', blocks.RawHTMLBlock(required=False, help_text='This is a standard HTML block. Anything written in HTML here will be rendered in a DIV element')),
@@ -26,6 +33,8 @@ class HomePage(Page):
         StreamFieldPanel('body'),
         InlinePanel('section_placements', label="Sections"),
     ]
+
+    settings_panels = [menupage_panel]
 
     template = 'home/home_page.html'
 
