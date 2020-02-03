@@ -8,6 +8,11 @@
 }
 
 /*FOOTER*/
+@media screen and (max-width: 480px) {
+  footer {
+    display: none;
+  }
+}
 /* global-footer logos */
 .partners-logo {
     width: auto;
