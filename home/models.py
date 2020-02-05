@@ -1,4 +1,5 @@
 from django.db import models
+from django.shortcuts import redirect
 
 from wagtail.core.models import Page, Orderable
 from wagtail.core import blocks
@@ -159,3 +160,27 @@ class SectionPlacement(Orderable, models.Model):
 
     def __str__(self):
         return self.page.title + " -> " + self.section.title
+
+
+class RedirectDummyPage(MenuPage):
+    """
+    A dummy page that can be added to wagtailmenus, but its sole purpose is to redirect to a page specified in the
+    redirect_to field. This is intended to be used for pages like ipt.biodiversity.aq that is not part of Django app.
+
+    If it is an existing wagtail page, edit redirection in wagtail cms: Settings > Redirects
+    """
+    redirect_to = models.URLField(blank=True, null=True)
+
+    content_panels = Page.content_panels + [
+        FieldPanel('redirect_to'),
+        ]
+
+    settings_panels = [menupage_panel]
+
+    def serve(self, request, **kwargs):
+        # redirect the page to url specified in redirect_to
+        return redirect(self.redirect_to)
+
+
+
+
