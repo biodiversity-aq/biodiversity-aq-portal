@@ -4,7 +4,7 @@ from django.shortcuts import redirect
 from wagtail.core.models import Page, Orderable
 from wagtail.core import blocks
 from wagtail.core.fields import StreamField
-from wagtail.admin.edit_handlers import FieldPanel, StreamFieldPanel, InlinePanel
+from wagtail.admin.edit_handlers import FieldPanel, StreamFieldPanel, InlinePanel, MultiFieldPanel
 from wagtail.images.blocks import ImageChooserBlock
 from wagtailmenus.models import MenuPage
 from wagtailmenus.panels import menupage_panel
@@ -13,6 +13,7 @@ from wagtail.snippets.models import register_snippet
 
 from modelcluster.fields import ParentalKey
 from modelcluster.models import ClusterableModel
+from modelcluster.contrib.taggit import ClusterTaggableManager
 from taggit.models import TaggedItemBase
 from taggit.managers import TaggableManager
 
@@ -182,5 +183,38 @@ class RedirectDummyPage(MenuPage):
         return redirect(self.redirect_to)
 
 
+class PageTag(TaggedItemBase):
+    """
+    Tag for detail pages
+    """
+    content_object = ParentalKey('home.DetailPage', on_delete=models.CASCADE, related_name='tagged_items')
 
 
+class DetailPage(MenuPage):
+    short_description = StreamField([
+        ('short_description', blocks.RichTextBlock(
+            required=False, features=['bold', 'italic', 'link', 'superscript', 'subscript'],
+            help_text='A one line description of the page that will appear in overview page.'))
+    ])
+    body = StreamField([
+        ('insert_html', blocks.RawHTMLBlock(
+            required=False, help_text='This is a standard HTML block. Anything written in HTML here will be rendered in a DIV element')),
+        ('paragraph', blocks.RichTextBlock(required=False)),
+        ('image', ImageChooserBlock(required=False))
+    ], blank=True)
+    tags = ClusterTaggableManager(through=PageTag, blank=True)
+
+    content_panels = Page.content_panels + [
+        StreamFieldPanel('short_description'),
+        StreamFieldPanel('body'),
+    ]
+
+    promote_panels = Page.promote_panels + [
+        FieldPanel('tags'),
+    ]
+
+    settings_panels = [menupage_panel]
+    # parent_page_types
+    # subpage_types
+    # tags stuffs
+    template = 'home/detail_page.html'
