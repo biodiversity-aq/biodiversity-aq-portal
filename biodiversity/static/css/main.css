@@ -8,7 +8,8 @@
 }
 
 /*FOOTER*/
-@media screen and (max-width: 480px) {
+/* hide footer when screen width is max 800px otherwise position:fixed-bottom will block the whole screen */
+@media screen and (max-width: 800px) {
   footer {
     display: none;
   }
