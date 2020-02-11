@@ -4,7 +4,7 @@ from django.shortcuts import redirect
 from wagtail.core.models import Page, Orderable
 from wagtail.core import blocks
 from wagtail.core.fields import StreamField
-from wagtail.admin.edit_handlers import FieldPanel, StreamFieldPanel, InlinePanel, MultiFieldPanel
+from wagtail.admin.edit_handlers import FieldPanel, StreamFieldPanel, InlinePanel
 from wagtail.images.blocks import ImageChooserBlock
 from wagtailmenus.models import MenuPage
 from wagtailmenus.panels import menupage_panel
