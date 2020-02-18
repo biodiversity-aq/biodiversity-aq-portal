@@ -263,8 +263,9 @@ WAGTAILADMIN_RICH_TEXT_EDITORS = {
     'default': {
         'WIDGET': 'wagtail.admin.rich_text.DraftailRichTextArea',
         'OPTIONS': {
-            'features': ['h2', 'h3', 'h4', 'h5', 'h6', 'bold', 'italic', 'link', 'ol', 'ul', 'document-link', 'image',
-                         'embed', 'code', 'superscript', 'subscript', 'strikethrough', 'blockquote'],
+            'features': ['h2', 'h3', 'h4', 'h5', 'h6', 'bold', 'italic', 'underline', 'mark', 'link', 'ol', 'ul',
+                         'document-link', 'image', 'embed', 'code', 'superscript', 'subscript', 'strikethrough',
+                         'bsblockquote'],
         }
     },
     'legacy': {
