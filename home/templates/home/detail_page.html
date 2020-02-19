@@ -1,0 +1,42 @@
+{% extends "home/base.html" %}
+{% load static wagtailcore_tags wagtailimages_tags%}
+
+{% block extra_css %}
+{% endblock %}
+
+{% block content %}
+    <!-- Jumbotron -->
+    <div class="jumbotron text-center">
+        <!-- Title -->
+        <h1 class="h1-responsive">{{ page.title }}</h1>
+        <!-- One line description -->
+        <h5>{{ page.short_description|richtext }}</h5>
+        <!-- Image overlay -->
+        <div class="view overlay">
+            {% image page.cover height-400 as cover_img %}
+            <img src="{{ cover_img.url }}" alt="{{ cover_img.alt }}" class="center"/>
+            <div class="mask rgba-white-slight"></div>
+        </div>
+    </div>
+    <!-- Body -->
+    <div class="container">
+        {{ page.body }}
+        <!-- Tags -->
+        {% if page.tags.exists %}
+            <div class="pt-5">
+                <p class="h6">Tags:</p>
+                <ul class="list-unstyled list-inline justify-content-between">
+                {% for tag in page.tags.all %}
+                    <li class="list-inline-item mr-1"><div class="chip mr-0">{{ tag }}</div></li>
+                {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+        <!-- Publish date -->
+        <div class="text-right text-muted"><small><i class="far fa-clock pr-2"></i>{{ page.last_published_at.date }}</small></div>
+    </div>
+
+    {% block extra_js %}
+    {% endblock extra_js %}
+
+{% endblock content %}

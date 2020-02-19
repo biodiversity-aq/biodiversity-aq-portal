@@ -1,0 +1,59 @@
+{% extends "home/base.html" %}
+{% load static wagtailcore_tags wagtailimages_tags %}
+
+{% block extra_css %}
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="text-center">
+            <h1>{{ page.title }}</h1>
+            {{ page.subtitle|richtext }}
+            <hr>
+        </div>
+    </div>
+    <section class="container">
+        <div class="row row-cols-1 row-cols-md-3">
+            {% for child_page in page.get_children %}
+                <div class="col mb-4">
+                    <div class="card h-100"> <!-- same height for each card, height 100% -->
+                    <!-- Card image -->
+                        <div class="view overlay">
+                            {% image child_page.specific.cover height-200 as cover_img %}
+                            <img src="{{ cover_img.url }}" alt="{{ cover_img.alt }}" width="{{ cover_img.width }}"
+                                 height="{{ cover_img.height }}" class="center"/>
+                            <a href="{{ child_page.url }}"><div class="mask rgba-white-slight"></div></a>
+                        </div>
+                        <div class="card-body">
+                            <!-- Card title -->
+                            <div>
+                                <!-- Title -->
+                                <h4 class="card-title mb-2">{{ child_page.specific.title }}</h4>
+                                <!-- Short description -->
+                                <div class="card-text">
+                                    {{ child_page.specific.short_description|richtext }}
+                                </div>
+                            </div>
+                            <!-- tags -->
+                            <div>
+                                {% if child_page.specific.tags %}
+                                <ul class="list-unstyled list-inline justify-content-between mb-0">
+                                {% for tag in child_page.specific.tags.all %}
+                                    <li class="list-inline-item mr-1"><div class="chip mr-0">{{ tag }}</div></li>
+                                {% endfor %}
+                                </ul>
+                            {% endif %}
+                            </div>
+                        </div>
+                        <!-- date published -->
+                        <a class="text-right pr-2 pb-2" href="{{ child_page.url }}">Read more <i class="fas fa-angle-double-right"></i></a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    {% block extra_js %}
+    {% endblock extra_js %}
+
+{% endblock content %}
