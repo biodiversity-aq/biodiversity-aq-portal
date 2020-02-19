@@ -259,6 +259,8 @@ MEDIA_URL = '/media/'
 
 WAGTAIL_SITE_NAME = "biodiversity"
 
+WAGTAILIMAGES_IMAGE_MODEL = 'home.CustomImage'
+
 WAGTAILADMIN_RICH_TEXT_EDITORS = {
     'default': {
         'WIDGET': 'wagtail.admin.rich_text.DraftailRichTextArea',
