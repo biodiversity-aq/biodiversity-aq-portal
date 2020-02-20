@@ -224,8 +224,14 @@ class CustomImage(AbstractImage):
     def get_image_credit(self):
         """
         Generate image caption using caption, author and license provided.
-        The caption is a RichTextField that by default always wrapped within <p></p>
-        :return:
+
+        The caption is a RichTextField that by default always wrapped within <p></p>. To avoid owner and license being
+        split into different lines, this function concatenate all the values into a string.
+
+        It is important to wrap the value returned by this function with |richtext filter in the template to ensure
+        that the html tags are not escaped.
+
+        :return: A string consists of caption, owner and image license.
         """
         caption = ''
         owner = ''
@@ -235,7 +241,7 @@ class CustomImage(AbstractImage):
         if self.owner:
             owner = ' - by {}'.format(self.owner)
         if self.license:
-            img_license = 'licensed under <a href="{}">{}</a>.'.format(self.license, self.get_license_display())
+            img_license = ' licensed under <a href="{}">{}</a>.'.format(self.license, self.get_license_display())
         img_credit = caption + owner + img_license
         return img_credit
 
