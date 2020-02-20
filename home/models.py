@@ -49,7 +49,7 @@ class PageTag(TaggedItemBase):
 
 
 class DetailPage(MenuPage):
-    cover = models.ForeignKey('wagtailimages.Image', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
+    cover = models.ForeignKey('home.CustomImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
     short_description = RichTextField(
         blank=True, null=True, features=['bold', 'italic', 'link', 'superscript', 'subscript'],
         help_text='A one line description of the page that will appear in overview page.')
@@ -188,6 +188,9 @@ class RedirectDummyPage(MenuPage):
 
 
 class CustomImage(AbstractImage):
+    """
+    Custom image model to include license and author for credits
+    """
     CC_BY = 'https://creativecommons.org/licenses/by/4.0/'
     CC_BY_SA = 'https://creativecommons.org/licenses/by-sa/4.0/'
     CC_BY_ND = 'https://creativecommons.org/licenses/by-nd/4.0/'
@@ -208,13 +211,33 @@ class CustomImage(AbstractImage):
     # should not use "title" for this field because it will cause compatibility issue
     caption = RichTextField(features=['bold', 'italic', 'underline', 'link', 'superscript', 'subscript'], blank=True,
                             null=True)
-    author = models.CharField(max_length=255, blank=True, null=True)
-    license = models.CharField(max_length=200, choices=LICENSE_CHOICES, default=CC_BY, blank=True, null=True)
+    owner = models.CharField(max_length=255, blank=True, null=True,
+                             help_text='Please fill in this field to give credit to the owner of the image.')
+    license = models.CharField(max_length=200, choices=LICENSE_CHOICES, default=CC_BY, blank=True, null=True,
+                               help_text='Please select a license.')
 
     admin_form_fields = Image.admin_form_fields + (
         # Then add the field names here to make them appear in the form:
-        'author', 'license', 'caption'
+        'owner', 'license', 'caption'
     )
+
+    def get_image_credit(self):
+        """
+        Generate image caption using caption, author and license provided.
+        The caption is a RichTextField that by default always wrapped within <p></p>
+        :return:
+        """
+        caption = ''
+        owner = ''
+        img_license = ''
+        if self.caption.startswith('<p>') and self.caption.endswith('</p>'):
+            caption = self.caption[3:][:-4]
+        if self.owner:
+            owner = ' - by {}'.format(self.owner)
+        if self.license:
+            img_license = 'licensed under <a href="{}">{}</a>.'.format(self.license, self.get_license_display())
+        img_credit = caption + owner + img_license
+        return img_credit
 
 
 class CustomRendition(AbstractRendition):
