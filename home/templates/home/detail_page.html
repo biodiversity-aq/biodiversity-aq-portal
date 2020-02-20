@@ -1,5 +1,5 @@
 {% extends "home/base.html" %}
-{% load static wagtailcore_tags wagtailimages_tags%}
+{% load static wagtailcore_tags wagtailimages_tags %}
 
 {% block extra_css %}
 {% endblock %}
@@ -17,6 +17,8 @@
             <img src="{{ cover_img.url }}" alt="{{ cover_img.alt }}" class="center"/>
             <div class="mask rgba-white-slight"></div>
         </div>
+        <!-- Attribution of the image -->
+        <div>{{ page.cover.get_image_credit|richtext }}</div>
     </div>
     <!-- Body -->
     <div class="container">
