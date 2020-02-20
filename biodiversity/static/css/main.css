@@ -187,3 +187,7 @@ body {
     box-shadow: none;
     padding: 0px;
 }
+
+a.link-card, a.link-card:hover {
+    color: inherit;
+}

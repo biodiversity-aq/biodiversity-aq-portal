@@ -16,13 +16,14 @@
         <div class="row row-cols-1 row-cols-md-3">
             {% for child_page in page.get_children %}
                 <div class="col mb-4">
-                    <div class="card h-100"> <!-- same height for each card, height 100% -->
+                    <a href="{{ child_page.url }}" class="link-card">
+                        <div class="card h-100 hoverable"> <!-- same height for each card, height 100% -->
                     <!-- Card image -->
                         <div class="view overlay">
                             {% image child_page.specific.cover height-200 as cover_img %}
                             <img src="{{ cover_img.url }}" alt="{{ cover_img.alt }}" width="{{ cover_img.width }}"
                                  height="{{ cover_img.height }}" class="center"/>
-                            <a href="{{ child_page.url }}"><div class="mask rgba-white-slight"></div></a>
+                            <div class="mask rgba-white-slight"></div>
                         </div>
                         <div class="card-body">
                             <!-- Card title -->
@@ -45,9 +46,8 @@
                             {% endif %}
                             </div>
                         </div>
-                        <!-- date published -->
-                        <a class="text-right pr-2 pb-2" href="{{ child_page.url }}">Read more <i class="fas fa-angle-double-right"></i></a>
                     </div>
+                    </a>
                 </div>
             {% endfor %}
         </div>
