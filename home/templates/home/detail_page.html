@@ -12,13 +12,17 @@
         <!-- One line description -->
         <h5>{{ page.short_description|richtext }}</h5>
         <!-- Image overlay -->
+        {% if page.cover %}
         <div class="view overlay">
             {% image page.cover height-400 as cover_img %}
-            <img src="{{ cover_img.url }}" alt="{{ cover_img.alt }}" class="center"/>
+            <img src="{{ cover_img.url }}" alt="{{ cover_img.alt }}" class="center figure-img z-depth-1"/>
             <div class="mask rgba-white-slight"></div>
         </div>
         <!-- Attribution of the image -->
-        <div>{{ page.cover.get_image_credit|richtext }}</div>
+            <!-- get_image_cover consist of fields from custom image model, so need to be accessed through
+            page.cover.get_image_credit, not cover_img.get_image_credit -->
+        <div class="figure-caption">{{ page.cover.get_image_credit|richtext }}</div>
+    {% endif %}
     </div>
     <!-- Body -->
     <div class="container">
