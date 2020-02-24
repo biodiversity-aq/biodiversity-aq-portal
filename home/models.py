@@ -19,11 +19,23 @@ from taggit.models import TaggedItemBase
 from taggit.managers import TaggableManager
 
 
-class OverviewPage(MenuPage):
+class BaseMenuPage(MenuPage):
     """
     Subclass MenuPage because the important page will just becomes toggles in multi-level menus
     https://wagtailmenus.readthedocs.io/en/stable/overview.html#solves-the-problem-of-important-page-links-becoming-just-toggles-in-multi-level-menus
+
+    To be inherited as MenuPage for all MenuPage in this project
     """
+    cover = models.ForeignKey('home.CustomImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
+    short_description = RichTextField(
+        blank=True, null=True, features=['bold', 'italic', 'link', 'superscript', 'subscript'],
+        help_text='A one line description of the page that will appear in overview page.')
+
+    class Meta:
+        abstract = True
+
+
+class OverviewPage(BaseMenuPage):
     subtitle = RichTextField(features=['bold', 'italic', 'underline', 'link', 'superscript', 'subscript'], blank=True)
     body = StreamField([
         ('insert_html', blocks.RawHTMLBlock(required=False, help_text='This is a standard HTML block. Anything written in HTML here will be rendered in a DIV element')),
@@ -48,11 +60,7 @@ class PageTag(TaggedItemBase):
     content_object = ParentalKey('home.DetailPage', on_delete=models.CASCADE, related_name='tagged_items')
 
 
-class DetailPage(MenuPage):
-    cover = models.ForeignKey('home.CustomImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
-    short_description = RichTextField(
-        blank=True, null=True, features=['bold', 'italic', 'link', 'superscript', 'subscript'],
-        help_text='A one line description of the page that will appear in overview page.')
+class DetailPage(BaseMenuPage):
     body = StreamField([
         ('insert_html', blocks.RawHTMLBlock(
             required=False, help_text='This is a standard HTML block. Anything written in HTML here will be rendered in a DIV element')),
@@ -167,7 +175,7 @@ class Card(ClusterableModel):
         return self.title
 
 
-class RedirectDummyPage(MenuPage):
+class RedirectDummyPage(BaseMenuPage):
     """
     A dummy page that can be added to wagtailmenus, but its sole purpose is to redirect to a page specified in the
     redirect_to field. This is intended to be used for pages like ipt.biodiversity.aq that is not part of Django app.
