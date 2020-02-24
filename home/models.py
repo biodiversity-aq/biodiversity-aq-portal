@@ -209,8 +209,10 @@ class CustomImage(AbstractImage):
         (CC0, 'CC0 1.0')
         ]
     # should not use "title" for this field because it will cause compatibility issue
-    caption = RichTextField(features=['bold', 'italic', 'underline', 'link', 'superscript', 'subscript'], blank=True,
-                            null=True)
+    caption = RichTextField(
+        features=['bold', 'italic', 'underline', 'link', 'superscript', 'subscript'], blank=True, null=True,
+        help_text='Description of the image. Image attribution will be generated in the form of '
+                  '"{caption}" by {owner} licensed under {license}.')
     owner = models.CharField(max_length=255, blank=True, null=True,
                              help_text='Please fill in this field to give credit to the owner of the image.')
     license = models.CharField(max_length=200, choices=LICENSE_CHOICES, default=CC_BY, blank=True, null=True,
@@ -226,10 +228,11 @@ class CustomImage(AbstractImage):
         Generate image caption using caption, author and license provided.
 
         The caption is a RichTextField that by default always wrapped within <p></p>. To avoid owner and license being
-        split into different lines, this function concatenate all the values into a string.
+        split into different lines, this function strip the <p></p> tags and concatenate all the values into a string.
 
         It is important to wrap the value returned by this function with |richtext filter in the template to ensure
-        that the html tags are not escaped.
+        that the html tags are not escaped. This is consistent with the feature of RichTextField:
+        https://docs.wagtail.io/en/stable/advanced_topics/customisation/page_editing_interface.html#rich-text-html
 
         :return: A string consists of caption, owner and image license.
         """
@@ -237,9 +240,9 @@ class CustomImage(AbstractImage):
         owner = ''
         img_license = ''
         if self.caption.startswith('<p>') and self.caption.endswith('</p>'):
-            caption = self.caption[3:][:-4]
+            caption = '"{}"'.format(self.caption[3:][:-4])
         if self.owner:
-            owner = ' - by {}'.format(self.owner)
+            owner = ' by {}'.format(self.owner)
         if self.license:
             img_license = ' licensed under <a href="{}">{}</a>.'.format(self.license, self.get_license_display())
         img_credit = caption + owner + img_license
@@ -247,6 +250,11 @@ class CustomImage(AbstractImage):
 
 
 class CustomRendition(AbstractRendition):
+    """
+    Since custom image model is used (CustomImage), a custom rendition which inherits from
+    `wagtail.images.models.AbstractRendition` is necessary.
+    https://docs.wagtail.io/en/stable/advanced_topics/images/custom_image_model.html
+    """
     image = models.ForeignKey(CustomImage, on_delete=models.CASCADE, related_name='renditions')
 
     class Meta:
