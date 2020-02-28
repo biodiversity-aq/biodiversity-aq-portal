@@ -33,7 +33,11 @@
                 <p class="h6">Tags:</p>
                 <ul class="list-unstyled list-inline justify-content-between">
                 {% for tag in page.tags.all %}
-                    <li class="list-inline-item mr-1"><div class="chip mr-0">{{ tag }}</div></li>
+                    <li class="list-inline-item mr-1">
+                        <div class="chip mr-0">
+                            <a href="{% slugurl 'tags' %}?tag={{ tag }}" style="color: rgba(0,0,0,0.6);">{{ tag }}</a>
+                        </div>
+                    </li>
                 {% endfor %}
                 </ul>
             </div>
