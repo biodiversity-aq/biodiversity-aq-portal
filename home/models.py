@@ -1,5 +1,6 @@
 from django.db import models
-from django.shortcuts import redirect
+from django.http import Http404
+from django.shortcuts import redirect, render
 
 from wagtail.core.models import Page, Orderable
 from wagtail.core import blocks
@@ -85,70 +86,27 @@ class DetailPage(BaseMenuPage):
     template = 'home/detail_page.html'
 
 
-class OneColumnPage(Page):
-  
-    body = StreamField([
-        ('insert_html', blocks.RawHTMLBlock(required=False,help_text='This is a standard HTML block. Anything written in HTML here will be rendered in a DIV element')),
-        ('paragraph', blocks.RichTextBlock(features=['bold','italic','ol','ul','h1','h2','h3','h4','hr','link','image','document-link'])),
-        ('image', ImageChooserBlock())
-        ], blank=True)
-    
-    content_panels = Page.content_panels + [        
-        StreamFieldPanel('body')
-    ]
-    
-    template = 'base_pages/one_column.html'
+class DetailIndexPage(Page):
+    """
+    An index page that returns Pages which are tagged with the tag specified.
+    """
+    template = 'home/detail_page_index.html'
 
-
-class TwoColumnPage(Page):
-  
-    column_one = StreamField([
-        ('insert_html', blocks.RawHTMLBlock(required=False,help_text='This is a standard HTML block. Anything written in HTML here will be rendered in a DIV element')),
-        ('paragraph', blocks.RichTextBlock(features=['bold','italic','ol','ul','h1','h2','h3','h4','hr','link','image','document-link'])),
-        ('image', ImageChooserBlock())
-        ],blank=True)
-    
-    column_two = StreamField([
-        ('insert_html', blocks.RawHTMLBlock(required=False,help_text='This is a standard HTML block. Anything written in HTML here will be rendered in a DIV element')),
-        ('paragraph', blocks.RichTextBlock(features=['bold','italic','ol','ul','h1','h2','h3','h4','hr','link','image','document-link'])),
-        ('image', ImageChooserBlock())
-        ],blank=True)
-
-    content_panels = Page.content_panels + [        
-        StreamFieldPanel('column_one'),
-        StreamFieldPanel('column_two')
-    ]
-    
-    template = 'base_pages/two_columns.html'
-
-
-class ThreeColumnPage(Page):
-  
-    column_one = StreamField([
-        ('insert_html', blocks.RawHTMLBlock(required=False,help_text='This is a standard HTML block. Anything written in HTML here will be rendered in a DIV element')),
-        ('paragraph', blocks.RichTextBlock(features=['bold','italic','ol','ul','h1','h2','h3','h4','hr','link','image','document-link'])),
-        ('image', ImageChooserBlock())
-        ],blank=True)
-    
-    column_two = StreamField([
-        ('insert_html', blocks.RawHTMLBlock(required=False,help_text='This is a standard HTML block. Anything written in HTML here will be rendered in a DIV element')),
-        ('paragraph', blocks.RichTextBlock(features=['bold','italic','ol','ul','h1','h2','h3','h4','hr','link','image','document-link'])),
-        ('image', ImageChooserBlock())
-        ],blank=True)
-
-    column_three = StreamField([
-        ('insert_html', blocks.RawHTMLBlock(required=False,help_text='This is a standard HTML block. Anything written in HTML here will be rendered in a DIV element')),
-        ('paragraph', blocks.RichTextBlock(features=['bold','italic','ol','ul','h1','h2','h3','h4','hr','link','image','document-link'])),
-        ('image', ImageChooserBlock())
-        ],blank=True)
-
-    content_panels = Page.content_panels + [        
-        StreamFieldPanel('column_one'),
-        StreamFieldPanel('column_two'),
-        StreamFieldPanel('column_three')
-    ]
-    
-    template = 'base_pages/three_columns.html'
+    def serve(self, request, *args, **kwargs):
+        """
+        Only return DetailPages which are live and tagged with the tag provided.
+        """
+        detail_pages = DetailPage.objects.live()
+        tag = request.GET.get('tag')
+        detail_pages = detail_pages.filter(tags__name=tag)
+        if tag:
+            return render(request, self.template, {
+                'page': self,
+                'tag': tag,
+                'detail_pages': detail_pages,
+            })
+        else:
+            raise Http404
 
 
 class CardTag(TaggedItemBase):
