@@ -188,6 +188,12 @@ body {
     padding: 0px;
 }
 
-a.link-card, a.link-card:hover {
-    color: inherit;
+.dropdown-item.active, .dropdown-item:active {
+    background-color: rgba(96, 125, 139, 0.2);
+}
+
+
+/* ul without bullet */
+.ul-no-bullet {
+    list-style-type: none;
 }

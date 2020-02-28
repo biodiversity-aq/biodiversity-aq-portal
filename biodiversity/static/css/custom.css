@@ -1,11 +1,6 @@
 /*******************
    GENERAL STYLES
 ********************/
-/* ul without bullet */
-.ul-no-bullet {
-    list-style-type: none;
-}
-
 .text-center {
     text-align: center;
 }
