@@ -28,7 +28,7 @@
                             <!-- Card title -->
                             <div>
                                 <!-- Title -->
-                                <h4 class="card-title mb-2"><a href="{{ child_page.url }}">{{ child_page.specific.title }}</a></h4>
+                                <h4 class="card-title mb-2"><a href="{{ child_page.url }}" style="color: inherit;">{{ child_page.specific.title }}</a></h4>
                                 <!-- Short description -->
                                 <div class="card-text">
                                     {{ child_page.specific.short_description|richtext }}
@@ -41,7 +41,7 @@
                                         {% for tag in child_page.specific.tags.all %}
                                             <li class="list-inline-item mr-1">
                                                 <div class="chip mr-0">
-                                                    <a href="{% slugurl 'tags' %}?tag={{ tag }}">{{ tag }}</a>
+                                                    <a href="{% slugurl 'tags' %}?tag={{ tag }}" style="color: rgba(0,0,0,0.6);;">{{ tag }}</a>
                                                 </div>
                                             </li>
                                         {% endfor %}
