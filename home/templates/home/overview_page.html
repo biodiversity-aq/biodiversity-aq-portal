@@ -16,9 +16,8 @@
         <div class="row row-cols-1 row-cols-md-3">
             {% for child_page in page.get_children %}
                 <div class="col mb-4">
-                    <a href="{{ child_page.url }}" class="link-card">
-                        <div class="card h-100 hoverable"> <!-- same height for each card, height 100% -->
-                    <!-- Card image -->
+                    <div class="card h-100 hoverable"> <!-- h-100: same height for each card, height 100% -->
+                        <!-- Card image -->
                         <div class="view overlay">
                             {% image child_page.specific.cover height-200 as cover_img %}
                             <img src="{{ cover_img.url }}" alt="{{ cover_img.alt }}" width="{{ cover_img.width }}"
@@ -29,7 +28,7 @@
                             <!-- Card title -->
                             <div>
                                 <!-- Title -->
-                                <h4 class="card-title mb-2">{{ child_page.specific.title }}</h4>
+                                <h4 class="card-title mb-2"><a href="{{ child_page.url }}">{{ child_page.specific.title }}</a></h4>
                                 <!-- Short description -->
                                 <div class="card-text">
                                     {{ child_page.specific.short_description|richtext }}
@@ -38,16 +37,19 @@
                             <!-- tags -->
                             <div>
                                 {% if child_page.specific.tags %}
-                                <ul class="list-unstyled list-inline justify-content-between mb-0">
-                                {% for tag in child_page.specific.tags.all %}
-                                    <li class="list-inline-item mr-1"><div class="chip mr-0">{{ tag }}</div></li>
-                                {% endfor %}
-                                </ul>
-                            {% endif %}
+                                    <ul class="list-unstyled list-inline justify-content-between mb-0">
+                                        {% for tag in child_page.specific.tags.all %}
+                                            <li class="list-inline-item mr-1">
+                                                <div class="chip mr-0">
+                                                    <a href="{% slugurl 'tags' %}?tag={{ tag }}">{{ tag }}</a>
+                                                </div>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
-                    </a>
                 </div>
             {% endfor %}
         </div>
