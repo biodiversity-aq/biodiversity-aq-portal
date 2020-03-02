@@ -6,6 +6,23 @@
     background: #0099CC;
     border-color: transparent;
 }
+/* highlight menu item when hover */
+.dropdown-item:focus, .dropdown-item:hover {
+    box-shadow: 0 5px 11px 0 rgba(0,0,0,0.18),0 4px 15px 0 rgba(0,0,0,0.15);
+    color: #fff !important;
+    background-color: #0099CC !important;
+}
+
+/* remove extra spaces in menu dropdown */
+a.waves-effect, a.waves-light {
+    display: block;
+}
+
+.dropdown-menu {
+    padding: 0;
+}
+
+
 
 /*FOOTER*/
 /* hide footer when screen width is max 800px otherwise position:fixed-bottom will block the whole screen */

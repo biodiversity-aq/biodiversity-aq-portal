@@ -44,10 +44,10 @@
 
 <body class="{% block body_class %}{% endblock %}">
     {% wagtailuserbar %}
-    {% main_menu template="menus/main/menu.html" %}
+    {% main_menu max_levels=3 template="menus/main/level_1.html" %}
 
     {% block inner_header %}{% endblock %}
-    <main style="padding: 50px 0px;">
+    <main style="padding: 50px 0;">
     {% block content %}{% endblock %}
     </main>
     {% block inner_footer %}{% endblock %}
