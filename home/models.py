@@ -29,7 +29,7 @@ class BaseMenuPage(MenuPage):
     """
     cover = models.ForeignKey('home.CustomImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
     short_description = RichTextField(
-        blank=True, null=True, features=['bold', 'italic', 'link', 'superscript', 'subscript'],
+        blank=True, null=True, features=['bold', 'italic', 'underline', 'link', 'superscript', 'subscript'],
         help_text='A one line description of the page that will appear in overview page.')
 
     class Meta:
@@ -37,7 +37,6 @@ class BaseMenuPage(MenuPage):
 
 
 class OverviewPage(BaseMenuPage):
-    subtitle = RichTextField(features=['bold', 'italic', 'underline', 'link', 'superscript', 'subscript'], blank=True)
     body = StreamField([
         ('insert_html', blocks.RawHTMLBlock(required=False, help_text='This is a standard HTML block. Anything written in HTML here will be rendered in a DIV element')),
         ('paragraph', blocks.RichTextBlock()),
@@ -45,7 +44,7 @@ class OverviewPage(BaseMenuPage):
         ], blank=True)
 
     content_panels = Page.content_panels + [                
-        FieldPanel('subtitle'),
+        FieldPanel('short_description'),
         StreamFieldPanel('body'),
     ]
 
@@ -143,6 +142,8 @@ class RedirectDummyPage(BaseMenuPage):
     redirect_to = models.URLField(blank=True, null=True)
 
     content_panels = Page.content_panels + [
+        FieldPanel('short_description'),
+        ImageChooserPanel('cover'),
         FieldPanel('redirect_to'),
         ]
 
@@ -227,5 +228,19 @@ class CustomRendition(AbstractRendition):
         unique_together = (
             ('image', 'filter_spec', 'focal_point_key'),
         )
+
+
+# class LandingPage(OverviewPage):
+#     logo = models.ForeignKey('home.CustomImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
+#
+#     content_panels = Page.content_panels + [
+#         FieldPanel('short_description'),
+#         ImageChooserPanel('cover'),
+#         ImageChooserPanel('logo'),
+#         StreamFieldPanel('body'),
+#     ]
+#
+#
+
 
 
