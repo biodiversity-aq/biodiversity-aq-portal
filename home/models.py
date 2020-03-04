@@ -213,7 +213,9 @@ class CustomRendition(AbstractRendition):
 
 
 class LinkButtonOrderable(Orderable):
-    """This allows us to select one or more link buttons from Snippets."""
+    """
+    This allows us to select one or more link buttons from Snippets.
+    """
 
     page = ParentalKey('wagtailcore.Page', related_name="link_buttons")
     button = models.ForeignKey(
@@ -228,6 +230,9 @@ class LinkButtonOrderable(Orderable):
 
 @register_snippet
 class LinkedButton(models.Model):
+    """
+    Button that refers to a linked_page
+    """
     linked_page = models.ForeignKey(
         'wagtailcore.Page',
         null=True,
