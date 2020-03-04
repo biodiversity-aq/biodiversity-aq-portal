@@ -46,14 +46,12 @@
     {% wagtailuserbar %}
     {% main_menu max_levels=3 template="menus/main/level_1.html" %}
 
-    {% block inner_header %}{% endblock %}
-    <main style="padding: 50px 0;">
     {% block content %}{% endblock %}
-    </main>
+
     {% block inner_footer %}{% endblock %}
 
 
-    {% include "footer.html" %}
+{#    {% include "footer.html" %}#}
     {# Global javascript #}
     <script type="text/javascript" src="{% static 'js/polarrr.js' %}"></script>
     <!-- JQuery -->

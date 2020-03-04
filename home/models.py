@@ -2,6 +2,7 @@ from django.db import models
 from django.http import Http404
 from django.shortcuts import redirect, render
 
+from wagtail.admin.edit_handlers import PageChooserPanel, MultiFieldPanel, InlinePanel
 from wagtail.core.models import Page, Orderable
 from wagtail.core import blocks
 from wagtail.core.fields import StreamField, RichTextField
@@ -12,6 +13,7 @@ from wagtail.images.models import Image, AbstractImage, AbstractRendition
 from wagtailmenus.models import MenuPage
 from wagtailmenus.panels import menupage_panel
 from wagtail.snippets.models import register_snippet
+from wagtail.snippets.edit_handlers import SnippetChooserPanel
 
 from modelcluster.fields import ParentalKey
 from modelcluster.models import ClusterableModel
@@ -38,12 +40,13 @@ class BaseMenuPage(MenuPage):
 
 class OverviewPage(BaseMenuPage):
     body = StreamField([
-        ('insert_html', blocks.RawHTMLBlock(required=False, help_text='This is a standard HTML block. Anything written in HTML here will be rendered in a DIV element')),
+        ('insert_html', blocks.RawHTMLBlock(required=False,
+                                            help_text='This is a standard HTML block. Anything written in HTML here will be rendered in a DIV element')),
         ('paragraph', blocks.RichTextBlock()),
-        ('image', ImageChooserBlock())        
-        ], blank=True)
+        ('image', ImageChooserBlock())
+    ], blank=True)
 
-    content_panels = Page.content_panels + [                
+    content_panels = Page.content_panels + [
         FieldPanel('short_description'),
         StreamFieldPanel('body'),
     ]
@@ -63,7 +66,8 @@ class PageTag(TaggedItemBase):
 class DetailPage(BaseMenuPage):
     body = StreamField([
         ('insert_html', blocks.RawHTMLBlock(
-            required=False, help_text='This is a standard HTML block. Anything written in HTML here will be rendered in a DIV element')),
+            required=False,
+            help_text='This is a standard HTML block. Anything written in HTML here will be rendered in a DIV element')),
         ('paragraph', blocks.RichTextBlock(required=False)),
         ('image', ImageChooserBlock(required=False))
     ], blank=True)
@@ -80,9 +84,11 @@ class DetailPage(BaseMenuPage):
     ]
 
     settings_panels = [menupage_panel]
-    # parent_page_types
-    # subpage_types
+
     template = 'home/detail_page.html'
+
+    class Meta:
+        ordering = ['-last_published_at']
 
 
 class DetailIndexPage(Page):
@@ -108,30 +114,6 @@ class DetailIndexPage(Page):
             raise Http404
 
 
-class CardTag(TaggedItemBase):
-    content_object = ParentalKey('home.Card', on_delete=models.CASCADE, related_name='tagged_items')
-
-
-@register_snippet
-class Card(ClusterableModel):
-    html = StreamField([
-        ('insert_html', blocks.RawHTMLBlock(
-            required=False, help_text='This is a standard HTML block. Anything written in HTML here will be rendered in a DIV element'))], blank=True)
-    title = models.CharField(null=True, blank=True, max_length=100)
-    description = models.TextField(null=True, blank=True)
-    tags = TaggableManager(through=CardTag, blank=True)
-
-    panels = [
-        StreamFieldPanel('html'),
-        FieldPanel('title'),
-        FieldPanel('description'),
-        FieldPanel('tags'),
-    ]
-
-    def __str__(self):
-        return self.title
-
-
 class RedirectDummyPage(BaseMenuPage):
     """
     A dummy page that can be added to wagtailmenus, but its sole purpose is to redirect to a page specified in the
@@ -145,7 +127,7 @@ class RedirectDummyPage(BaseMenuPage):
         FieldPanel('short_description'),
         ImageChooserPanel('cover'),
         FieldPanel('redirect_to'),
-        ]
+    ]
 
     settings_panels = [menupage_panel]
 
@@ -174,7 +156,7 @@ class CustomImage(AbstractImage):
         (CC_BY_NC_SA, 'CC BY-NC-SA 4.0'),
         (CC_BY_NC_ND, 'CC BY-NC-ND 4.0'),
         (CC0, 'CC0 1.0')
-        ]
+    ]
     # should not use "title" for this field because it will cause compatibility issue
     caption = RichTextField(
         features=['bold', 'italic', 'underline', 'link', 'superscript', 'subscript'], blank=True, null=True,
@@ -230,17 +212,79 @@ class CustomRendition(AbstractRendition):
         )
 
 
-# class LandingPage(OverviewPage):
-#     logo = models.ForeignKey('home.CustomImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
-#
-#     content_panels = Page.content_panels + [
-#         FieldPanel('short_description'),
-#         ImageChooserPanel('cover'),
-#         ImageChooserPanel('logo'),
-#         StreamFieldPanel('body'),
-#     ]
-#
-#
+class LinkButtonOrderable(Orderable):
+    """This allows us to select one or more link buttons from Snippets."""
+
+    page = ParentalKey('wagtailcore.Page', related_name="link_buttons")
+    button = models.ForeignKey(
+        "home.LinkedButton",
+        on_delete=models.CASCADE,
+    )
+
+    panels = [
+        SnippetChooserPanel('button'),
+    ]
 
 
+@register_snippet
+class LinkedButton(models.Model):
+    linked_page = models.ForeignKey(
+        'wagtailcore.Page',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='linked_button',
+        help_text='The page which this button directs the users to.'
+    )
+    text = models.CharField(max_length=100, help_text='The text to be displayed on the button.')
+    icon = models.CharField(
+        max_length=100, null=True, blank=True,
+        help_text="The html code of the icon to be displayed on the button, e.g. '<i class=\"fab fa-mdb\"></i>', "
+                  "Fontawesome icons available: https://bit.ly/2wYnKyD")
+    color = models.CharField(
+        max_length=100, null=True, blank=True,
+        help_text="Button class e.g.'btn btn-primary'. Button classes available (free version only): "
+                  "https://bit.ly/3ctJtir")
 
+    panels = [
+        PageChooserPanel('linked_page'),
+        FieldPanel('text'),
+        FieldPanel('icon'),
+        FieldPanel('color'),
+    ]
+
+    def __str__(self):
+        return '{}, {}'.format(self.linked_page, self.color)
+
+    class Meta:
+        # check if the button is already exist
+        unique_together = (
+            ('linked_page', 'text', 'color')
+        )
+
+
+class AppLandingPage(OverviewPage):
+    """
+    Landing page for app
+    """
+    logo = models.ForeignKey('home.CustomImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
+
+    template = "home/app_landing_page.html"
+
+    content_panels = Page.content_panels + [
+        MultiFieldPanel(
+            [
+                FieldPanel('short_description'),
+                ImageChooserPanel('cover'),
+                ImageChooserPanel('logo')
+            ],
+            heading='Page banner'
+        ),
+        MultiFieldPanel(
+            [
+                InlinePanel('link_buttons', label='Buttons', min_num=0, max_num=4,
+                            help_text='Buttons that link to other pages')
+            ]
+        ),
+        StreamFieldPanel('body'),
+    ]
