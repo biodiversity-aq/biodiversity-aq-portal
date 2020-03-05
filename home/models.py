@@ -19,11 +19,11 @@ from modelcluster.fields import ParentalKey
 from modelcluster.models import ClusterableModel
 from modelcluster.contrib.taggit import ClusterTaggableManager
 from taggit.models import TaggedItemBase
-from taggit.managers import TaggableManager
 
 
 class BaseMenuPage(MenuPage):
     """
+    A base menu page for all pages in this app.
     Subclass MenuPage because the important page will just becomes toggles in multi-level menus
     https://wagtailmenus.readthedocs.io/en/stable/overview.html#solves-the-problem-of-important-page-links-becoming-just-toggles-in-multi-level-menus
 
@@ -33,26 +33,34 @@ class BaseMenuPage(MenuPage):
     short_description = RichTextField(
         blank=True, null=True, features=['bold', 'italic', 'underline', 'link', 'superscript', 'subscript'],
         help_text='A one line description of the page that will appear in overview page.')
+    body = StreamField([
+        ('insert_html', blocks.RawHTMLBlock(
+            required=False,
+            help_text='This is a standard HTML block. Anything written in HTML here will be rendered in a DIV element')),
+        ('paragraph', blocks.RichTextBlock(required=False)),
+        ('image', ImageChooserBlock(required=False))
+    ], blank=True)
+    show_in_footer = models.BooleanField(
+        default=False, blank=False, null=False,
+        help_text='If set to true, a link of this page will appear in the footer')
+
+    content_panels = Page.content_panels + [
+        ImageChooserPanel('cover'),
+        FieldPanel('short_description'),
+        StreamFieldPanel('body'),
+        FieldPanel('show_in_footer'),
+    ]
+
+    settings_panels = [menupage_panel]
 
     class Meta:
         abstract = True
 
 
 class OverviewPage(BaseMenuPage):
-    body = StreamField([
-        ('insert_html', blocks.RawHTMLBlock(required=False,
-                                            help_text='This is a standard HTML block. Anything written in HTML here will be rendered in a DIV element')),
-        ('paragraph', blocks.RichTextBlock()),
-        ('image', ImageChooserBlock())
-    ], blank=True)
-
-    content_panels = Page.content_panels + [
-        FieldPanel('short_description'),
-        StreamFieldPanel('body'),
-    ]
-
-    settings_panels = [menupage_panel]
-
+    """
+    An overview page which list all the children pages
+    """
     template = 'home/overview_page.html'
 
 
@@ -64,26 +72,12 @@ class PageTag(TaggedItemBase):
 
 
 class DetailPage(BaseMenuPage):
-    body = StreamField([
-        ('insert_html', blocks.RawHTMLBlock(
-            required=False,
-            help_text='This is a standard HTML block. Anything written in HTML here will be rendered in a DIV element')),
-        ('paragraph', blocks.RichTextBlock(required=False)),
-        ('image', ImageChooserBlock(required=False))
-    ], blank=True)
-    tags = ClusterTaggableManager(through=PageTag, blank=True)
 
-    content_panels = Page.content_panels + [
-        FieldPanel('short_description'),
-        ImageChooserPanel('cover'),
-        StreamFieldPanel('body'),
-    ]
+    tags = ClusterTaggableManager(through=PageTag, blank=True)
 
     promote_panels = Page.promote_panels + [
         FieldPanel('tags'),
     ]
-
-    settings_panels = [menupage_panel]
 
     template = 'home/detail_page.html'
 
@@ -123,13 +117,9 @@ class RedirectDummyPage(BaseMenuPage):
     """
     redirect_to = models.URLField(blank=True, null=True)
 
-    content_panels = Page.content_panels + [
-        FieldPanel('short_description'),
-        ImageChooserPanel('cover'),
+    content_panels = BaseMenuPage.content_panels + [
         FieldPanel('redirect_to'),
     ]
-
-    settings_panels = [menupage_panel]
 
     def serve(self, request, **kwargs):
         # redirect the page to url specified in redirect_to
@@ -244,11 +234,11 @@ class LinkedButton(models.Model):
     text = models.CharField(max_length=100, help_text='The text to be displayed on the button.')
     icon = models.CharField(
         max_length=100, null=True, blank=True,
-        help_text="The html code of the icon to be displayed on the button, e.g. '<i class=\"fab fa-mdb\"></i>', "
+        help_text="The html code of the icon to be displayed on the button, e.g. 'fas fa-arrow-left', "
                   "Fontawesome icons available: https://bit.ly/2wYnKyD")
     color = models.CharField(
         max_length=100, null=True, blank=True,
-        help_text="Button class e.g.'btn btn-primary'. Button classes available (free version only): "
+        help_text="Button class e.g. 'btn-primary'. Button classes available (free version only): "
                   "https://bit.ly/3ctJtir")
 
     panels = [
@@ -273,23 +263,13 @@ class AppLandingPage(OverviewPage):
     Landing page for app
     """
     logo = models.ForeignKey('home.CustomImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
-
     template = "home/app_landing_page.html"
-
-    content_panels = Page.content_panels + [
-        MultiFieldPanel(
-            [
-                FieldPanel('short_description'),
-                ImageChooserPanel('cover'),
-                ImageChooserPanel('logo')
-            ],
-            heading='Page banner'
-        ),
+    content_panels = OverviewPage.content_panels + [
+        ImageChooserPanel('logo'),
         MultiFieldPanel(
             [
                 InlinePanel('link_buttons', label='Buttons', min_num=0, max_num=4,
                             help_text='Buttons that link to other pages')
             ]
         ),
-        StreamFieldPanel('body'),
     ]
