@@ -32,7 +32,7 @@ class BaseMenuPage(MenuPage):
     cover = models.ForeignKey('home.CustomImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
     short_description = RichTextField(
         blank=True, null=True, features=['bold', 'italic', 'underline', 'link', 'superscript', 'subscript'],
-        help_text='A one line description of the page that will appear in overview page.')
+        help_text='A one line description of the page to help user discover this page.')
     body = StreamField([
         ('insert_html', blocks.RawHTMLBlock(
             required=False,
@@ -40,15 +40,13 @@ class BaseMenuPage(MenuPage):
         ('paragraph', blocks.RichTextBlock(required=False)),
         ('image', ImageChooserBlock(required=False))
     ], blank=True)
-    show_in_footer = models.BooleanField(
-        default=False, blank=False, null=False,
-        help_text='If set to true, a link of this page will appear in the footer')
 
     content_panels = Page.content_panels + [
-        ImageChooserPanel('cover'),
-        FieldPanel('short_description'),
+        MultiFieldPanel([
+            ImageChooserPanel('cover'),
+            FieldPanel('short_description'),
+        ]),
         StreamFieldPanel('body'),
-        FieldPanel('show_in_footer'),
     ]
 
     settings_panels = [menupage_panel]
@@ -59,7 +57,7 @@ class BaseMenuPage(MenuPage):
 
 class OverviewPage(BaseMenuPage):
     """
-    An overview page which list all the children pages
+    An overview page which list all its children pages
     """
     template = 'home/overview_page.html'
 
@@ -72,7 +70,9 @@ class PageTag(TaggedItemBase):
 
 
 class DetailPage(BaseMenuPage):
-
+    """
+    Page for details
+    """
     tags = ClusterTaggableManager(through=PageTag, blank=True)
 
     promote_panels = Page.promote_panels + [
