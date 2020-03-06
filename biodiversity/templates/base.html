@@ -1,22 +1,22 @@
-﻿{% load static wagtailuserbar leaflet_tags menu_tags %}
+﻿{% load static wagtailuserbar leaflet_tags menu_tags home_tags %}
 
 <!DOCTYPE html>
 <html class="no-js" lang="en">
 <head>
-    <meta charset="utf-8" />
+    <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>
         {% block title %}
-        {% if self.seo_title %}{{ self.seo_title }}{% else %}{{ self.title }}{% endif %}
+            {% if self.seo_title %}{{ self.seo_title }}{% else %}{{ self.title }}{% endif %}
         {% endblock %}
         {% block title_suffix %}
-        {% with self.get_site.site_name as site_name %}
-        {% if site_name %}- {{ site_name }}{% endif %}
-        {% endwith %}
+            {% with self.get_site.site_name as site_name %}
+                {% if site_name %}- {{ site_name }}{% endif %}
+            {% endwith %}
         {% endblock %}
     </title>
-    <meta name="description" content="" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content=""/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
     {# Global stylesheets #}
     {% leaflet_css %}
@@ -27,13 +27,14 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
     <!-- Material Design Bootstrap -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.8.11/css/mdb.min.css" rel="stylesheet">
-    <link href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/css/bootstrap-select.min.css">
+    <link href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css" rel="stylesheet"/>
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/css/bootstrap-select.min.css">
     <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/custom.css' %}">
 
     {% block extra_css %}
-    {# Override this in templates to add extra stylesheets #}
+        {# Override this in templates to add extra stylesheets #}
     {% endblock %}
 
 
@@ -43,38 +44,58 @@
 </head>
 
 <body class="{% block body_class %}{% endblock %}">
-    {% wagtailuserbar %}
-    {% main_menu max_levels=3 template="menus/main/level_1.html" %}
+{% wagtailuserbar %}
+{% main_menu max_levels=3 template="menus/main/level_1.html" %}
 
+{# banner needs to be above flex-wrapper otherwise it won't be displayed #}
+{% block banner %}{% endblock %}
+
+{# flex-wrapper is needed to push the footer to the bottom of the page if the content of viewport is <100% height #}
+{# fixed-bottom is not applied on footer because it blocks the content of when scrolls down. Having both #}
+{# fixed-top navbar and fixed-bottom footer is taking too much space on the screen #}
+<div class="flex-wrapper">
     {% block content %}{% endblock %}
-
-    {% block inner_footer %}{% endblock %}
-
-
-{#    {% include "footer.html" %}#}
-    {# Global javascript #}
-    <script type="text/javascript" src="{% static 'js/polarrr.js' %}"></script>
-    <!-- JQuery -->
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <!-- Bootstrap tooltips -->
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.4/umd/popper.min.js"></script>
-    <!-- Bootstrap core JavaScript -->
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
-    <!-- MDB core JavaScript -->
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.8.11/js/mdb.min.js"></script>
-
-    <script type="text/javascript" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+    {% footer %}
+</div>
 
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/js/bootstrap-select.min.js"></script>
-    <!--<link rel="stylesheet" type="text/css" href="//wpcc.io/lib/1.0.2/cookieconsent.min.css" />
-        <script src="//wpcc.io/lib/1.0.2/cookieconsent.min.js"></script>
-        <script>window.addEventListener("load", function () { window.wpcc.init({ "border": "normal", "colors": { "popup": { "background": "#222222", "text": "#ffffff", "border": "#b4eae4" }, "button": { "background": "#b4eae4", "text": "#000000" } }, "position": "top", "pushdown": true, "fontsize": "large", "content": { "href": "#", "message": "POLAAAR uses cookies to ensure that you have the best user experience! By clicking accept, you agree to the terms of the privacy policy", "link": "#", "button": "Accept" } }) });</script>
-    -->
-    <script type="text/javascript">var bannerLink = '<a href="/policy/">Learn more </a>'</script>
-    <script type="text/javascript" src="{% static 'js/cookie-consent.js' %}"></script>
-    {% block extra_js %}
+{# Global javascript #}
+<script type="text/javascript" src="{% static 'js/polarrr.js' %}"></script>
+<!-- JQuery -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<!-- Bootstrap tooltips -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.4/umd/popper.min.js"></script>
+<!-- Bootstrap core JavaScript -->
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<!-- MDB core JavaScript -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.8.11/js/mdb.min.js"></script>
 
-    {% endblock %}
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/js/bootstrap-select.min.js"></script>
+<link rel="stylesheet" type="text/css" href="//wpcc.io/lib/1.0.2/cookieconsent.min.css"/>
+<script src="//wpcc.io/lib/1.0.2/cookieconsent.min.js"></script>
+<script>window.addEventListener("load", function () {
+    window.wpcc.init({"border": "normal",
+        "colors": {
+            "popup": {"background": "#222222", "text": "#ffffff", "border": "#b4eae4"},
+            "button": {"background": "#b4eae4", "text": "#000000"}
+        },
+        "position": "bottom",
+        "pushdown": false,
+        "fontsize": "large",
+        "content": {
+            "href": "#",
+            "message": "This website uses cookies to ensure that you have the best user experience! By clicking accept, you agree to the terms of the privacy policy",
+            "link": "#",
+            "button": "Accept"
+        }
+    })
+});</script>
+{% block extra_js %}
+
+{% endblock %}
 </body>
 </html>

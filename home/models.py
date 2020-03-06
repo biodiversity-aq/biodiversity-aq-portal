@@ -202,11 +202,30 @@ class CustomRendition(AbstractRendition):
         )
 
 
+class AppLandingPage(OverviewPage):
+    """
+    Landing page for app
+    """
+    logo = models.ForeignKey('home.CustomImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
+    template = "home/app_landing_page.html"
+    content_panels = OverviewPage.content_panels + [
+        ImageChooserPanel('logo'),
+        MultiFieldPanel(
+            [
+                InlinePanel('link_buttons', label='Buttons', min_num=0, max_num=4,
+                            help_text='Buttons that link to other pages')
+            ]
+        ),
+    ]
+
+
+# ---------
+# Snippets
+# ---------
 class LinkButtonOrderable(Orderable):
     """
     This allows us to select one or more link buttons from Snippets.
     """
-
     page = ParentalKey('wagtailcore.Page', related_name="link_buttons")
     button = models.ForeignKey(
         "home.LinkedButton",
@@ -258,18 +277,28 @@ class LinkedButton(models.Model):
         )
 
 
-class AppLandingPage(OverviewPage):
-    """
-    Landing page for app
-    """
-    logo = models.ForeignKey('home.CustomImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
-    template = "home/app_landing_page.html"
-    content_panels = OverviewPage.content_panels + [
-        ImageChooserPanel('logo'),
-        MultiFieldPanel(
-            [
-                InlinePanel('link_buttons', label='Buttons', min_num=0, max_num=4,
-                            help_text='Buttons that link to other pages')
-            ]
-        ),
+@register_snippet
+class Footer(models.Model):
+    footer_page = StreamField([
+        ('footer_pages', blocks.PageChooserBlock(required=False, help_text='Select page to render in footer')),
+    ], blank=True, null=True)
+    logo = StreamField([
+        ('logos', blocks.StructBlock([
+            ('logo_image', ImageChooserBlock(required=False, help_text='Select a logo.')),
+            ('logo_url', blocks.URLBlock(required=False, help_text='Set a url which the logo refers to.')),
+        ])),
+    ], blank=True, null=True)
+    text = StreamField([
+        ('text', blocks.RichTextBlock(
+            required=False, features=['bold', 'italic', 'underline', 'link', 'superscript', 'subscript'],
+            help_text='A short line of text to be displayed at the bottom of footer.'
+        ))
+    ], blank=True, null=True)
+
+    panels = [
+        StreamFieldPanel('footer_page'),
+        StreamFieldPanel('logo'),
+        StreamFieldPanel('text'),
     ]
+
+
