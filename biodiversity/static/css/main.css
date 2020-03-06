@@ -1,3 +1,15 @@
+body {
+    padding-top: 80px;  /* to prevent fixed-top header blocking the content */
+    margin-bottom: 0;  /* required to override body margin in styles.all.min.css - stick footer to the bottom */
+}
+
+.flex-wrapper {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
 /*HEADER*/
 /* remove margin at the bottom of header */
 .navbar {
@@ -6,6 +18,16 @@
     background: #0099CC;
     border-color: transparent;
 }
+
+.navbar.scrolling-navbar.top-nav-collapse, .navbar.scrolling-navbar {
+    padding: 0 20px;
+}
+
+.navbar .dropdown-menu a {
+    padding-top: 8px;
+    padding-bottom: 8px;
+}
+
 /* highlight menu item when hover */
 .dropdown-item:focus, .dropdown-item:hover {
     box-shadow: 0 5px 11px 0 rgba(0,0,0,0.18),0 4px 15px 0 rgba(0,0,0,0.15);
@@ -23,7 +45,6 @@ a.waves-effect, a.waves-light {
 }
 
 
-
 /*FOOTER*/
 /* hide footer when screen width is max 800px otherwise position:fixed-bottom will block the whole screen */
 @media screen and (max-width: 768px) {
@@ -38,12 +59,6 @@ a.waves-effect, a.waves-light {
     display: inline-block;
     padding: 5px 20px; /* add space between logos */
 }
-
-/*stick footer to the bottom */
-body {
-    margin-bottom: 0;  /* required to override body margin in styles.all.min.css */
-}
-
 
 .fadeinclass {
     margin-top: 25px;
@@ -213,4 +228,9 @@ body {
 /* ul without bullet */
 .ul-no-bullet {
     list-style-type: none;
+}
+
+/*override top border in styles.all.min.css*/
+.row, .row:last-child{
+    border: none;
 }
