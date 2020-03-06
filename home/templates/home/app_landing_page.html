@@ -1,0 +1,135 @@
+{% extends "home/base.html" %}
+{% load static menu_tags wagtailcore_tags wagtailimages_tags %}
+
+{% block extra_css %}
+    <style>
+        body {
+            padding-top: 0;
+        }
+
+        @media (min-width: 800px) and (max-width: 850px) {
+            .navbar:not(.top-nav-collapse) {
+                background: #0099CC !important;
+            }
+        }
+
+        .view, body, html {
+            height: 80%
+        }
+
+        .navbar {
+            background-color: rgba(0, 0, 0, .2)
+        }
+
+        .top-nav-collapse {
+            background-color: #0099CC;
+        }
+
+    </style>
+{% endblock %}
+
+{% block banner %}
+    {% image page.cover original as cover_img %}
+    <div class="view"
+         style="background-image: url('{{ cover_img.url }}'); background-repeat: no-repeat; background-size: cover;">
+
+        <!-- Mask & flexbox options-->
+        <div class="mask rgba-black-light d-flex flex-column justify-content-center align-items-center">
+            <!-- Content -->
+            <div class="text-center white-text flex-column mt-auto">
+                {% image page.logo height-100 as app_logo %}
+                <img src="{{ app_logo.url }}" alt="{{ app_logo.alt }}" class="center"/>
+                <div class="my-4 d-none d-md-block">
+                    <strong>{{ page.short_description|richtext }}</strong>
+                </div>
+                <!-- buttons -->
+                <div class="btn-group" role="group">
+                    {% for iter in page.link_buttons.all %}
+                        <a role="button" href="{{ iter.button.linked_page.url }}"
+                           class="btn {{ iter.button.color }} mx-2 waves-effect" style="border-radius: 30px;">{{ iter.button.text }}
+                            <i class="{{ iter.button.icon }}"></i>
+                        </a>
+                    {% endfor %}
+                </div><!--buttons -->
+
+            </div><!-- text-center -->
+            <div class="white-text align-items-end flex-column mt-auto ml-auto">
+                {{ page.cover.get_image_credit|richtext }}
+            </div>
+        </div><!-- Content -->
+
+    </div><!-- Mask & flexbox options-->
+{% endblock %}
+
+{% block content %}
+    <!--Main layout-->
+    <main>
+        <!-- Rich text page body -->
+        <section class="container mt-4">
+            {{ page.body }}
+            <hr>
+        </section>
+        <!-- /.Rich text page body -->
+        <!-- Most recent pages -->
+        <section class="container">
+            <div class="row row-cols-1 row-cols-md-3">
+                {% for child_page in page.get_children %}
+                    <div class="col mb-4">
+                        <div class="card h-100 hoverable"> <!-- h-100: same height for each card, height 100% -->
+                            <!-- Card image -->
+                            <div class="view overlay">
+                                <a href="{{ child_page.url }}">
+                                    {% image child_page.specific.cover height-200 as child_cover_img %}
+                                    <img src="{{ child_cover_img.url }}" alt="{{ child_cover_img.alt }}"
+                                         width="{{ child_cover_img.width }}"
+                                         height="{{ child_cover_img.height }}" class="center"/>
+                                </a>
+                                <div class="mask rgba-white-slight"></div>
+                            </div>
+                            <div class="card-body">
+                                <!-- Card title -->
+                                <div>
+                                    <!-- Title -->
+                                    <h4 class="card-title mb-2">
+                                        <a href="{{ child_page.url }}" style="color: inherit;">
+                                            {{ child_page.specific.title }}
+                                        </a>
+                                    </h4>
+                                    <!-- Short description -->
+                                    <div class="card-text">
+                                        {{ child_page.specific.short_description|richtext }}
+                                    </div>
+                                </div>
+                                <!-- tags -->
+                                <div>
+                                    {% if child_page.specific.tags %}
+                                        <ul class="list-unstyled list-inline justify-content-between mb-0">
+                                            {% for tag in child_page.specific.tags.all %}
+                                                <li class="list-inline-item mr-1">
+                                                    <div class="chip mr-0">
+                                                        <a href="{% slugurl 'tags' %}?tag={{ tag }}"
+                                                           style="color: rgba(0,0,0,0.6);;">{{ tag }}</a>
+                                                    </div>
+                                                </li>
+                                            {% endfor %}
+                                        </ul>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </section>
+        <!-- /.Most recent pages -->
+    </main>
+    <!--Main layout-->
+
+{% endblock %}
+
+{% block extra_js %}
+{% endblock %}
+
+
+
+
