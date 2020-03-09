@@ -1,0 +1,22 @@
+{% extends "home/base.html" %}
+{% load static wagtailcore_tags wagtailimages_tags %}
+
+{% block title %}Resource search{% endblock %}
+
+{% block extra_css %}
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h1>Pages tagged with "<i>{{ tag }}</i>"</h1>
+        <hr>
+        <ul class="ul-no-bullet">
+            {% for detail_page in detail_pages %}
+            <li class="pt-4">
+                <h4><a href="{% pageurl detail_page %}">{{ detail_page.title }}</a></h4>
+            </li>
+            <li>{{ detail_page.short_description|richtext }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}

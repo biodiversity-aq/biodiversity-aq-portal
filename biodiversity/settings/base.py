@@ -259,6 +259,22 @@ MEDIA_URL = '/media/'
 
 WAGTAIL_SITE_NAME = "biodiversity"
 
+WAGTAILIMAGES_IMAGE_MODEL = 'home.CustomImage'
+
+WAGTAILADMIN_RICH_TEXT_EDITORS = {
+    'default': {
+        'WIDGET': 'wagtail.admin.rich_text.DraftailRichTextArea',
+        'OPTIONS': {
+            'features': ['h2', 'h3', 'h4', 'h5', 'h6', 'bold', 'italic', 'underline', 'mark', 'link', 'ol', 'ul',
+                         'document-link', 'image', 'embed', 'code', 'superscript', 'subscript', 'strikethrough',
+                         'bsblockquote'],
+        }
+    },
+    'legacy': {
+        'WIDGET': 'wagtail.admin.rich_text.HalloRichTextArea',
+    }
+}
+
 # Base URL to use when referring to full URLs within the Wagtail admin backend -
 # e.g. in notification emails. Don't include '/admin' or a trailing slash
 BASE_URL = 'http://example.com'

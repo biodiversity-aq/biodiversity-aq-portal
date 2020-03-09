@@ -6,7 +6,7 @@ from . import views
 
 app_name = "accounts"
 urlpatterns = [
-    path('authenticated/',views.authenticated,name='authenticated'),
+    path('authenticated/', views.authenticated,name='authenticated'),
     path('register/', views.register, name='register'),
 
     url(r'^activation/(?P<pk>[0-9]+)/(?P<token>[0-9A-Za-z_\-\.]+)/$',

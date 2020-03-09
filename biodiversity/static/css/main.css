@@ -1,3 +1,15 @@
+body {
+    padding-top: 80px;  /* to prevent fixed-top header blocking the content */
+    margin-bottom: 0;  /* required to override body margin in styles.all.min.css - stick footer to the bottom */
+}
+
+.flex-wrapper {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
 /*HEADER*/
 /* remove margin at the bottom of header */
 .navbar {
@@ -7,7 +19,39 @@
     border-color: transparent;
 }
 
+.navbar.scrolling-navbar.top-nav-collapse, .navbar.scrolling-navbar {
+    padding: 0 20px;
+}
+
+.navbar .dropdown-menu a {
+    padding-top: 8px;
+    padding-bottom: 8px;
+}
+
+/* highlight menu item when hover */
+.dropdown-item:focus, .dropdown-item:hover {
+    box-shadow: 0 5px 11px 0 rgba(0,0,0,0.18),0 4px 15px 0 rgba(0,0,0,0.15);
+    color: #fff !important;
+    background-color: #0099CC !important;
+}
+
+/* remove extra spaces in menu dropdown */
+a.waves-effect, a.waves-light {
+    display: block;
+}
+
+.dropdown-menu {
+    padding: 0;
+}
+
+
 /*FOOTER*/
+/* hide footer when screen width is max 800px otherwise position:fixed-bottom will block the whole screen */
+@media screen and (max-width: 768px) {
+  footer {
+    display: none;
+  }
+}
 /* global-footer logos */
 .partners-logo {
     width: auto;
@@ -15,8 +59,6 @@
     display: inline-block;
     padding: 5px 20px; /* add space between logos */
 }
-
-
 
 .fadeinclass {
     margin-top: 25px;
@@ -74,4 +116,121 @@
     box-shadow: 10px 10px 26px 1px rgba(0,0,0,0.75);
     font-size: 1em;
     opacity: 0.8;
+}
+
+/* to center an image */
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* not found in mdbootstrap, for tags */
+.chip {
+    display: inline-block;
+    height: 25px;
+    padding: 0 12px;
+    margin-right: 1rem;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 25px;
+    color: rgba(0,0,0,0.6);
+    cursor: pointer;
+    background-color: rgba(96, 125, 139, 0.2);
+    border-radius: 16px;
+}
+
+/* not found in mdbootstrap, for cards */
+.row-cols-1 > * {
+  -ms-flex: 0 0 100%;
+  flex: 0 0 100%;
+  max-width: 100%;
+}
+
+.row-cols-2 > * {
+  -ms-flex: 0 0 50%;
+  flex: 0 0 50%;
+  max-width: 50%;
+}
+
+.row-cols-3 > * {
+  -ms-flex: 0 0 33.333333%;
+  flex: 0 0 33.333333%;
+  max-width: 33.333333%;
+}
+
+.row-cols-4 > * {
+  -ms-flex: 0 0 25%;
+  flex: 0 0 25%;
+  max-width: 25%;
+}
+
+.row-cols-5 > * {
+  -ms-flex: 0 0 20%;
+  flex: 0 0 20%;
+  max-width: 20%;
+}
+
+.row-cols-6 > * {
+  -ms-flex: 0 0 16.666667%;
+  flex: 0 0 16.666667%;
+  max-width: 16.666667%;
+}
+
+@media (min-width: 768px) {
+    .row-cols-md-1 > * {
+        -ms-flex: 0 0 100%;
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+
+    .row-cols-md-2 > * {
+        -ms-flex: 0 0 50%;
+        flex: 0 0 50%;
+        max-width: 50%;
+    }
+
+    .row-cols-md-3 > * {
+        -ms-flex: 0 0 33.333333%;
+        flex: 0 0 33.333333%;
+        max-width: 33.333333%;
+    }
+
+    .row-cols-md-4 > * {
+        -ms-flex: 0 0 25%;
+        flex: 0 0 25%;
+        max-width: 25%;
+    }
+
+    .row-cols-md-5 > * {
+        -ms-flex: 0 0 20%;
+        flex: 0 0 20%;
+        max-width: 20%;
+    }
+
+    .row-cols-md-6 > * {
+        -ms-flex: 0 0 16.666667%;
+        flex: 0 0 16.666667%;
+        max-width: 16.666667%;
+    }
+}
+
+.jumbotron {
+    box-shadow: none;
+    padding: 0px;
+}
+
+.dropdown-item.active, .dropdown-item:active {
+    background-color: rgba(96, 125, 139, 0.2);
+}
+
+
+/* ul without bullet */
+.ul-no-bullet {
+    list-style-type: none;
+}
+
+/*override top border in styles.all.min.css*/
+.row, .row:last-child{
+    border: none;
 }
