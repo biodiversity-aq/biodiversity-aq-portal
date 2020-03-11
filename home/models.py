@@ -240,7 +240,7 @@ class LinkButtonOrderable(Orderable):
 @register_snippet
 class LinkedButton(models.Model):
     """
-    Button that refers to a linked_page
+    Button that refers to a linked_page or an external url.
     """
     linked_page = models.ForeignKey(
         'wagtailcore.Page',
@@ -250,25 +250,31 @@ class LinkedButton(models.Model):
         related_name='linked_button',
         help_text='The page which this button directs the users to.'
     )
+    external_url = models.URLField(
+        null=True, blank=True, help_text='A valid url if the button is to link to an external page not managed via '
+                                         'this CMS.')
     text = models.CharField(max_length=100, help_text='The text to be displayed on the button.')
     icon = models.CharField(
         max_length=100, null=True, blank=True,
         help_text="The html code of the icon to be displayed on the button, e.g. 'fas fa-arrow-left', "
                   "Fontawesome icons available: https://bit.ly/2wYnKyD")
     color = models.CharField(
-        max_length=100, null=True, blank=True,
+        max_length=100, null=True, blank=True, default='btn-outline-white',
         help_text="Button class e.g. 'btn-primary'. Button classes available (free version only): "
                   "https://bit.ly/3ctJtir")
 
     panels = [
-        PageChooserPanel('linked_page'),
+        MultiFieldPanel([
+            PageChooserPanel('linked_page'),
+            FieldPanel('external_url'),
+        ], heading='Link to'),
         FieldPanel('text'),
         FieldPanel('icon'),
         FieldPanel('color'),
     ]
 
     def __str__(self):
-        return '{}, {}'.format(self.linked_page, self.color)
+        return '{}, {}'.format(self.text, self.color)
 
     class Meta:
         # check if the button is already exist

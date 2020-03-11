@@ -45,7 +45,7 @@
                 <!-- buttons -->
                 <div class="btn-group" role="group">
                     {% for iter in page.link_buttons.all %}
-                        <a role="button" href="{{ iter.button.linked_page.url }}"
+                        <a role="button" href="{% if iter.button.linked_page.url %}{{ iter.button.linked_page.url }}{% else %}{{ iter.button.external_url }}{% endif %}"
                            class="btn {{ iter.button.color }} mx-2 waves-effect" style="border-radius: 30px;">{{ iter.button.text }}
                             <i class="{{ iter.button.icon }}"></i>
                         </a>
