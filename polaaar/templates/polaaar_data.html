@@ -33,14 +33,14 @@ POLA3R data
             <div class="row" style="border-width:0px;">
                 <div class="col-12">
                     <h2 style="text-align:center">What would you like to do?</h2>
-                    <a role="button" href="{% url 'polaaar:polaaar_submit_data' %}" class="btn btn-light-blue btn-lg" style="width:100%">
-                        Submit a dataset <i class="fas fa-cloud-upload-alt pl-1"></i>
-                    </a>
                     <a role="button" href="{% url 'polaaar:polaaar_search' %}" class="btn btn-light-blue btn-lg" style="width:100%">
                         Search the database <i class="fas fa-search pl-1"></i>
                     </a>
                     <a role="button" href="http://share.biodiversity.aq/MARS/Vision/mARSVision.pdf" class="btn btn-light-blue btn-lg" style="width:100%">
                         Read the vision paper <i class="fas fa-book-reader pl-1"></i>
+                    </a>
+                    <a role="button" href="{% url 'polaaar:polaaar_submit_data' %}" class="btn btn-light-blue btn-lg" style="width:100%">
+                        Submit a dataset <i class="fas fa-cloud-upload-alt pl-1"></i>
                     </a>
                     {% if user.is_authenticated %}
 
