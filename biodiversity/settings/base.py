@@ -90,10 +90,11 @@ INSTALLED_APPS = [
     'django_countries',
     'djconfig',
     'data',
-    'polaaar'
-
-       
+    'cloudinary',
+    'cloudinary_storage',
+    'polaaar'       
 ]
+
 
 MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -108,6 +109,7 @@ MIDDLEWARE = [
     'wagtail.core.middleware.SiteMiddleware',
     'wagtail.contrib.redirects.middleware.RedirectMiddleware',
 ]
+
 
 ROOT_URLCONF = 'biodiversity.urls'
 
@@ -259,6 +261,14 @@ FILE_UPLOAD_HANDLERS = [
  "django.core.files.uploadhandler.TemporaryFileUploadHandler"
 ]
 
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': 'hhcpob9rq',
+    'API_KEY': '449231933768455',
+    'API_SECRET': 'KEnRK1YkTCIHQ-vCUwe6JJil9gM',
+}
+
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
 
 # Wagtail settings
 
@@ -338,10 +348,8 @@ FORMS_EXTRA_FIELDS = (
 #### Django Leaflet settings
 
 LEAFLET_CONFIG = {
-    
     'DEFAULT_CENTER':(0,0),    
     'DEFAULT_ZOOM':1,    
-    
     }
 
 

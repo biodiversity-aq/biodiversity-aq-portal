@@ -495,8 +495,10 @@ class MailFile(models.Model):
 
 
 
-
-
+#####################################################################################################
+#class Amplicon(models.Model):
+#    AmpImg = models.ImageField()
+    
 
 
 #### RESTRICT DATA to USER and to USER selected other users
