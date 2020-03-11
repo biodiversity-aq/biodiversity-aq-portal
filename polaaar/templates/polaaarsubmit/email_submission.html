@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+{% load static leaflet_tags %}
+
+{% block title %}
+POLA3R
+{% endblock title %}
+
+
+{% block body_class %}{% endblock %}
+
+{% block extra_css %}
+{% leaflet_css %}
+
+<style>
+    body {
+        padding-top: 0;
+    }
+
+    @media (min-width: 800px) and (max-width: 850px) {
+        .navbar:not(.top-nav-collapse) {
+            background: #0099CC !important;
+        }
+    }
+
+    .view, body, html {
+        height: 80%
+    }
+
+    .navbar {
+        background-color: rgba(0, 0, 0, .2)
+    }
+
+    .top-nav-collapse {
+        background-color: #0099CC;
+    }
+</style>
+{% endblock extra_css %}
+
+{% block content %}
+<div class="container" style="padding-top:60px;">
+
+
+    {% if user.is_authenticated %}
+
+    <div class="row">
+        <div class="col-12 col-md-6">
+            <form method="POST" class="post-form form-horizontal" enctype="multipart/form-data">
+                {% csrf_token %}
+                <h3 style="margin-bottom: 20px;color:#a3b745 ">Submit data to POLA<sub>3</sub>R</h3>
+                <div class="form-group">
+                    {{ form.email.errors }}
+                    <label class="control-label col-md-12" for="{{ form.email.id_for_label }}">Your email</label>
+                    <div class="col-md-12">{{ form.email }}</div>
+                    <div class="clear"></div>
+                </div>
+                <div class="form-group">
+                    {{ form.subject.errors }}
+                    <label class="control-label col-12" for="{{ form.subject.id_for_label }}">Data set name</label>
+                    <div class="col-12">{{ form.subject }}</div>
+                    <div class="clear"></div>
+                </div>
+                <div class="form-group">
+                    {{ form.document.errors }}
+                    <label class="control-label col-12" for="{{ form.document.id_for_label }}">Select data sheet</label>
+                    <div class="col-12">{{ form.document }}</div>
+                    <div class="clear"></div>
+                </div>
+                <div class="form-group">
+                    {{ form.message.errors }}
+                    <label class="control-label col-12" for="{{ form.message.id_for_label }}">Additional information</label>
+                    <div class="col-12">{{ form.message}}</div>
+                    <div class="clear"></div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-2"></label>
+                    <div class="col-8"><input class="btn btn-green btn-lg" type="submit" name="submit" value="Submit data"></div>
+                    <div class="clear"></div>
+                </div>
+            </form>
+        </div>
+        <div class="col-12 col-md-6">
+            <h3 style="margin-bottom: 20px;color:#a3b745 ">POLA<sub>3</sub>R submission checklist</h3>
+            <h4>
+                <i class="far fa-check-square" style="color:green"></i> Have you downloaded the
+                <a href="{% static 'files/Template_SeqDataPolaaar_v1.xlsx' %}">data sheet</a>?
+            </h4>
+            <h4>
+                <i class="far fa-check-square" style="color:green"></i> Have you filled in the
+                dark orange cells in the data sheet as a minimum?
+            </h4>
+            <h4>
+                <i class="far fa-check-square" style="color:green"></i> Have you checked your data sheet
+                to make sure no sensitive or confidential information has been accidentally included?
+            </h4>
+            <h4>
+                <i class="far fa-check-square" style="color:green"></i> Have you made a record for your dataset
+                in the <a href="https://ipt.biodiversity.aq">IPT</a>?
+            </h4>
+            <h4>
+                <i class="far fa-check-square" style="color:green"></i> Have you stored a local version of your data sheet
+                somewhere you can easily find it again?
+            </h4>
+            <h4>
+                <i class="far fa-check-square" style="color:green"></i> Make sure to include your correct e-mail address
+                so we can make sure to get a hold of you with questions.
+            </h4>
+            <h4>
+                <i class="far fa-check-square" style="color:green"></i> If submitting a dataset you're unsure about, please
+                give us as much information in the "additional information" section as possible.
+            </h4>
+
+
+
+        </div>
+    </div>
+
+    {% else %}
+    <div class="row">
+        <div class="col-12">
+            <h3 style="text-align:center;margin-bottom: 20px;color:#a3b745 ">Sorry you must be signed in to POLA<sub>3</sub>R to submit</h3>
+        </div>
+    </div>
+
+    {% endif %}
+
+</div>
+{% block extra_js %}
+
+
+
+
+
+{% endblock extra_js %}
+
+
+
+{% endblock content %}
+
+

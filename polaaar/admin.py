@@ -43,24 +43,25 @@ class TaxaAdmin(ModelAdmin):
 
 
 ##############################################################################################################################
-#### Biome admin chunk
-class BiomeAdmin(ModelAdmin):
-    model=Biome
-    menu_label = 'Biomes'
-    menu_icon = 'snippet'
+#### Geog admin chunk
+
+class GeogAdmin(ModelAdmin):
+    model=Geog_Location
+    menu_label = 'Geographic locations'
+    menu_icon = 'globe'#'snippet'
     menu_order = 600
     add_to_settings_menu = False
     exclude_from_explorer = False
-    list_display = ('name','biome_level','Biome_parent')
-    search_fields = ('biome_level','name',
-                     'parent_biome__parent_biome__name',
-                     'parent_biome__parent_biome__parent_biome__name',
-                     'parent_biome__parent_biome__parent_biome__parent_biome__name',
-                     'parent_biome__parent_biome__parent_biome__parent_biome__parent_biome__name',)
+    list_display = ('name','geog_level','Geog_parent')
+    search_fields = ('geog_level','name',
+                     'parent_geog__parent_geog__name',
+                     'parent_geog__parent_geog__parent_geog__name',
+                     'parent_geog__parent_geog__parent_geog__parent_geog__name',
+                     'parent_geog__parent_geog__parent_geog__parent_geog__parent_geog__name',)
     
-    def Biome_parent(self,obj):
-        if obj.parent_biome:
-            return obj.parent_biome.biome_level+': '+obj.parent_biome.name
+    def Geog_parent(self,obj):
+        if obj.parent_geog:
+            return obj.parent_geog.geog_level+': '+obj.parent_geog.name
         else:
             return ''
 
@@ -68,6 +69,8 @@ class BiomeAdmin(ModelAdmin):
         
 ##############################################################################################################################
 ### References Admin 
+
+
 class ReferencesAdmin(ModelAdmin):
     model=Reference
     menu_label = 'References'
@@ -75,8 +78,8 @@ class ReferencesAdmin(ModelAdmin):
     menu_order = 450
     add_to_settings_menu = False
     exclude_from_explorer = False
-    search_fields = ('title','short_authors','year','journal','doi','authors_list',)
-    list_display = ('title','short_authors','year','journal','doi','authors_list',)
+    search_fields = ('full_reference','doi','year',)
+    list_display = ('full_reference','doi','year',)
 
 
 
@@ -162,7 +165,7 @@ class ProjectMetadataAdmin(ModelAdmin):
 
 
 class ParentEventAdmin(ModelAdmin):
-    model=ParentEvent
+    model=EventHierarchy
     menu_label='Parent Event'
     menu_icon='arrow-up-big'
     menu_order = 101
@@ -270,7 +273,7 @@ class MetadataAdmin(ModelAdmin):
 modeladmin_register(ReferencesAdmin)
 modeladmin_register(TaxaAdmin)
 modeladmin_register(EnvironmentGroup)
-modeladmin_register(BiomeAdmin)
+modeladmin_register(GeogAdmin)
 modeladmin_register(EventGroup)
 modeladmin_register(SequencesAdmin)
 modeladmin_register(OccurrencesAdmin)
@@ -287,12 +290,12 @@ class TaxaResource(resources.ModelResource):
     class Meta:
         model = Taxa
 
-class BiomeResource(resources.ModelResource):
+class GeogResource(resources.ModelResource):
     delete = Field(widget=widgets.BooleanWidget())
     def for_delete(self, row, instance):
         return self.fields['delete'].clean(row)
     class Meta:
-        model = Biome
+        model = Geog_Location
 
 class ReferencesResource(resources.ModelResource):
     delete = Field(widget=widgets.BooleanWidget())
@@ -348,7 +351,8 @@ class ParentEventResource(resources.ModelResource):
     def for_delete(self, row, instance):
         return self.fields['delete'].clean(row)
     class Meta:
-        model = ParentEvent
+        model = EventHierarchy
+
 
 class EventResource(resources.ModelResource):
     delete = Field(widget=widgets.BooleanWidget())
@@ -410,26 +414,26 @@ class TaxaAdminImpExp(ImportExportModelAdmin):
             return ''
 
 
-class BiomeAdminImpExp(ImportExportModelAdmin):
-    resource_class = BiomeResource
-    list_display = ('name','biome_level','Biome_parent')
-    search_fields = ('biome_level','name',
-                     'parent_biome__parent_biome__name',
-                     'parent_biome__parent_biome__parent_biome__name',
-                     'parent_biome__parent_biome__parent_biome__parent_biome__name',
-                     'parent_biome__parent_biome__parent_biome__parent_biome__parent_biome__name',)
+class GeogAdminImpExp(ImportExportModelAdmin):
+    resource_class = GeogResource
+    list_display = ('name','geog_level','Geog_parent')
+    search_fields = ('geog_level','name',
+                     'parent_geog__parent_geog__name',
+                     'parent_geog__parent_geog__parent_geog__name',
+                     'parent_geog__parent_geog__parent_geog__parent_geog__name',
+                     'parent_geog__parent_geog__parent_geog__parent_geog__parent_geog__name',)
     
-    def Biome_parent(self,obj):
-        if obj.parent_biome:
-            return obj.parent_biome.biome_level+': '+obj.parent_biome.name
+    def Geog_parent(self,obj):
+        if obj.parent_geog:
+            return obj.parent_geog.geog_level+': '+obj.parent_geog.name
         else:
             return ''
-
+   
 
 class ReferenceAdminImpExp(ImportExportModelAdmin):
     resource_class = ReferencesResource
-    search_fields = ('title','short_authors','year','journal','doi','authors_list',)
-    list_display = ('title','short_authors','year','journal','doi','authors_list',)
+    search_fields = ('full_reference','doi','year',)
+    list_display = ('full_reference','doi','year',)
 
 class SamplingMethodAdminImpExp(ImportExportModelAdmin):
     resource_class = SamplingMethodResource
@@ -522,7 +526,7 @@ class MetadataResourceAdminImpExp(ImportExportModelAdmin):
 #### Register admin
 
 admin.site.register(Taxa,TaxaAdminImpExp)
-admin.site.register(Biome,BiomeAdminImpExp)
+admin.site.register(Geog_Location,GeogAdminImpExp)
 admin.site.register(Reference,ReferenceAdminImpExp)
 admin.site.register(sampling_method,SamplingMethodAdminImpExp)
 admin.site.register(units,SamplingUnitsAdminImpExp)
@@ -530,7 +534,7 @@ admin.site.register(Variable,SamplingVariableAdminImpExp)
 admin.site.register(Environment,EnvironmentalSampleAdminImpExp)
 admin.site.register(package,MIxSAdminImpExp)
 admin.site.register(ProjectMetadata,ProjectMetadataAdminImpExp)
-admin.site.register(ParentEvent,ParentEventAdminImpExp)
+admin.site.register(EventHierarchy,ParentEventAdminImpExp)
 admin.site.register(Event,EventAdminImpExp)
 admin.site.register(EventType,EventTypeAdminImpExp)
 admin.site.register(Sequences,SequencesAdminImpExp)

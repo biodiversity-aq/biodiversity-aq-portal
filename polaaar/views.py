@@ -11,10 +11,12 @@ from django.utils.translation import ugettext as _
 from django.http import HttpResponsePermanentRedirect
 from django.db.models import Prefetch
 from django.contrib.gis.db.models.functions import AsGeoJSON, Centroid 
-
+from django.core.files.storage import FileSystemStorage
+from .forms import EmailForm
+from django.core.mail import send_mail, EmailMessage
 
 from polaaar.models import *
-
+from accounts.models import UserProfile
 
 def home(request):
     return render(request, 'polaaar_home.html')
@@ -83,4 +85,40 @@ def mim_submit(request):
     return render(request, 'polaaarsubmit/submit_mim.html')
 
 
-#########################################################
+#######################################################
+##### 
+### Email submission views
+
+def email_submission(request):
+
+    usr = request.user
+    if usr.is_authenticated:
+        init = {'email':usr.email}
+    else:
+        init = {'email':''}
+    if request.method == "POST":
+       
+        form = EmailForm(request.POST,request.FILES,initial=init)
+        if form.is_valid():
+            post = form.save(commit=False)
+            #post.published_date = timezone.now()
+            post.save()
+            email = request.POST.get('email')
+            subject = request.POST.get('subject')
+            message = request.POST.get('message')
+            document = request.FILES.get('document')
+            email_from = settings.SENDER_MAIL
+            recipient_list = ['humphries.grant@gmail.com']
+            email = EmailMessage(subject,message,email_from,recipient_list)
+            base_dir = 'media/uploads/'
+            email.attach_file('media/uploads/'+str(document))
+            email.send()
+            response = redirect('/polaaar/submit_success/')
+            return response
+    else:
+        form = EmailForm(initial=init)
+    return render(request, 'polaaarsubmit/email_submission.html', {'form': form})
+
+
+def submit_success(request):
+    return render(request, 'polaaarsubmit/submit_success.html')

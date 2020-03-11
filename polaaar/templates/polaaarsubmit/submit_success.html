@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% load static leaflet_tags %}
+
+{% block title %}
+POLA3R search
+{% endblock title %}
+
+
+{% block body_class %}{% endblock %}
+
+{% block extra_css %}
+{% leaflet_css %}
+<style>
+    body {
+        padding-top: 60px;
+    }
+
+    @media (min-width: 800px) and (max-width: 850px) {
+        .navbar:not(.top-nav-collapse) {
+            background: #0099CC !important;
+        }
+    }
+
+    .view, body, html {
+        height: 80%
+    }
+
+    .navbar {
+        background-color: rgba(0, 0, 0, .2)
+    }
+
+    .top-nav-collapse {
+        background-color: #0099CC;
+    }
+</style>
+{% endblock extra_css %}
+
+{% block content %}
+
+<div class="container-fluid">
+    <div class="row justify-content-center" style="padding-top:20px;padding-bottom:160px; border-width:0px;">
+
+        <div class="col-12 text-center" style="text-align:center">
+
+            <a href="#"><img style="background-color:white;border:solid black 2px;border-radius:100px" src="{% static 'imgs/dna_clipart.png' %}" /></a>
+
+            <h2>Thanks for submitting data to POLA<sub>3</sub>R <i class="fas fa-dna pl-1"></i></h2>
+            
+        </div>
+        <div class="col-4">
+            <a role="button" href="{% url 'polaaar:polaaar_search' %}" class="btn btn-primary btn-lg" style="width:100%">
+                Explore POLA<sub>3</sub>R <i class="fas fa-binoculars pl-1"></i>
+            </a>
+            <a role="button" href="{% url 'polaaar:home' %}" class="btn btn-primary btn-lg" style="width:100%">
+                Return home <i class="fas fa-home pl-1"></i>
+            </a>
+        </div>
+    </div>
+
+</div>
+
+
+{% block extra_js %}
+
+
+
+
+
+{% endblock extra_js %}
+
+
+
+{% endblock content %}

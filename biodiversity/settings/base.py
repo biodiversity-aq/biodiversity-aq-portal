@@ -254,6 +254,11 @@ STATIC_URL = '/static/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
+FILE_UPLOAD_HANDLERS = [
+ "django.core.files.uploadhandler.MemoryFileUploadHandler",
+ "django.core.files.uploadhandler.TemporaryFileUploadHandler"
+]
+
 
 # Wagtail settings
 
@@ -283,7 +288,7 @@ BASE_URL = 'http://example.com'
 SITE_ID = 1
 
 
-DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
+#DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
 
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
@@ -352,16 +357,7 @@ DATA_UPLOAD_MAX_NUMBER_FIELDS = 10000
 
 
 ############################################
-#### DJANGO ALLAUTH SETTINGS
-
-#ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS =1
-#ACCOUNT_EMAIL_REQUIRED = True
-#ACCOUNT_EMAIL_VERIFICATION = "mandatory"
-#ACCOUNT_LOGIN_ATTEMPTS_LIMIT = 5
-#ACCOUNT_LOGIN_ATTEMPTS_TIMEOUT = 86400 # 1 day in seconds
-#ACCOUNT_LOGOUT_REDIRECT_URL ='/accounts/login/'
-#LOGIN_REDIRECT_URL = '/accounts/email/' 
-
+#### DJANGO AUTH SETTINGS
 
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
@@ -374,6 +370,17 @@ ADMINS = (
 )
 
 
-SENDER_MAIL = 'Seabirds.net <no-reply@seabirds.net>'
+SENDER_MAIL = 'Biodiversity.aq <no-reply@biodiversity.aq>'
 
 FIXTURE_DIRS = ['fixtures',]
+
+############################################################################################
+## Email settings
+
+#SENDGRID_API_KEY = secrets.SENDGRID_API_KEY
+
+EMAIL_HOST = 'smtp.sendgrid.net'
+EMAIL_HOST_USER = 'apikey'
+EMAIL_HOST_PASSWORD = SENDGRID_API_KEY
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
