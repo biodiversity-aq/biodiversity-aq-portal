@@ -22,28 +22,28 @@ def register(request):
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
-#             ''' Begin reCAPTCHA validation '''
-#            #recaptcha_response = request.POST.get('g-recaptcha-response')
-#            #url = 'https://www.google.com/recaptcha/api/siteverify'
-#            #values = {             
-#            #    'secret': settings.RECAPTCHA_PRIVATE_KEY,
-#            #    'response': recaptcha_response
-#            #}
-#            #data = urllib.parse.urlencode(values).encode()
-#            #req =  urllib.request.Request(url, data=data)
-#            #response = urllib.request.urlopen(req)
-#            #result = json.loads(response.read().decode())
+     
+            recaptcha_response = request.POST.get('g-recaptcha-response')
+            url = 'https://www.google.com/recaptcha/api/siteverify'
+            values = {             
+                'secret': settings.RECAPTCHA_PRIVATE_KEY,
+                'response': recaptcha_response
+            }
+            data = urllib.parse.urlencode(values).encode()
+            req =  urllib.request.Request(url, data=data)
+            response = urllib.request.urlopen(req)
+            result = json.loads(response.read().decode())
 #             ''' End reCAPTCHA validation '''
                                                                                                                 
-            result=True
-            if result==True:#result['success']:
+            #result=True
+            if result['success']:#result==True:#
                 user = form.save()
                 send_activation_email(request, user)
                 send_verification_email(request)
                 messages.info(
                     request, _(
                         "We have sent you an email to %(email)s "
-                        "so you can activate your account!") % {'email': form.get_email()})
+                        "so you can activate your account!") % {'email': form.email()})
 
                 return redirect(reverse('login'))
 
