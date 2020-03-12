@@ -43,7 +43,7 @@ def register(request):
                 messages.info(
                     request, _(
                         "We have sent you an email to %(email)s "
-                        "so you can activate your account!") % {'email': form.email()})
+                        "so you can activate your account!") % {'email': form.cleaned_data['email']})
 
                 return redirect(reverse('login'))
 
