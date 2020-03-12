@@ -40,12 +40,14 @@ def register(request):
                 user = form.save()
                 send_activation_email(request, user)
                 send_verification_email(request)
+                
                 messages.info(
                     request, _(
                         "We have sent you an email to %(email)s "
                         "so you can activate your account!") % {'email': form.cleaned_data['email']})
 
-                return redirect(reverse('login'))
+                           
+                return redirect(reverse('accounts:registered'))
 
             return redirect('login')
     else:
@@ -68,7 +70,8 @@ def registration_activation(request, pk, token):
 def authenticated(request):
     return render(request, 'registration/authenticated.html')
 
-
+def registered(request):
+    return render(request, 'registration/registration_success.html')
 
 
 

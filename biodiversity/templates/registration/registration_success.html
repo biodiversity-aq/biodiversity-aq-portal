@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <h1 style="text-align:center">Thanks for registering!</h1>
+
+            <h2 style="text-align:center">You should receive an activation e-mail soon. Please check your spam/junk inbox as well.</a></h2>
+
+            <a role="button" href="{% url 'home' %}" class="btn btn-primary btn-lg" style="width:100%">
+                Return home <i class="fas fa-home pl-1"></i>
+            </a>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}
