@@ -5,7 +5,7 @@
 
 {% trans "Please go to the following link to activate your account:" %}
 
-{{ protocol }}://{{ domain }}{% url 'accounts:registration-activation' pk=user_id token=token %}
+{{ protocol }}://{{ request.get_host }}{% url 'accounts:registration-activation' pk=user_id token=token %}
 
 {% trans "Once the account has been activated you will be able to update your profile after your first login" %}
 

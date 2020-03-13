@@ -2,14 +2,15 @@
   "ExpandedNodes": [
     "",
     "\\accounts",
+    "\\accounts\\templates",
     "\\biodiversity",
-    "\\home",
-    "\\home\\migrations",
-    "\\home\\migrations\\__pycache__",
+    "\\biodiversity\\settings",
+    "\\biodiversity\\templates",
+    "\\biodiversity\\templates\\registration",
+    "\\polaaar",
     "\\polaaar\\templates",
-    "\\polaaar\\templates\\polaaarsearch",
     "\\polaaar\\templates\\polaaarsubmit"
   ],
-  "SelectedNode": "\\accounts\\migrations",
+  "SelectedNode": "\\biodiversity\\settings\\dev.py",
   "PreviewInSolutionExplorer": false
 }

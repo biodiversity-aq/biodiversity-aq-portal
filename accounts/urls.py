@@ -15,8 +15,18 @@ urlpatterns = [
         name='registration-activation'),
 
     path('password-change/', 
-         auth_views.PasswordChangeView.as_view(template_name='registration/password_change_form.html'), 
+         auth_views.PasswordChangeView.as_view(template_name='registration/password_change_form.html'),
+         {'post_change_redirect':'password_change_done'},
          name='password_change'),
-    path('password-change/done/', auth_views.PasswordChangeDoneView.as_view(), name='password_change_done')
+
+    #path('password-change/done/', 
+    #     views.PasswordchangeDone,
+    #     name='password_change_done')
+    
+    path('password_change/done/', 
+         auth_views.PasswordChangeDoneView.as_view(template_name='registration/password_change_done.html'),
+         name='password_change_done')
+
+
 
 ]

@@ -29,8 +29,14 @@ SECRET_KEY = SECRET_KEY
 # SECURITY WARNING: define the correct hosts in production!
 ALLOWED_HOSTS = ['*'] 
 
+# Base URL to use when referring to full URLs within the Wagtail admin backend -
+# e.g. in notification emails. Don't include '/admin' or a trailing slash
+BASE_URL = 'http://biodiversity-aq-dev.herokuapp.com'
+
+SITE_ID = 2
 
 
+#### GEO Libraries
 GEOS_LIBRARY_PATH = environ.get('GEOS_LIBRARY_PATH')
 GDAL_LIBRARY_PATH = environ.get('GDAL_LIBRARY_PATH')
 
@@ -290,13 +296,6 @@ WAGTAILADMIN_RICH_TEXT_EDITORS = {
     }
 }
 
-# Base URL to use when referring to full URLs within the Wagtail admin backend -
-# e.g. in notification emails. Don't include '/admin' or a trailing slash
-BASE_URL = 'http://biodiversity-aq-dev.herokuapp.com'
-
-
-SITE_ID = 1
-
 
 #DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
 
@@ -370,7 +369,7 @@ DATA_UPLOAD_MAX_NUMBER_FIELDS = 10000
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 AUTH_USER_MODEL = 'accounts.UserProfile'
-
+LOGIN_URL = 'accounts/login/?next=/'
 
 ADMINS = (
     #('You', 'wsuadmin@seabirds.net'),

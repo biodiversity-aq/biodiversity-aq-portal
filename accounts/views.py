@@ -22,7 +22,8 @@ def register(request):
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
-     
+            
+            """
             recaptcha_response = request.POST.get('g-recaptcha-response')
             url = 'https://www.google.com/recaptcha/api/siteverify'
             values = {             
@@ -34,19 +35,14 @@ def register(request):
             response = urllib.request.urlopen(req)
             result = json.loads(response.read().decode())
 #             ''' End reCAPTCHA validation '''
-                                                                                                                
-            #result=True
-            if result['success']:#result==True:#
+            """                                                                                           
+            result=True
+            #if result['success']:
+            if result==True:
                 user = form.save()
                 send_activation_email(request, user)
                 send_verification_email(request)
-                
-                messages.info(
-                    request, _(
-                        "We have sent you an email to %(email)s "
-                        "so you can activate your account!") % {'email': form.cleaned_data['email']})
-
-                           
+                                          
                 return redirect(reverse('accounts:registered'))
 
             return redirect('login')
@@ -73,8 +69,7 @@ def authenticated(request):
 def registered(request):
     return render(request, 'registration/registration_success.html')
 
-
-
-
+def PasswordchangeDone(request):
+    return render(request,'registration/password_change_done.html')
 
 
