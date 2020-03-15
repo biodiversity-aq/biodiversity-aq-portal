@@ -1,16 +1,15 @@
 {
   "ExpandedNodes": [
     "",
-    "\\accounts",
-    "\\accounts\\templates",
     "\\biodiversity",
     "\\biodiversity\\settings",
     "\\biodiversity\\templates",
     "\\biodiversity\\templates\\registration",
     "\\polaaar",
     "\\polaaar\\templates",
+    "\\polaaar\\templates\\polaaarsearch",
     "\\polaaar\\templates\\polaaarsubmit"
   ],
-  "SelectedNode": "\\biodiversity\\settings\\dev.py",
+  "SelectedNode": "\\polaaar\\templates\\polaaar_data.html",
   "PreviewInSolutionExplorer": false
 }

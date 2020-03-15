@@ -8,12 +8,13 @@ from django.contrib.auth import get_user_model, update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib import messages
 from django.utils.translation import ugettext as _
-from django.http import HttpResponsePermanentRedirect
+from django.http import HttpResponsePermanentRedirect, HttpResponse
 from django.db.models import Prefetch
 from django.contrib.gis.db.models.functions import AsGeoJSON, Centroid 
 from django.core.files.storage import FileSystemStorage
 from .forms import EmailForm
 from django.core.mail import send_mail, EmailMessage
+from django.core.serializers import serialize
 
 from polaaar.models import *
 from accounts.models import UserProfile
@@ -22,12 +23,33 @@ def home(request):
     return render(request, 'polaaar_home.html')
 
 
+
+
 def polaaar_data(request):
+    qs_results = ProjectMetadata.objects.annotate(geom=AsGeoJSON(Centroid('geomet')))
+    return render(request, 'polaaar_data.html',{'qs_results':qs_results})
 
-    #qs_results = ProjectMetadata.objects.annotate(geom=AsGeoJSON(Centroid('geomet')))
+def spatial_searching(request):    
+    return render(request, 'polaaarsearch/spatial_search.html')
+
+#def sitemap(request):
+#    assert isinstance(request, HttpRequest)
+#    X = Sitetable.objects.all()
+#    X3 = X.values_list('site','lat','lon')
+#    X4 = json.dumps(list(X3), cls=DjangoJSONEncoder)
+
+#    data = {'sites':X4}
+
+#    return render(request,'sitemap.html',data)
 
 
-    return render(request, 'polaaar_data.html')#,{'qs_results':qs_results})
+
+
+
+
+
+
+
 
 #########################################################
 ### Search views

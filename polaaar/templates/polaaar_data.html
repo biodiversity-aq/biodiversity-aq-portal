@@ -10,7 +10,7 @@ POLA3R data
 {% block body_class %}{% endblock %}
 
 {% block extra_css %}
-{% leaflet_css %}
+{% leaflet_css plugins="draw" %}
 {% endblock extra_css %}
 
 {% block content %}
@@ -71,6 +71,9 @@ POLA3R data
     .leaflet-container { /* all maps */
         width: 100%;
         height: 400px;
+        -webkit-box-shadow: 10px 10px 42px 0px rgba(0,0,0,0.75);
+        -moz-box-shadow: 10px 10px 42px 0px rgba(0,0,0,0.75);
+        box-shadow: 10px 10px 42px 0px rgba(0,0,0,0.75);
     }
 
     #specialbigmap {
@@ -83,13 +86,20 @@ POLA3R data
     }
 </style>
 
+<script type="text/javascript">
+      var collection = {{ qs_results|geojsonfeature|safe }};
 
+    function map_init(map, options) {
+         L.geoJson(collection).addTo(map);
+         L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
+                    attribution: 'Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012'
+                }).addTo(map);
+
+      }
+
+
+</script>
 
 {% endblock extra_js %}
-<!--<script type="text/javascript">
-      var collection = {{ qs_results|geojsonfeature|safe }};
-      function map_init(map, options) {
-          L.geoJson(collection).addTo(map);
-      }
-</script>-->
+
 {% endblock content %}

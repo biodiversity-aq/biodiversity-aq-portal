@@ -22,8 +22,10 @@ urlpatterns = [
     path('submit_data/',views.email_submission,name='email_submission'),
     path('submit_success/',views.submit_success,name='submit_success'),
     path('dcsubmit/',views.dc_submit,name='dc_submit'),
-    path('mimsubmit/',views.mim_submit,name='mim_submit')
+    path('mimsubmit/',views.mim_submit,name='mim_submit'),
 
+
+    path('spatialsearch/',views.spatial_searching,name='spatialsearch'),
 
  
 ]

@@ -235,7 +235,7 @@ class EventHierarchy(models.Model):
     created_on = models.DateField()
     updated_on = models.DateField(auto_now=True)
     
-    project = models.ForeignKey(_("ProjectMetadata"),blank=True,null=True,on_delete=models.CASCADE)
+    project_metadata = models.ForeignKey(_("ProjectMetadata"),blank=True,null=True,on_delete=models.CASCADE)
 
     def __str__(self):
         return self.event_type.name +': '+ self.parent_event_name
@@ -271,7 +271,7 @@ class Event(models.Model):
     samplingProtocol = models.TextField(blank=True,null=True)
 
     occurrence = models.ManyToManyField(_("Occurrence"),blank=True)
-    metadata = models.ForeignKey(_("Metadata"),blank=True,null=True,on_delete=models.DO_NOTHING)
+    #metadata = models.ForeignKey(_("Metadata"),blank=True,null=True,on_delete=models.DO_NOTHING)
     environment = models.ManyToManyField(_("Environment"),blank=True)
 
     metadata_exists = models.BooleanField(blank=True,null=True)

@@ -267,6 +267,10 @@ FILE_UPLOAD_HANDLERS = [
  "django.core.files.uploadhandler.TemporaryFileUploadHandler"
 ]
 
+
+
+############################################################
+### Cloudinary settings
 CLOUDINARY_STORAGE = {
     'CLOUD_NAME': 'hhcpob9rq',
     'API_KEY': '449231933768455',
@@ -274,6 +278,7 @@ CLOUDINARY_STORAGE = {
 }
 
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+#DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
 
 
 # Wagtail settings
@@ -297,7 +302,7 @@ WAGTAILADMIN_RICH_TEXT_EDITORS = {
 }
 
 
-#DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
+
 
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
@@ -348,8 +353,20 @@ FORMS_EXTRA_FIELDS = (
 
 LEAFLET_CONFIG = {
     'DEFAULT_CENTER':(0,0),    
-    'DEFAULT_ZOOM':1,    
+    'DEFAULT_ZOOM':1,
+    
+    'PLUGINS': {
+        'draw': {
+            'css': 'https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css',
+            'js': 'https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js',
+        'auto-include': True,
+    },
+}
+
     }
+
+
+
 
 
 #############################################
@@ -396,3 +413,7 @@ EMAIL_USE_TLS = True
 ####################################
 ### Google recaptcha SETTINGS
 RECAPTCHA_PRIVATE_KEY = GOOGLE_SECRET_KEY
+
+
+####################################################################################
+### 
