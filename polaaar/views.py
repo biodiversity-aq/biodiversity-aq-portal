@@ -29,8 +29,9 @@ def polaaar_data(request):
     qs_results = ProjectMetadata.objects.annotate(geom=AsGeoJSON(Centroid('geomet')))
     return render(request, 'polaaar_data.html',{'qs_results':qs_results})
 
-def spatial_searching(request):    
-    return render(request, 'polaaarsearch/spatial_search.html')
+def spatial_searching(request):
+    qs_results = ProjectMetadata.objects.annotate(geom=AsGeoJSON(Centroid('geomet')))
+    return render(request, 'polaaarsearch/spatial_search.html',{'qs_results':qs_results})
 
 #def sitemap(request):
 #    assert isinstance(request, HttpRequest)
@@ -89,8 +90,6 @@ def seq_search(request):
 
     return render(request, 'polaaarsearch/sequences.html',{'qs':qs})
 
-def spatial_search(request):
-    return render(request, 'polaaarsearch/spatial.html')
 
 
 

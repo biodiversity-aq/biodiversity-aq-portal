@@ -32,19 +32,26 @@ POLA3R data
 
         <div class="col-12 col-md-4">
             <div class="row">
+                <div class="col-12" style="padding-bottom:40px">
+                    <a role="button" href="{% url 'polaaar:polaaar_search' %}" class="btn btn-mdb btn-lg waves-effect" style="width:100%;">
+                        Return to text search <i class="fas fa-arrow-left pl-1"></i>
+                    </a>
+                </div>
                 <div class="col-12">
                     <h3>Vertice coordinates: </h3>
 
-                    <textarea id="coordbox" rows="5",cols="80"></textarea>
-                   
+                    <textarea id="coordbox" rows="5" ,cols="80"></textarea>
+
                 </div>
                 <div class="col-12" style="padding-top:40px">
-                    <a role="button" href="{% url 'polaaar:polaaar_data' %}" class="btn btn-info btn-lg waves-effect" style="width:100%;">
+                    <a role="button" href="{% url 'polaaar:polaaar_data' %}" class="btn btn-dark-green btn-lg waves-effect" style="width:100%;">
                         Search <i class="fas fa-search pl-1"></i>
                     </a>
                 </div>
             </div>
         </div>
+        <div class="col-12"><hr /></div>
+
     </div>
 
 </div>
@@ -73,9 +80,24 @@ POLA3R data
 </style>
 
 <script type="text/javascript">
-
+    var collection = {{ qs_results|geojsonfeature|safe }};
     function map_init(map, options) {
 
+
+        var geojsonMarkerOptions = {
+            radius: 3,
+            fillColor: "#ff7800",
+            color: "#000",
+            weight: 1,
+            opacity: 1,
+            fillOpacity: 0.8
+        };
+
+        L.geoJson(collection,{
+            pointToLayer: function(feature,latlng){
+                return L.circleMarker(latlng,geojsonMarkerOptions);
+            }
+        }).addTo(map);
 
         L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
             attribution: 'Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012'
