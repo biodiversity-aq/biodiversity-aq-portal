@@ -40,12 +40,18 @@ class BaseMenuPage(MenuPage):
         ('paragraph', blocks.RichTextBlock(required=False)),
         ('image', ImageChooserBlock(required=False))
     ], blank=True)
+    show_in_parent = models.BooleanField(
+        default=False, null=True, blank=True,
+        help_text='If true (checked) this page will appear in the bottom of parent page if parent page type is '
+                  'AppLandingPage or OverviewPage.'
+    )
 
     content_panels = Page.content_panels + [
         MultiFieldPanel([
             ImageChooserPanel('cover'),
             FieldPanel('short_description'),
         ]),
+        FieldPanel('show_in_parent'),
         StreamFieldPanel('body'),
     ]
 
