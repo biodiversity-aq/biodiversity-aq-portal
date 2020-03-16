@@ -22,30 +22,28 @@ def register(request):
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
-#             ''' Begin reCAPTCHA validation '''
-#            #recaptcha_response = request.POST.get('g-recaptcha-response')
-#            #url = 'https://www.google.com/recaptcha/api/siteverify'
-#            #values = {             
-#            #    'secret': settings.RECAPTCHA_PRIVATE_KEY,
-#            #    'response': recaptcha_response
-#            #}
-#            #data = urllib.parse.urlencode(values).encode()
-#            #req =  urllib.request.Request(url, data=data)
-#            #response = urllib.request.urlopen(req)
-#            #result = json.loads(response.read().decode())
+            
+            
+            recaptcha_response = request.POST.get('g-recaptcha-response')
+            url = 'https://www.google.com/recaptcha/api/siteverify'
+            values = {             
+                'secret': settings.RECAPTCHA_PRIVATE_KEY,
+                'response': recaptcha_response
+            }
+            data = urllib.parse.urlencode(values).encode()
+            req =  urllib.request.Request(url, data=data)
+            response = urllib.request.urlopen(req)
+            result = json.loads(response.read().decode())
 #             ''' End reCAPTCHA validation '''
-                                                                                                                
-            result=True
-            if result==True:#result['success']:
+                                                                                                     
+            #result=True
+            if result['success']:
+            #if result==True:
                 user = form.save()
                 send_activation_email(request, user)
                 send_verification_email(request)
-                messages.info(
-                    request, _(
-                        "We have sent you an email to %(email)s "
-                        "so you can activate your account!") % {'email': form.get_email()})
-
-                return redirect(reverse('login'))
+                                          
+                return redirect(reverse('accounts:registered'))
 
             return redirect('login')
     else:
@@ -68,10 +66,10 @@ def registration_activation(request, pk, token):
 def authenticated(request):
     return render(request, 'registration/authenticated.html')
 
+def registered(request):
+    return render(request, 'registration/registration_success.html')
 
-
-
-
-
+def PasswordchangeDone(request):
+    return render(request,'registration/password_change_done.html')
 
 

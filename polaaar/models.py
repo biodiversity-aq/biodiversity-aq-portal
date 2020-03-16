@@ -11,6 +11,7 @@ from django.contrib.gis.gdal import *
 from django.contrib.gis.db import models
 
 from django_countries.fields import CountryField
+from django.core.files.storage import FileSystemStorage
 
 
 
@@ -76,31 +77,63 @@ class Taxa(models.Model):
 #####################################################################################################
 #### Biome levels ####
 
+##### BIOME COMMENTED OUT ON FEB 24 2020
+
 ## Much like the species tables, we use a recursive model because the endpoint of the biome is 
 ## ambiguous. This means the user can select any biome. We will set the values of this ourselves
 ## and allow users to select from it. Levels are hierarchical to each other. I.E. Level 2 is a child of Level 1
 ## Level 3 is a child to Level 2, etc... 
 
-BIOME_LEVELS = (
-    ('L1',"Level_1"),
-    ('L2',"Level_2"),
-    ('L3',"Level_3"),
-    ('L4',"Level_4"),
-    ('L5',"Level_5")
-    )
+#BIOME_LEVELS = (
+#    ('L1',"Level_1"),
+#    ('L2',"Level_2"),
+#    ('L3',"Level_3"),
+#    ('L4',"Level_4"),
+#    ('L5',"Level_5")
+#    )
 
 
-class Biome(models.Model):
+#class Biome(models.Model):
+#    name = models.CharField(max_length=300,null=True,blank=True)
+#    biome_level = models.CharField(max_length=300,choices=BIOME_LEVELS)
+#    parent_biome = models.ForeignKey('self',on_delete=models.DO_NOTHING,related_name='BiomeName',blank=True,null=True)
+
+#    def __str__(self):
+#        return self.biome_level+': '+self.name  
+#    class Meta:
+#        ordering=['name']
+
+##### End of Biome model block
+#####################################################################################################
+#### Geographical location table
+
+GEOG_LEVELS = (
+    ('Conti','Continent'),
+    ('Count','Country'),
+    ('Sta','State'),
+    ('Prov','Province'),
+    ('IslG','Island_Group'),
+    ('Isl','Island'),
+    ('Pla','Place_Name'),
+    ('Ocean','Ocean'),
+    ('Sea','Sea'),
+    ('Bay','Bay'),
+    ('Wb','Water_body')
+)
+
+class Geog_Location(models.Model):
     name = models.CharField(max_length=300,null=True,blank=True)
-    biome_level = models.CharField(max_length=300,choices=BIOME_LEVELS)
-    parent_biome = models.ForeignKey('self',on_delete=models.DO_NOTHING,related_name='BiomeName',blank=True,null=True)
+    geog_level = models.CharField(max_length=300,choices=GEOG_LEVELS)
+    parent_geog = models.ForeignKey('self',on_delete=models.DO_NOTHING,related_name='GeogName',blank=True,null=True)
 
     def __str__(self):
-        return self.biome_level+': '+self.name  
+        return self.geog_level+': '+self.name  
     class Meta:
         ordering=['name']
 
-##### End of Biome model block
+
+
+
 #####################################################################################################
 #### MIxS package table
 
@@ -119,17 +152,16 @@ class package(models.Model):
 ### volumes of data coming in, and therefore it can easily be cleaned if need be. 
 
 class Reference(models.Model):
-    authors_list = models.TextField()                           ### The full list of authors
+    full_reference = models.TextField()                         ### The full reference 
     doi = models.CharField(max_length=255,blank=True,null=True) ### doi of the reference if known
-    short_authors = models.CharField(max_length=150)            ### Short authors list. e.g., Humphries et al. / Humphries and van de Putte
-    title = models.TextField()                                  ### Full title of reference
-    journal = models.TextField()                                ### The journal or the book that the reference is in
+    #short_authors = models.CharField(max_length=150)            ### Short authors list. e.g., Humphries et al. / Humphries and van de Putte
+    #journal = models.TextField()                                ### The journal or the book that the reference is in
     year = models.IntegerField()                                ### The year the reference was published
 
-    occurrences = models.ManyToManyField(_("Occurrence"),blank=True)
+    #occurrences = models.ManyToManyField(_("Occurrence"),blank=True)
 
     def __str__(self):
-        return self.short_authors +","+ str(self.year)
+        return self.full_reference
     class Meta:
         ordering = ['-year']                                    ### Order this by year (descending), listing most recent first
 
@@ -162,7 +194,7 @@ class ProjectMetadata(models.Model):
     geomet = models.PolygonField(srid=4326, blank=True, null=True)
     
     is_public = models.BooleanField()
-    associated_references = models.ManyToManyField(_("Reference"),blank=True)
+    associated_references = models.ForeignKey(_("Reference"),blank=True,null=True,on_delete=models.DO_NOTHING)
     associated_media = models.TextField(blank=True,null=True)
     created_on = models.DateField()
     updated_on = models.DateField(auto_now=True)
@@ -178,13 +210,20 @@ class ProjectMetadata(models.Model):
     class Meta:
         ordering = ['project_name']
 
+####################################################################################################################
+
+## Add table here for lost datasets / data with no structure?
+####################################################################################################################
 
 ################################################################################
 ### Change event type to TextField?
 ################################################################################
 
-class ParentEvent(models.Model):
-    parent_event_name = models.CharField(max_length=255)                               ## User's project name or cruise name, etc...
+
+## Change to EventHierarchy
+
+class EventHierarchy(models.Model):
+    parent_event_name = models.CharField(max_length=255)                        ## User's project name or cruise name, etc...
     event_type = models.ForeignKey(_("EventType"),on_delete=models.DO_NOTHING)  ## Drawn from the Event_type table
        
     description = models.TextField()                                            ## Description of the event
@@ -196,7 +235,7 @@ class ParentEvent(models.Model):
     created_on = models.DateField()
     updated_on = models.DateField(auto_now=True)
     
-    project = models.ForeignKey(_("ProjectMetadata"),blank=True,null=True,on_delete=models.CASCADE)
+    project_metadata = models.ForeignKey(_("ProjectMetadata"),blank=True,null=True,on_delete=models.CASCADE)
 
     def __str__(self):
         return self.event_type.name +': '+ self.parent_event_name
@@ -213,13 +252,17 @@ class ParentEvent(models.Model):
 class Event(models.Model):
 
     footprintWKT = models.GeometryField(srid=4326,blank=True,null=True)
-     
+    
+    Latitude = models.DecimalField(decimal_places=5,max_digits=10,blank=True,null=True) 
+    Longitude = models.DecimalField(decimal_places=5,max_digits=10,blank=True,null=True)
+
     eventRemarks = models.TextField(blank=True,null=True)
     sample_name = models.CharField(max_length=255,unique=True)   ### Unique value      ## User provided id for sample
     collection_date = models.DateField()
     collection_time = models.TimeField()
-    parent_event = models.ForeignKey(_("ParentEvent"),on_delete=models.CASCADE)
+    parent_event = models.ForeignKey(_("EventHierarchy"),on_delete=models.CASCADE)
     ### Sample is a recursive table, and can be sub-sampled
+    
     parent_sample = models.ForeignKey('self',
                                       on_delete=models.DO_NOTHING,
                                       blank=True,
@@ -228,7 +271,7 @@ class Event(models.Model):
     samplingProtocol = models.TextField(blank=True,null=True)
 
     occurrence = models.ManyToManyField(_("Occurrence"),blank=True)
-    metadata = models.ForeignKey(_("Metadata"),blank=True,null=True,on_delete=models.DO_NOTHING)
+    #metadata = models.ForeignKey(_("Metadata"),blank=True,null=True,on_delete=models.DO_NOTHING)
     environment = models.ManyToManyField(_("Environment"),blank=True)
 
     metadata_exists = models.BooleanField(blank=True,null=True)
@@ -277,18 +320,19 @@ class Metadata(models.Model):  ### rename to Sample_metadata
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE)
     license = models.CharField(max_length=100,blank=True,null=True)
-    continent = models.CharField(max_length=50,choices=CONTINENTS)
-    country = CountryField(blank=True,null=True)
-    state_province = models.CharField(max_length=70,blank=True,null=True)
-    waterBody = models.CharField(max_length=150,blank=True,null=True)
-    islandGroup = models.CharField(max_length=150,blank=True,null=True)
-    island = models.CharField(max_length=150,blank=True,null=True)
-    location = models.CharField(max_length=50,blank=True,null=True)
+    #continent = models.CharField(max_length=50,choices=CONTINENTS)
+    #country = CountryField(blank=True,null=True)
+    #state_province = models.CharField(max_length=70,blank=True,null=True)
+    #waterBody = models.CharField(max_length=150,blank=True,null=True)
+    #islandGroup = models.CharField(max_length=150,blank=True,null=True)
+    #island = models.CharField(max_length=150,blank=True,null=True)
+    
+    geographic_location = models.ForeignKey(_("Geog_Location"),on_delete=models.DO_NOTHING,blank=True,null=True)
+    locality = models.CharField(max_length=50,blank=True,null=True)
     
     geo_loc_name = models.CharField(max_length=50,blank=True,null=True)                 ## MIxS field
-   
-    additional_info = models.TextField(blank=True,null=True)
-    env_biome = models.ForeignKey(_("Biome"),on_delete=models.DO_NOTHING,blank=True,null=True)
+       
+    env_biome = models.CharField(max_length=255,blank=True,null=True)  #models.ForeignKey(_("Biome"),on_delete=models.DO_NOTHING,blank=True,null=True)
     env_package = models.ForeignKey(_("package"),on_delete=models.DO_NOTHING,blank=True,null=True)
     env_feature = models.CharField(max_length=50,blank=True,null=True)
     env_material = models.CharField(max_length=50,blank=True,null=True)
@@ -312,6 +356,8 @@ class Metadata(models.Model):  ### rename to Sample_metadata
     lib_size = models.DecimalField(max_digits=10,decimal_places=3,blank=True,null=True )
 
     sequence = models.ManyToManyField(_("Sequences"),blank=True)
+
+    additional_information = models.TextField(blank=True,null=True)
     
     def __str__(self):
         return self.metadata_tag
@@ -403,9 +449,7 @@ class Variable(models.Model):
 class Environment(models.Model):
     env_sample_name = models.CharField(max_length=255,blank=True,null=True)   # Uploader's personal sample ID
     created_at = models.DateField()
-    
-    Latitude = models.DecimalField(decimal_places=5,max_digits=10)  ##????
-    Longitude = models.DecimalField(decimal_places=5,max_digits=10) ##????
+         
     link_climate_info = models.URLField(blank=True,null=True)
     env_variable = models.ForeignKey(_("Variable"),on_delete=models.DO_NOTHING)
     env_method = models.ForeignKey(_("sampling_method"),blank=True,null=True,on_delete=models.DO_NOTHING)
@@ -428,10 +472,33 @@ class Environment(models.Model):
 #### End of environmental sample table
 ######################################################################################################
 
+######################################################################################################
+####
+### Spare file table ####
+fs = FileSystemStorage(location='/media/files')
+class HomelessFiles(models.Model):
+    files = models.FileField(storage=fs,blank=True,null=True)
+    event = models.ForeignKey(_("Event"),on_delete=models.CASCADE)
+
+#####################################################################################################
+
+    
+### Table for mailing uploaded documents
+class MailFile(models.Model):
+    email = models.EmailField() 
+    subject = models.CharField(max_length=1000)
+    message = models.CharField(max_length=20000)
+    document = models.FileField(upload_to='uploads/')
+    def __str__(self):
+        return self.email
+
+
+
+
+#####################################################################################################
+#class Amplicon(models.Model):
+#    AmpImg = models.ImageField()
+    
 
 
 #### RESTRICT DATA to USER and to USER selected other users
-#### trick people into thinking they're uploading data, but it e-mails it to us.   
-#### Disclaimer with dataset will be peer reviewed
-#### Allows users to create spreadsheets based on their data structure. 
-

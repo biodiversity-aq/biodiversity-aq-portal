@@ -29,8 +29,14 @@ SECRET_KEY = SECRET_KEY
 # SECURITY WARNING: define the correct hosts in production!
 ALLOWED_HOSTS = ['*'] 
 
+# Base URL to use when referring to full URLs within the Wagtail admin backend -
+# e.g. in notification emails. Don't include '/admin' or a trailing slash
+BASE_URL = 'http://biodiversity-aq-dev.herokuapp.com'
+
+SITE_ID = 2
 
 
+#### GEO Libraries
 GEOS_LIBRARY_PATH = environ.get('GEOS_LIBRARY_PATH')
 GDAL_LIBRARY_PATH = environ.get('GDAL_LIBRARY_PATH')
 
@@ -90,10 +96,11 @@ INSTALLED_APPS = [
     'django_countries',
     'djconfig',
     'data',
-    'polaaar'
-
-       
+    'cloudinary',
+    'cloudinary_storage',
+    'polaaar'       
 ]
+
 
 MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -108,6 +115,7 @@ MIDDLEWARE = [
     'wagtail.core.middleware.SiteMiddleware',
     'wagtail.contrib.redirects.middleware.RedirectMiddleware',
 ]
+
 
 ROOT_URLCONF = 'biodiversity.urls'
 
@@ -254,6 +262,24 @@ STATIC_URL = '/static/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
+FILE_UPLOAD_HANDLERS = [
+ "django.core.files.uploadhandler.MemoryFileUploadHandler",
+ "django.core.files.uploadhandler.TemporaryFileUploadHandler"
+]
+
+
+
+############################################################
+### Cloudinary settings
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': 'hhcpob9rq',
+    'API_KEY': '449231933768455',
+    'API_SECRET': 'KEnRK1YkTCIHQ-vCUwe6JJil9gM',
+}
+
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+#DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
+
 
 # Wagtail settings
 
@@ -275,15 +301,8 @@ WAGTAILADMIN_RICH_TEXT_EDITORS = {
     }
 }
 
-# Base URL to use when referring to full URLs within the Wagtail admin backend -
-# e.g. in notification emails. Don't include '/admin' or a trailing slash
-BASE_URL = 'http://example.com'
 
 
-SITE_ID = 1
-
-
-DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
 
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
@@ -333,11 +352,21 @@ FORMS_EXTRA_FIELDS = (
 #### Django Leaflet settings
 
 LEAFLET_CONFIG = {
-    
     'DEFAULT_CENTER':(0,0),    
-    'DEFAULT_ZOOM':1,    
+    'DEFAULT_ZOOM':1,
     
+    'PLUGINS': {
+        'draw': {
+            'css': 'https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css',
+            'js': 'https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js',
+        'auto-include': True,
+    },
+}
+
     }
+
+
+
 
 
 #############################################
@@ -352,21 +381,12 @@ DATA_UPLOAD_MAX_NUMBER_FIELDS = 10000
 
 
 ############################################
-#### DJANGO ALLAUTH SETTINGS
-
-#ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS =1
-#ACCOUNT_EMAIL_REQUIRED = True
-#ACCOUNT_EMAIL_VERIFICATION = "mandatory"
-#ACCOUNT_LOGIN_ATTEMPTS_LIMIT = 5
-#ACCOUNT_LOGIN_ATTEMPTS_TIMEOUT = 86400 # 1 day in seconds
-#ACCOUNT_LOGOUT_REDIRECT_URL ='/accounts/login/'
-#LOGIN_REDIRECT_URL = '/accounts/email/' 
-
+#### DJANGO AUTH SETTINGS
 
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 AUTH_USER_MODEL = 'accounts.UserProfile'
-
+LOGIN_URL = 'accounts/login/?next=/'
 
 ADMINS = (
     #('You', 'wsuadmin@seabirds.net'),
@@ -374,6 +394,26 @@ ADMINS = (
 )
 
 
-SENDER_MAIL = 'Seabirds.net <no-reply@seabirds.net>'
+SENDER_MAIL = 'Biodiversity.aq <no-reply@biodiversity.aq>'
 
 FIXTURE_DIRS = ['fixtures',]
+
+############################################################################################
+## Email settings
+
+#SENDGRID_API_KEY = secrets.SENDGRID_API_KEY
+
+EMAIL_HOST = 'smtp.sendgrid.net'
+EMAIL_HOST_USER = 'apikey'
+EMAIL_HOST_PASSWORD = SENDGRID_API_KEY
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+
+
+####################################
+### Google recaptcha SETTINGS
+RECAPTCHA_PRIVATE_KEY = GOOGLE_SECRET_KEY
+
+
+####################################################################################
+### 

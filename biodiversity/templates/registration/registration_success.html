@@ -1,11 +1,16 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
+
+
 {% block content %}
     <div class="container">
-        <div class="row">
-            <div class="col-12">
-                <h1 style="text-align:center">Your password is now changed!</h1>
+        <div class="row d-flex justify-content-center">
+            <div class="col-12 text-center">
+                <h1 style="text-align:center">Thanks for registering!</h1>
+
+                <h2 style="text-align:center">You should receive an activation e-mail soon. Please check your spam/junk inbox as well.</h2>
             </div>
         </div>
+
         <div class="row d-flex justify-content-center">
             <div class="col-6 text-center">
                 <a role="button" href="/" class="btn purple-gradient btn-lg waves-effect" style="width:100%">
@@ -15,4 +20,4 @@
 
         </div>
     </div>
-{% endblock %}
+        {% endblock %}

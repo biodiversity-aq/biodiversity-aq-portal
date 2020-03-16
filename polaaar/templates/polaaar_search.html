@@ -2,7 +2,7 @@
 {% load static leaflet_tags %}
 
 {% block title %}
-Polaaar search
+POLA3R search
 {% endblock title %}
 
 
@@ -46,7 +46,7 @@ Polaaar search
     <div id="searchcontent"></div>
 
 </div>
- 
+
 
 
 
@@ -56,19 +56,19 @@ Polaaar search
 <script>
 
     function envfunc() {
-        $("#searchcontent").load('../envsearch')
+    $("#searchcontent").load('../envsearch')
     };
     function mimfunc() {
-        $("#searchcontent").load('../mimsearch')
+    $("#searchcontent").load('../mimsearch')
     };
     function seqfunc() {
-        $("#searchcontent").load('../seqsearch')
+    $("#searchcontent").load('../seqsearch')
     };
     function spafunc() {
-        $("#searchcontent").load('../spasearch')
+        window.location = "/polaaar/spatialsearch"
     };
     function projfunc() {
-        $("#searchcontent").load('../projsearch')
+    $("#searchcontent").load('../projsearch')
     };
 
 
@@ -77,6 +77,11 @@ Polaaar search
 
 
 </script>
+
+
+
+
+
 
 
 {% endblock extra_js %}

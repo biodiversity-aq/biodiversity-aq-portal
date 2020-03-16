@@ -19,7 +19,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
     {# Global stylesheets #}
-    {% leaflet_css %}
+    {% leaflet_css plugins="draw" %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/styles.all.min.css' %}">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
@@ -37,7 +37,30 @@
     {% endblock %}
 
 
-    {% leaflet_js %}
+    <style>
+        @media (min-width: 800px) and (max-width: 850px) {
+            .navbar:not(.top-nav-collapse) {
+                background: #0099CC !important;
+            }
+        }
+
+        .view, body, html {
+            height: 80%
+        }
+
+        .navbar {
+            background-color: rgba(0, 0, 0, .2)
+        }
+
+        .top-nav-collapse {
+            background-color: #0099CC;
+        }
+
+    </style>
+
+
+
+    {% leaflet_js plugins="draw" %}
 
 
 </head>

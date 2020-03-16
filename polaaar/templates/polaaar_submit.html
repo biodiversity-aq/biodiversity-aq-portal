@@ -2,7 +2,7 @@
 {% load static leaflet_tags %}
 
 {% block title %}
-Polaaar search
+POLA3R search
 {% endblock title %}
 
 
@@ -10,6 +10,7 @@ Polaaar search
 
 {% block extra_css %}
 {% leaflet_css %}
+
 {% endblock extra_css %}
 
 {% block content %}
@@ -26,50 +27,39 @@ Polaaar search
 
             <a href="#"><img style="background-color:white;border:solid black 2px;border-radius:100px" src="{% static 'imgs/dna_clipart.png' %}" /></a>
 
-            <h2>Submit data to POLAAAR <i class="fas fa-dna pl-1"></i></h2>
+            <h2>Submit data to POLA<sub>3</sub>R <i class="fas fa-dna pl-1"></i></h2>
 
-
-            <a role="button" href="https://press3.mcs.anl.gov/gensc/mixs/" class="btn btn-lime btn-lg" style="width:30%;">
+            <a role="button" href="https://press3.mcs.anl.gov/gensc/mixs/" class="btn btn-lime btn-lg" style="width:30%;display:inline-block">
                 MIxS instructions
             </a>
-            <a role="button" href="{% static 'files/Template_SeqDataPolaaar_v1.xlsx' %}" class="btn btn-deep-orange btn-lg" style="width:30%;">
-                Get the XLSX
+            <a role="button" href="{% static 'files/Template_SeqDataPolaaar_v1.xlsx' %}" class="btn btn-deep-orange btn-lg" style="width:30%;display:inline-block;">
+                Download the datasheet
             </a>
 
         </div>
+        <div class="col-12">
+            <hr />
+        </div>
+        <div class="col-12 col-md-7" style="text-align:left">
 
-        <div class="col-12" style="text-align:center">
-
-            <ul>
-                <li><h2>Click the above button to download the xlsx sheet</h2></li>
-                <li><h2>Read all the instructions in the ReadMe tab of the spreadsheet</h2></li>
-                <li><h2>Fill in the <span style="color:darkorange">dark orange cells</span> at minimum</h2></li>
-                <li><h1>Once completed, please e-mail your form to <a href="mailto:msweetlove@naturalscience.be">msweetlove@naturalscience.be</a> or <a href="mailto:avandeputte@naturalscience.be">avandeputte@naturalscience.be</a></h1></li>
-            </ul>
-            
-
+            <h4>1) Click the above button to download the xlsx sheet</h4>
+            <h4>2) Read all the instructions in the ReadMe tab of the spreadsheet</h4>
+            <h4>3) Fill in the <span style="color:darkorange">dark orange cells</span> at minimum</h4>
+            <h4>4) Create a record for your dataset in <a href="https://ipt.biodiversity.aq/">IPT</a></h4>
+            <h4>
+                5) Once completed, <a href="/polaaar/submit_data">Click here</a> to submit your datasheet
+                <strong>(N.B. Your data sheet will be reviewed before data become available online)</strong>
+            </h4>
+        </div>
+        <div class="col-12">
+            <hr />
+        </div>
+        <div class="col-12 col-md-7" style="text-align:left">
+            <h3>Do you have a dataset, but aren't sure where to put it?</h3>
+            <h3><a href="/polaaar/submit_data">Submit your datasheet</a> to the portal and we will review it</h3>
         </div>
 
-
-        <!--
-        <div class="col-6" style="text-align:center">
-
-            <a href="#"><img style="background-color:white;border:solid black 2px;border-radius:100px" src="{% static 'imgs/leaf.png' %}" /></a>
-
-            <h2>Submit environmental data <i class="fas fa-leaf pl-1"></i></h2>
-
-
-            <a role="button" href="https://press3.mcs.anl.gov/gensc/mixs/" class="btn btn-lime btn-lg" style="width:50%">
-                MIxS instructions
-            </a>
-            <a role="button" href="#" class="btn btn-deep-orange btn-lg" style="width:50%">
-                Get the XLSX
-            </a>
-
-        </div>-->
-
-
-
+               
     </div>
 
 </div>

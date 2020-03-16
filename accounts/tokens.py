@@ -4,6 +4,8 @@ from __future__ import unicode_literals
 
 from django.core import signing
 from django.utils.encoding import smart_text
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
+from django.utils import six
 
 
 class TokenGenerator(object):
@@ -12,13 +14,7 @@ class TokenGenerator(object):
         raise NotImplementedError
 
     def generate(self, user, data=None):
-        """
-        Django signer uses colon (:) for components separation
-        JSON_object:hash_first_component:hash_secret, all base64 encoded
-        that aint so url-safe, so Im replacing them by dots (.)
-
-        base64 encode characters ref: 0-9, A-Z, a-z, _, -
-        """
+        
         data = data or {}
         data.update({'uid': self._uid(user), })
         return signing.dumps(data, salt=__name__).replace(":", ".")
@@ -39,6 +35,9 @@ class UserActivationTokenGenerator(TokenGenerator):
 
     def _uid(self, user):
         return ";".join((smart_text(user.pk), smart_text(user.is_verified)))
+
+
+
 
 
 class UserEmailChangeTokenGenerator(TokenGenerator):

@@ -20,8 +20,9 @@ logger = logging.getLogger(__name__)
 def sender(request, subject, template_name, context, to):
     site = get_current_site(request)
     context.update({
-        'site_name': site.name,
+        'site_name': "Biodiversity.aq",
         'domain': site.domain,
+        'request':request,
         'protocol': 'https' if request.is_secure() else 'http'
     })
     message = render_to_string(template_name, context)
@@ -45,7 +46,7 @@ def send_activation_email(request, user):
     subject = _("User activation")
     template_name = 'registration/activation_email.html'
     token = UserActivationTokenGenerator().generate(user)
-    context = {'user_id': user.pk, 'token': token}
+    context = {'user_id': user.pk, 'token': token, 'request':request}
     sender(request, subject, template_name, context, [user.email, ])
 
 
