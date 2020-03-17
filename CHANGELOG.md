@@ -3,11 +3,11 @@
 ## [Unreleased]
 
 ### Added
-- A `BooleanField` in abstract class `BaseMenuPage` to indicate if a page should appear as card in parent page if 
-parent page type is a `home.models.OverviewPage` or `home.models.AppLandingPage`. 
+- A BooleanField in abstract class BaseMenuPage to indicate if a page should appear as card in parent page if 
+parent page type is a OverviewPage or AppLandingPage. 
 [#8](https://gitlab.com/ymgan/biodiversity-aq-dev/-/issues/8)  ([ymgan](https://gitlab.com/ymgan))
-- A `StreamField` with `PageChooserBlock` for user to indicate which pages should be pinned in 
-`home.models.OverviewPage` or `home.models.AppLandingPage`. 
+- A StreamField with PageChooserBlock for user to indicate which pages should be pinned in OverviewPage or 
+AppLandingPage. 
 [#10](https://gitlab.com/ymgan/biodiversity-aq-dev/-/issues/10)  ([ymgan](https://gitlab.com/ymgan))
 
 ### Changed
@@ -17,6 +17,9 @@ parent page type is a `home.models.OverviewPage` or `home.models.AppLandingPage`
 [#8](https://gitlab.com/ymgan/biodiversity-aq-dev/-/issues/8)  ([ymgan](https://gitlab.com/ymgan))
 - OverviewPage and AppLandingPage template to render pinned pages. 
 [#10](https://gitlab.com/ymgan/biodiversity-aq-dev/-/issues/10)  ([ymgan](https://gitlab.com/ymgan))
+- OverviewPage and `AppLandingPage template only render max 6 most recent pages. 
+[#6](https://gitlab.com/ymgan/biodiversity-aq-dev/-/issues/6), 
+[#7](https://gitlab.com/ymgan/biodiversity-aq-dev/-/issues/7) ([ymgan](https://gitlab.com/ymgan))
 
 
 ## [0.1.1](https://gitlab.com/ymgan/biodiversity-aq-dev/-/releases/v0.1.1) - 2020-03-13
