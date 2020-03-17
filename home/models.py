@@ -59,6 +59,7 @@ class BaseMenuPage(MenuPage):
 
     class Meta:
         abstract = True
+        ordering = ['-last_published_at']
 
 
 class OverviewPage(BaseMenuPage):
@@ -94,9 +95,6 @@ class DetailPage(BaseMenuPage):
     ]
 
     template = 'home/detail_page.html'
-
-    class Meta:
-        ordering = ['-last_published_at']
 
 
 class DetailIndexPage(Page):
