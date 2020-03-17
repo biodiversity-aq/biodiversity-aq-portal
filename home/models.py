@@ -42,7 +42,7 @@ class BaseMenuPage(MenuPage):
     ], blank=True)
     show_in_parent = models.BooleanField(
         default=False, null=True, blank=True,
-        help_text='If true (checked) this page will appear in the bottom of parent page if parent page type is '
+        help_text='If true, this page will appear in the parent page if parent page type is '
                   'AppLandingPage or OverviewPage.'
     )
 
@@ -65,7 +65,15 @@ class OverviewPage(BaseMenuPage):
     """
     An overview page which list all its children pages
     """
+    pin = StreamField([
+        ('pinned_pages', blocks.PageChooserBlock(required=False, help_text='Select page to be pinned in this page')),
+    ], blank=True, null=True)
+
     template = 'home/overview_page.html'
+
+    content_panels = BaseMenuPage.content_panels + [
+        StreamFieldPanel('pin')
+    ]
 
 
 class PageTag(TaggedItemBase):
