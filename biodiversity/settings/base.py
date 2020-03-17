@@ -92,6 +92,9 @@ INSTALLED_APPS = [
     'django_social_share',
     'puput',
     'colorful',
+    'rest_framework',
+    'django_filters',
+
 
     'django_countries',
     'djconfig',
@@ -416,4 +419,10 @@ RECAPTCHA_PRIVATE_KEY = GOOGLE_SECRET_KEY
 
 
 ####################################################################################
-### 
+### REST Framework SETTINGS
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'DEFAULT_VERSIONING_CLASS':'rest_framework.versioning.NamespaceVersioning',
+    'DEFAULT_FILTER_BACKENDS': 'django_filters.rest_framework.DjangoFilterBackend',
+    'PAGE_SIZE': 10
+}

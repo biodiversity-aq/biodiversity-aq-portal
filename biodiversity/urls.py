@@ -16,6 +16,7 @@ from django.contrib.auth import views as auth_views
 import accounts
 import data.urls
 import polaaar.urls
+from . import views
 
 urlpatterns = [
     re_path(r'^django-admin/', admin.site.urls),
@@ -25,6 +26,9 @@ urlpatterns = [
     url(r'^documents/', include(wagtaildocs_urls)),
     url(r'^accounts/', include('accounts.urls')), 
     url(r'^accounts/', include('django.contrib.auth.urls'), name='accounts'),
+   
+    # putting api reference in here because it might be generic to the whole site
+    url(r'^api_reference/',views.api_reference,name='api_reference'),
 
     path('data/', include('data.urls')),
     re_path(r'polaaar/', include('polaaar.urls')),
