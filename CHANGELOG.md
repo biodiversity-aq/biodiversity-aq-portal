@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [0.1.2](https://gitlab.com/ymgan/biodiversity-aq-dev/-/releases/v0.1.2) - 2020-03-18
+
 ### Added
 - A BooleanField in abstract class BaseMenuPage to indicate if a page should appear as card in parent page if 
 parent page type is a OverviewPage or AppLandingPage. 
