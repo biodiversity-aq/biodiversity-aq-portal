@@ -1,4 +1,3 @@
-from django.shortcuts import render
 
 # Create your views here.
 from django.contrib.auth.decorators import login_required
@@ -15,9 +14,17 @@ from django.core.files.storage import FileSystemStorage
 from .forms import EmailForm
 from django.core.mail import send_mail, EmailMessage
 from django.core.serializers import serialize
+from django_filters.rest_framework import DjangoFilterBackend
 
 from polaaar.models import *
 from accounts.models import UserProfile
+
+from rest_framework import viewsets
+from rest_framework import permissions
+from polaaar.serializers import *
+
+
+
 
 def home(request):
     return render(request, 'polaaar_home.html')
@@ -143,3 +150,23 @@ def email_submission(request):
 
 def submit_success(request):
     return render(request, 'polaaarsubmit/submit_success.html')
+
+
+
+
+###################################################################################################################
+
+#### REST API views
+
+
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = UserProfile.objects.all().order_by('last_name')   # Must be named queryset for the API 
+    serializer_class = UserSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+
+class EventViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Event.objects.all()
+    serializer_class = EventSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['sample_name','samplingProtocol']

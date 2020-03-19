@@ -48,7 +48,7 @@ class TaxaAdmin(ModelAdmin):
 class GeogAdmin(ModelAdmin):
     model=Geog_Location
     menu_label = 'Geographic locations'
-    menu_icon = 'globe'#'snippet'
+    menu_icon = 'site'
     menu_order = 600
     add_to_settings_menu = False
     exclude_from_explorer = False
@@ -139,11 +139,6 @@ class MIxSAdmin(ModelAdmin):
     exclude_from_explorer=False
     
 
-class EnvironmentGroup(ModelAdminGroup):
-    menu_label = "Environmental"
-    menu_icon = "snippet"
-    menu_order = 502
-    items = (SamplingMethodAdmin,SamplingUnitsAdmin,SamplingVariable,EnvironmentalSample,MIxSAdmin)
 
 
 
@@ -203,11 +198,6 @@ class EventTypeAdmin(ModelAdmin):
     add_to_settings_menu=False
     exclude_from_explorer=False
 
-class EventGroup(ModelAdminGroup):
-    menu_label = "Events"
-    menu_icon = "arrows-up-down"
-    menu_order = 503
-    items = (ProjectMetadataAdmin,ParentEventAdmin,EventAdmin,EventTypeAdmin)
 
 ### End of event model admin
 #########################################################################################
@@ -267,17 +257,22 @@ class MetadataAdmin(ModelAdmin):
 
 
 
+
+class pola3rAdmin(ModelAdminGroup):
+    menu_label = "Pola3r"
+    menu_icon = "cogs"
+    menu_order = 300
+    items = (MetadataAdmin,OccurrencesAdmin,SequencesAdmin,EventAdmin,EventTypeAdmin,ParentEventAdmin,
+            ProjectMetadataAdmin,MIxSAdmin,EnvironmentalSample,SamplingVariable,SamplingUnitsAdmin,SamplingMethodAdmin,
+            ReferencesAdmin,TaxaAdmin,GeogAdmin)
+
+
+
 #########################################################################
 #### Registration chunk
 ## This chunk registers tables to the admin so they can be manipulated through the CMS
-modeladmin_register(ReferencesAdmin)
-modeladmin_register(TaxaAdmin)
-modeladmin_register(EnvironmentGroup)
-modeladmin_register(GeogAdmin)
-modeladmin_register(EventGroup)
-modeladmin_register(SequencesAdmin)
-modeladmin_register(OccurrencesAdmin)
-modeladmin_register(MetadataAdmin)
+
+modeladmin_register(pola3rAdmin)
 
 ##################################################################################################################################################
 ### Model admin for  /django-admin with import-export loading

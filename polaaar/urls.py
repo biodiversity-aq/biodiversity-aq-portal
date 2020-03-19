@@ -3,6 +3,12 @@ from django.urls import path
 from django.conf.urls import include, url
 from . import views
 
+from rest_framework import routers
+
+router = routers.DefaultRouter()
+router.register(r'users',views.UserViewSet)
+router.register(r'events',views.EventViewSet)
+
 
 app_name = 'polaaar'
 urlpatterns = [
@@ -24,7 +30,10 @@ urlpatterns = [
     path('dcsubmit/',views.dc_submit,name='dc_submit'),
     path('mimsubmit/',views.mim_submit,name='mim_submit'),
 
+    #### REST API URLS
 
+    path('',include(router.urls)),
+    path('api-auth/',include('rest_framework.urls',namespace='rest_framework'))
     
 
  
