@@ -40,12 +40,18 @@ class BaseMenuPage(MenuPage):
         ('paragraph', blocks.RichTextBlock(required=False)),
         ('image', ImageChooserBlock(required=False))
     ], blank=True)
+    show_in_parent = models.BooleanField(
+        default=False, null=True, blank=True,
+        help_text='If true, this page will appear in the parent page if parent page type is '
+                  'AppLandingPage or OverviewPage.'
+    )
 
     content_panels = Page.content_panels + [
         MultiFieldPanel([
             ImageChooserPanel('cover'),
             FieldPanel('short_description'),
         ]),
+        FieldPanel('show_in_parent'),
         StreamFieldPanel('body'),
     ]
 
@@ -53,13 +59,22 @@ class BaseMenuPage(MenuPage):
 
     class Meta:
         abstract = True
+        ordering = ['-last_published_at']
 
 
 class OverviewPage(BaseMenuPage):
     """
     An overview page which list all its children pages
     """
+    pin = StreamField([
+        ('pinned_pages', blocks.PageChooserBlock(required=False, help_text='Select page to be pinned in this page')),
+    ], blank=True, null=True)
+
     template = 'home/overview_page.html'
+
+    content_panels = BaseMenuPage.content_panels + [
+        StreamFieldPanel('pin')
+    ]
 
 
 class PageTag(TaggedItemBase):
@@ -80,9 +95,6 @@ class DetailPage(BaseMenuPage):
     ]
 
     template = 'home/detail_page.html'
-
-    class Meta:
-        ordering = ['-last_published_at']
 
 
 class DetailIndexPage(Page):

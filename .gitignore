@@ -19,3 +19,6 @@ biodiversity/settings/local.py
 
 # media directories
 media
+
+# Mac
+.DS_Store
