@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+### Removed 
+- previous `header.html` which is no longer used.
+
 ## [0.1.2](https://gitlab.com/ymgan/biodiversity-aq-dev/-/releases/v0.1.2) - 2020-03-18
 
 ### Added
