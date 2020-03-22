@@ -194,7 +194,7 @@ class ProjectMetadata(models.Model):
     geomet                          = models.PolygonField(srid=4326, blank=True, null=True)
     
     is_public                       = models.BooleanField()
-    associated_references           = models.ForeignKey(_("Reference"),blank=True,null=True,on_delete=models.DO_NOTHING)
+    associated_references           = models.ManyToManyField(_("Reference"),blank=True)
     associated_media                = models.TextField(blank=True,null=True)
     created_on                      = models.DateField()
     updated_on                      = models.DateField(auto_now=True)
@@ -212,36 +212,28 @@ class ProjectMetadata(models.Model):
 
 ####################################################################################################################
 
-## Add table here for lost datasets / data with no structure?
-####################################################################################################################
-
-################################################################################
-### Change event type to TextField?
-################################################################################
-
-
 ## Change to EventHierarchy
 
 class EventHierarchy(models.Model):
-    parent_event_name               = models.CharField(max_length=255)                        ## User's project name or cruise name, etc...
-    event_type                      = models.ForeignKey(_("EventType"),
-                                                            on_delete=models.DO_NOTHING)  ## Drawn from the Event_type table
+    event_hierarchy_name               = models.CharField(max_length=255)                        ## User's project name or cruise name, etc...
+    event_type                      = models.ForeignKey(_("EventType"),related_name='eventtype',
+                                                            on_delete=models.DO_NOTHING)        ## Drawn from the Event_type table
        
     description                     = models.TextField()                                            ## Description of the event
     
-    parent_event                    = models.ForeignKey('self',on_delete=models.DO_NOTHING,related_name='EventRank',blank=True,null=True)
+    parent_event_hierarchy          = models.ForeignKey('self',on_delete=models.DO_NOTHING,related_name='EventRank',blank=True,null=True)
     event_creator                   = models.ForeignKey(
                                         settings.AUTH_USER_MODEL,
                                         on_delete=models.CASCADE)
     created_on                      = models.DateField()
     updated_on                      = models.DateField(auto_now=True)
     
-    project_metadata                = models.ForeignKey(_("ProjectMetadata"),blank=True,null=True,on_delete=models.CASCADE)
+    project_metadata                = models.ForeignKey(_("ProjectMetadata"),related_name='event_hierarchy',blank=True,null=True,on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.event_type.name +': '+ self.parent_event_name
+        return self.event_type.name +': '+ self.event_hierarchy_name
     class Meta:
-        ordering=['parent_event_name']
+        ordering=['event_hierarchy_name']
 
 #### End of parent event models block
 ####################################################################################################
@@ -251,7 +243,7 @@ class EventHierarchy(models.Model):
 ## then a new event (sample) can be defined with the original sample as a parent.
 
 class Event(models.Model):
-
+    
     footprintWKT        = models.GeometryField(srid=4326,blank=True,null=True)
     
     Latitude            = models.DecimalField(decimal_places=5,max_digits=10,blank=True,null=True) 
@@ -261,15 +253,16 @@ class Event(models.Model):
     sample_name         = models.CharField(max_length=255,unique=True)   ### Unique value      ## User provided id for sample
     collection_date     = models.DateField()
     collection_time     = models.TimeField()
-    parent_event        = models.ForeignKey(_("EventHierarchy"),on_delete=models.CASCADE)
-    ### Sample is a recursive table, and can be sub-sampled    
-    parent_sample       = models.ForeignKey('self',
+    event_hierarchy     = models.ForeignKey(_("EventHierarchy"),related_name='event',on_delete=models.CASCADE)
+    ### Sample is a recursive table, and can be sub-sampled (in other words, it refers back to itself so you can build on itself)    
+    parent_event        = models.ForeignKey('self',
                                       on_delete=models.DO_NOTHING,
                                       blank=True,
                                       null=True)
     
     samplingProtocol    = models.TextField(blank=True,null=True)
 
+    event_metadata      = models.ForeignKey(_("SampleMetadata"),blank=True,null=True,on_delete=models.CASCADE)
     occurrence          = models.ManyToManyField(_("Occurrence"),blank=True)    
     environment         = models.ManyToManyField(_("Environment"),blank=True)
 
@@ -279,7 +272,7 @@ class Event(models.Model):
     
 
     def __str__(self):
-        return self.parent_event.parent_event_name +', '+ self.sample_name
+        return self.sample_name
     class Meta:
         ordering = ['-collection_date','-collection_time']
 
@@ -307,17 +300,17 @@ class Occurrence(models.Model):
         return self.occurrenceID + ': ' + self.taxon.name
 ### End of occurrences model block
 ####################################################################################################
-### Metadata model
+### Sample Metadata model
 
 ### This metadata table is linked to the Event (sample) - it has to be completed BEFORE creating the sample
 ### in order for the sample to be linked to the Metadata
 
-class Metadata(models.Model):  ### rename to Sample_metadata
+class SampleMetadata(models.Model):  
     metadata_tag            = models.CharField(max_length=255,blank=True,null=True)
     md_created_on           = models.DateField()
     metadata_creator        = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE)
+                                settings.AUTH_USER_MODEL,
+                                on_delete=models.CASCADE)
     
     license                 = models.CharField(max_length=100,blank=True,null=True)
     

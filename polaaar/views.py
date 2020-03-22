@@ -19,7 +19,8 @@ from django_filters.rest_framework import DjangoFilterBackend
 from polaaar.models import *
 from accounts.models import UserProfile
 
-from rest_framework import viewsets
+
+from rest_framework import viewsets, filters
 from rest_framework import permissions
 from polaaar.serializers import *
 
@@ -158,15 +159,287 @@ def submit_success(request):
 
 #### REST API views
 
+class ReferenceViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Reference.objects.all()
+    serializer_class = ReferenceSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['full_reference','year']
 
-class UserViewSet(viewsets.ModelViewSet):
-    queryset = UserProfile.objects.all().order_by('last_name')   # Must be named queryset for the API 
-    serializer_class = UserSerializer
-    permission_classes = [permissions.IsAuthenticated]
+class SequencesViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Sequences.objects.all()
+    serializer_class = SequencesSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = {
+    'sequence_name':['exact','icontains'],
+	'target_gene':['exact','icontains'],
+	'primerName_forward':['exact','icontains'],
+	'primerName_reverse':['exact','icontains'],
+	'seqData_numberOfBases':['gte','lte','exact'],
+	'seqData_numberOfSequences':['gte','lte','exact'],    
+	}
 
+
+class ProjectMetadataViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = ProjectMetadata.objects.all()
+    serializer_class = ProjectMetadataSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = {
+    'project_name':['exact','icontains'],
+	'start_date':['exact','icontains','gte','lte'],
+	'end_date':['exact','icontains','gte','lte'],    
+	'abstract':['icontains'],
+	'is_public':['exact'],
+	## Creator search
+	'project_creator__full_name':['exact','icontains'],
+	## Reference search
+	'associated_references__full_reference':['icontains'],
+	## Event hierarchy search
+	'event_hierarchy__event_hierarchy_name':['exact','icontains'],
+	'event_hierarchy__description':['icontains'],
+	'event_hierarchy__event_type__name':['icontains'],
+	## Event search
+	'event_hierarchy__event__parent_event__sample_name':['icontains'],							# This references the __str__ argument from the model (back to 'self')
+	'event_hierarchy__event__sample_name':['icontains'],
+	## Sequence search
+	'event_hierarchy__event__event_metadata__sequence__sequence_name':['exact','icontains'],
+	'event_hierarchy__event__event_metadata__sequence__target_gene':['exact','icontains'],
+	'event_hierarchy__event__event_metadata__sequence__primerName_forward':['exact','icontains'],
+	'event_hierarchy__event__event_metadata__sequence__primerName_reverse':['exact','icontains'],
+	'event_hierarchy__event__event_metadata__sequence__seqData_numberOfBases':['gte','lte','exact'],
+	'event_hierarchy__event__event_metadata__sequence__seqData_numberOfSequences':['gte','lte','exact'],    
+	}
+
+
+
+class EventHierarchyViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = EventHierarchy.objects.all()
+    serializer_class = EventHierarchySerializer
+    filter_backends = [DjangoFilterBackend]        
+    filterset_fields = {    
+     'event_hierarchy_name':['exact','istartswith','icontains'],
+     'description':['icontains'],
+	}
+
+class OccurrenceViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Occurrence.objects.all()
+    serializer_class = OccurrenceSerializer
+    filter_backends = [DjangoFilterBackend]        
+    filterset_fields = {    
+     'occurrenceID':['exact','istartswith','icontains']
+	}
 
 class EventViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Event.objects.all()
     serializer_class = EventSerializer
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['sample_name','samplingProtocol']
+    filterset_fields = {
+    #'collection_date':['gte','lte'],
+     'sample_name':['exact','istartswith'],
+     #'parent_event__project_metadata__project_name':['exact','icontains']
+	}
+
+class GeogViewSet(viewsets.ReadOnlyModelViewSet):	
+	queryset = Geog_Location.objects.all()
+	serializer_class = GeogSerializer
+	filter_backends = [DjangoFilterBackend]
+	filterset_fields = {
+		'name':['exact']
+	}
+	
+
+class EnvironmentViewSet(viewsets.ReadOnlyModelViewSet):	
+	queryset = Environment.objects.all()
+	serializer_class = EnvironmentSerializer
+	filter_backends = [DjangoFilterBackend]
+	
+
+
+###########################################################################
+'''
+
+
+
+class sampling_methodSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = sampling_method
+		fields =[
+		'url',
+		'shortname',
+		'description'
+		]
+
+class unitsSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = units
+		fields =[
+		'url',
+		'name',
+		'html_tag'
+		]
+    
+
+class VariableSerializer(serializers.ModelSerializer):
+	var_units = serializers.StringRelatedField(many=True)
+	method = serializers.StringRelatedField(many=True)
+	class Meta:
+		model = Variable
+		fields =[
+		'url',
+		'name',
+		'var_units',
+		'method',
+		'var_type'
+		]
+
+
+class EnvironmentSerializer(serializers.ModelSerializer):
+	env_variable = VariableSerializer(many=False,read_only=True)
+	sequences = SequencesSerializer(many=True,read_only=True)
+	
+	class Meta:
+		model = Environment
+		fields =[
+		'url',
+	    'env_sample_name',
+		'created_at',
+		'link_climate_info',
+		'env_variable',
+		'sequences',
+		'env_numeric_value',
+		'env_text_value'
+		]
+
+
+
+
+#########################################################################################################
+
+
+
+class EventTypeSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = EventType
+		fields = [
+		'url',
+		'name']
+
+
+
+class SampleMetadataSerializer(serializers.ModelSerializer): 
+	metadata_creator = serializers.StringRelatedField(many=False)
+	geographic_location = GeogSerializer(many=False,read_only=True)
+	env_package = PackageSerializer(many=False,read_only=True)
+	sequence = SequencesSerializer(many=True,read_only=True)
+
+	class Meta:
+		model = SampleMetadata
+		fields = [
+		'metadata_tag',
+		'md_created_on',
+		'metadata_creator',        # User FK
+		'license',
+		'geographic_location',  #FK geog_loc
+		'locality',
+		'geo_loc_name',
+		'env_biome',
+		'env_package',   #FK Package
+		'env_feature',
+		'env_material',
+		'institutionID',
+		'nucl_acid_amp',
+		'nucl_acid_ext',
+		'ref_biomaterial',
+		'rel_to_oxygen',
+		'rightsHolder',
+		'samp_collect_device',
+		'samp_store_dur',
+		'samp_store_loc',
+		'samp_store_temp',
+		'samp_vol_we_dna_ext',
+		'samplingProtocol',
+		'source_mat_id',
+		'submitted_to_insdc',
+		'investigation_type',
+		'isol_growth_condt',
+		'lib_size',
+		'sequence', #M2M  sequences
+		'additional_information'
+	]
+
+
+
+
+##################### has a router = 'project_metadata'
+class ProjectMetadataSerializer(serializers.ModelSerializer):
+
+	associated_references = ReferenceSerializer(many=True,read_only=True)
+	#associated_references = serializers.StringRelatedField(many=False)
+	project_creator = serializers.StringRelatedField(many=False)
+	class Meta:
+		model = ProjectMetadata
+		fields = [
+		'url',
+		'project_name',
+		'start_date',
+		'end_date',
+		'EML_URL',
+		'abstract',
+		'geomet',
+		'is_public',
+		'associated_references',
+		'associated_media',
+		'created_on',
+		'updated_on',
+		'project_creator',
+		'project_qaqc'
+		]
+
+
+class EventHierarchySerializer(serializers.ModelSerializer):	
+	project_metadata = ProjectMetadataSerializer(many=False,read_only=True)
+	event_type = serializers.StringRelatedField(many=False)
+	parent_event = serializers.StringRelatedField(many=False)
+	event_creator = serializers.StringRelatedField(many=False)
+	class Meta:
+		model = EventHierarchy
+		fields = [
+		'url',
+		'parent_event_name',
+		'event_type',
+		'description',
+		'parent_event',
+		'event_creator',
+		'created_on',
+		'updated_on',
+		'project_metadata']
+
+
+
+class TaxaSerializer(serializers.ModelSerializer):
+	parent_taxa = serializers.StringRelatedField(many=False)
+	class Meta:
+		model = Taxa
+		fields = [
+		'name',
+		'TaxonRank',
+		'taxonID',
+		'parent_taxa'		    
+		]
+
+
+
+'''
+
+
+
+
+
+
+
+
+
+
+
+
+
+

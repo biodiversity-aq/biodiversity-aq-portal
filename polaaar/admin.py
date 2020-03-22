@@ -159,15 +159,15 @@ class ProjectMetadataAdmin(ModelAdmin):
 
 
 
-class ParentEventAdmin(ModelAdmin):
+class EventHierarchyAdmin(ModelAdmin):
     model=EventHierarchy
-    menu_label='Parent Event'
+    menu_label='Event Hierarchy'
     menu_icon='arrow-up-big'
     menu_order = 101
     add_to_settings_menu=False
     exclude_from_explorer=False
-    search_fields=('event_creator__username','event_creator__first_name','event_creator__last_name','parent_event_name')        
-    list_display = ('parent_event_name','description') #'Project_name',
+    search_fields=('event_creator__username','event_creator__first_name','event_creator__last_name','event_hierarchy_name')        
+    list_display = ('event_hierarchy_name','description') #'Project_name',
  
     #def Project_name(self,obj):
     #    return obj.project.project_name
@@ -182,13 +182,13 @@ class EventAdmin(ModelAdmin):
     menu_order=102
     add_to_settings_menu=False
     exclude_from_explorer=False
-    search_fields=('sample_name','parent_sample__sample_name',
-                   'parent_sample_parent_sample__sample_name')
+    search_fields=('sample_name','parent_event__sample_name',
+                   'parent_event_parent_event__sample_name')
     list_filter=('metadata_exists','occurrence_exists','environment_exists',)
-    list_display=('Parent_Event','sample_name','collection_date')
+    list_display=('Event_Hierarchy','sample_name','collection_date')
 
-    def Parent_Event(self,obj):
-        return obj.parent_event.parent_event_name
+    def Event_Hierarchy(self,obj):
+        return obj.event_hierarchy.event_hierarchy_name
 
 class EventTypeAdmin(ModelAdmin):
     model=EventType
@@ -239,8 +239,8 @@ class OccurrencesAdmin(ModelAdmin):
 #########################################################################################
 
 class MetadataAdmin(ModelAdmin):
-    model=Metadata
-    menu_label='Metadata'
+    model=SampleMetadata
+    menu_label='Sample Metadata'
     menu_icon='doc-full'
     menu_order = 507
     add_to_settings_menu=False
@@ -262,7 +262,7 @@ class pola3rAdmin(ModelAdminGroup):
     menu_label = "Pola3r"
     menu_icon = "cogs"
     menu_order = 300
-    items = (MetadataAdmin,OccurrencesAdmin,SequencesAdmin,EventAdmin,EventTypeAdmin,ParentEventAdmin,
+    items = (MetadataAdmin,OccurrencesAdmin,SequencesAdmin,EventAdmin,EventTypeAdmin,EventHierarchyAdmin,
             ProjectMetadataAdmin,MIxSAdmin,EnvironmentalSample,SamplingVariable,SamplingUnitsAdmin,SamplingMethodAdmin,
             ReferencesAdmin,TaxaAdmin,GeogAdmin)
 
@@ -341,7 +341,7 @@ class ProjectMetadataResource(resources.ModelResource):
     class Meta:
         model = ProjectMetadata
 
-class ParentEventResource(resources.ModelResource):
+class EventHierarchyResource(resources.ModelResource):
     delete = Field(widget=widgets.BooleanWidget())
     def for_delete(self, row, instance):
         return self.fields['delete'].clean(row)
@@ -382,7 +382,7 @@ class MetadataResource(resources.ModelResource):
     def for_delete(self, row, instance):
         return self.fields['delete'].clean(row)
     class Meta:
-        model = Metadata
+        model = SampleMetadata
     
 
 #################################################################################################################################
@@ -464,23 +464,23 @@ class ProjectMetadataAdminImpExp(ImportExportModelAdmin):
     list_display = ('project_name','start_date','end_date','is_public','abstract','project_qaqc')
 
 
-class ParentEventAdminImpExp(ImportExportModelAdmin):
-    resource_class = ParentEventResource
-    search_fields=('event_creator__username','event_creator__first_name','event_creator__last_name','parent_event_name')        
-    list_display = ('parent_event_name','description')#'Project_name',
+class EventHierarchyAdminImpExp(ImportExportModelAdmin):
+    resource_class = EventHierarchyResource
+    search_fields=('event_creator__username','event_creator__first_name','event_creator__last_name','event_hierarchy_name')        
+    list_display = ('event_hierarchy_name','description')#'Project_name',
  
     #def Project_name(self,obj):
     #    return obj.project.project_name
 
 class EventAdminImpExp(ImportExportModelAdmin):
     resource_class = EventResource
-    search_fields=('sample_name','parent_sample__sample_name',
-                   'parent_sample_parent_sample__sample_name')
+    search_fields=('sample_name','parent_event__sample_name',
+                   'parent_event_parent_event__sample_name')
     list_filter=('metadata_exists','occurrence_exists','environment_exists',)
-    list_display=('Parent_Event','sample_name','collection_date')
+    list_display=('Event_Hierarchy','sample_name','collection_date')
 
-    def Parent_Event(self,obj):
-        return obj.parent_event.parent_event_name
+    def Event_Hierarchy(self,obj):
+        return obj.event_hierarchy.event_hierarchy_name
 
 class EventTypeAdminImpExp(ImportExportModelAdmin):
     resource_class = EventTypeResource
@@ -529,9 +529,9 @@ admin.site.register(Variable,SamplingVariableAdminImpExp)
 admin.site.register(Environment,EnvironmentalSampleAdminImpExp)
 admin.site.register(package,MIxSAdminImpExp)
 admin.site.register(ProjectMetadata,ProjectMetadataAdminImpExp)
-admin.site.register(EventHierarchy,ParentEventAdminImpExp)
+admin.site.register(EventHierarchy,EventHierarchyAdminImpExp)
 admin.site.register(Event,EventAdminImpExp)
 admin.site.register(EventType,EventTypeAdminImpExp)
 admin.site.register(Sequences,SequencesAdminImpExp)
 admin.site.register(Occurrence,OcurrencesAdminImpExp)
-admin.site.register(Metadata,MetadataResourceAdminImpExp)
+admin.site.register(SampleMetadata,MetadataResourceAdminImpExp)

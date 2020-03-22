@@ -6,8 +6,15 @@ from . import views
 from rest_framework import routers
 
 router = routers.DefaultRouter()
-router.register(r'users',views.UserViewSet)
+router.register(r'occurrence',views.OccurrenceViewSet)
 router.register(r'events',views.EventViewSet)
+router.register(r'eventhierarchy',views.EventHierarchyViewSet)
+router.register(r'project_metadata',views.ProjectMetadataViewSet)
+router.register(r'sequences',views.SequencesViewSet)
+router.register(r'reference',views.ReferenceViewSet)
+router.register(r'geog_location',views.GeogViewSet)
+router.register(r'environment',views.EnvironmentViewSet)
+
 
 
 app_name = 'polaaar'
