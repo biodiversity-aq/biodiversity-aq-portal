@@ -2,6 +2,23 @@
 
 ## [Unreleased]
 
+### Added
+- Flat menu handle choices in `settings/base.py`. [#9](https://gitlab.com/ymgan/biodiversity-aq-dev/-/issues/9) 
+([ymgan](https://gitlab.com/ymgan))
+- Flat menu template under `biodiversity/templates/menus/flat/level_1.html`. 
+[#9](https://gitlab.com/ymgan/biodiversity-aq-dev/-/issues/9) 
+([ymgan](https://gitlab.com/ymgan))
+- Flat menu block in project base template `biodiversity/templates/base.html` and `home` app base template. 
+[#9](https://gitlab.com/ymgan/biodiversity-aq-dev/-/issues/9) 
+([ymgan](https://gitlab.com/ymgan))
+
+### Changed
+- Project css `biodiversity/static/css/main.css`. Smaller navbar brand, smaller header menu and hence smaller top 
+padding for `body`. ([ymgan](https://gitlab.com/ymgan))
+
+### Removed 
+- Previous `header.html` which is no longer used.
+
 ## [0.1.2](https://gitlab.com/ymgan/biodiversity-aq-dev/-/releases/v0.1.2) - 2020-03-18
 
 ### Added
