@@ -11,6 +11,7 @@
 - Flat menu block in project base template `biodiversity/templates/base.html` and `home` app base template. 
 [#9](https://gitlab.com/ymgan/biodiversity-aq-dev/-/issues/9) 
 ([ymgan](https://gitlab.com/ymgan))
+- `django-filter` in `requirements.txt.
 
 ### Changed
 - Project css `biodiversity/static/css/main.css`. Smaller navbar brand, smaller header menu and hence smaller top 
