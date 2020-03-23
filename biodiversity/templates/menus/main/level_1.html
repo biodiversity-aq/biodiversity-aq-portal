@@ -1,22 +1,27 @@
 {% load static menu_tags %}
 <div class="collapse" id="mainMenuCollapse">
     <ul class="nav">
-    {% for item in menu_items %}
-        {% if item.has_children_in_menu %}
-            <li class="nav-item {{ item.active_class }} dropdown">
-                <a href="{{ item.href }}" class="nav-link dropdown-toggle"
-                   id="ddtoggle_{{ item.link_page.pk }}" aria-haspopup="true" aria-expanded="false"
-                   data-toggle="dropdown" style="color:white">
-                    {{ item.text }}</a>
-                <div class="dropdown-menu" aria-labelledby="ddtoggle_{{ item.link_page.pk }}">
-                    {% sub_menu item %}
-                </div>
-            </li>
-        {% else %}
-            <li class="nav-item {{ item.active_class }}">
-                <a href="{{ item.href }}" class="nav-link" style="color:white">{{ item.text }}</a>
-            </li>
-        {% endif %}
-    {% endfor %}
+        {% for item in menu_items %}
+            {% if item.has_children_in_menu %}
+                <li class="nav-item {{ item.active_class }} dropdown">
+                    <a href="{{ item.href }}" class="nav-link dropdown-toggle"
+                       id="ddtoggle_{{ item.link_page.pk }}" aria-haspopup="true" aria-expanded="false"
+                       data-toggle="dropdown" style="color:white">
+                        {{ item.text }}</a>
+                    <div class="dropdown-menu" aria-labelledby="ddtoggle_{{ item.link_page.pk }}">
+                        {% sub_menu item %}
+                    </div>
+                </li>
+            {% else %}
+                <li class="nav-item {{ item.active_class }}">
+                    <a href="{{ item.href }}" class="nav-link" style="color:white">{{ item.text }}</a>
+                </li>
+            {% endif %}
+        {% endfor %}
     </ul>
 </div>
+<!-- Button to toggle main menu -->
+<button class="btn btn-outline-white btn-sm" type="button" data-toggle="collapse" data-target="#mainMenuCollapse"
+        aria-controls="mainMenuCollapse" aria-expanded="false" aria-label="Toggle navigation">
+    <span><i class="fas fa-bars"></i></span>
+</button>

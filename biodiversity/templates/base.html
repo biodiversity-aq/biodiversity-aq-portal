@@ -74,19 +74,10 @@
     <!-- Collapsible flat menu content -->
     {% block flat_menu %}
     {% endblock %}
-    <!-- Collapse button for flat menu -->
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#flatMenuCollapse"
-            aria-controls="flatMenuCollapse" aria-expanded="false" aria-label="Toggle navigation">
-        <span><i class="fas fa-info"></i></span>
-    </button>
 
     <!-- Collapsible main menu content -->
     {% main_menu max_levels=3 template="menus/main/level_1.html" %}
-    <!-- Button to toggle main menu -->
-    <button class="btn btn-outline-white btn-sm" type="button" data-toggle="collapse" data-target="#mainMenuCollapse"
-            aria-controls="mainMenuCollapse" aria-expanded="false" aria-label="Toggle navigation">
-        <span><i class="fas fa-bars"></i></span>
-    </button>
+
     <!-- user menu -->
     <ul id="user-account" class="navbar-nav ml-auto pl-2">
         <li class="nav-item dropdown">
