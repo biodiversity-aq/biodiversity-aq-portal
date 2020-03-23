@@ -11,7 +11,7 @@
 - Flat menu block in project base template `biodiversity/templates/base.html` and `home` app base template. 
 [#9](https://gitlab.com/ymgan/biodiversity-aq-dev/-/issues/9) 
 ([ymgan](https://gitlab.com/ymgan))
-- `django-filter` in `requirements.txt.
+- `django-filter` in `requirements.txt`.
 
 ### Changed
 - Project css `biodiversity/static/css/main.css`. Smaller navbar brand, smaller header menu and hence smaller top 
@@ -19,6 +19,11 @@ padding for `body`. ([ymgan](https://gitlab.com/ymgan))
 
 ### Removed 
 - Previous `header.html` which is no longer used.
+
+### Fixed
+- Site matching query does not exist for login link after user logged out. 
+[#12](https://gitlab.com/ymgan/biodiversity-aq-dev/-/issues/12) 
+([ymgan](https://gitlab.com/ymgan))
 
 ## [0.1.2](https://gitlab.com/ymgan/biodiversity-aq-dev/-/releases/v0.1.2) - 2020-03-18
 
