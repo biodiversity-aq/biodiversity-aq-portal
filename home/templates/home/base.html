@@ -1,14 +1,14 @@
 {% extends "base.html" %}
-{% load static leaflet_tags %}
+{% load static leaflet_tags menu_tags %}
 
 
 {% block extra_css %}
 {% leaflet_css %}
 {% endblock extra_css %}
 
-{% block inner_header %}
+{% block flat_menu %}
+    {% flat_menu 'home' max_levels=1 template='menus/flat/level_1.html' %}
 {% endblock %}
-
 
 {% block content %}
     {% block extra_js %}
