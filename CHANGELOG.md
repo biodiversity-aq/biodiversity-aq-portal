@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [0.1.3](https://gitlab.com/ymgan/biodiversity-aq-dev/-/releases/v0.1.3) - 2020-03-23
+
 ### Added
 - Flat menu handle choices in `settings/base.py`. [#9](https://gitlab.com/ymgan/biodiversity-aq-dev/-/issues/9) 
 ([ymgan](https://gitlab.com/ymgan))
