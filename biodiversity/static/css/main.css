@@ -1,7 +1,7 @@
 
 
 body {
-    padding-top: 60px; /* to prevent fixed-top header blocking the content */
+    padding-top: 50px; /* to prevent fixed-top header blocking the content */
     margin-bottom: 0; /* required to override body margin in styles.all.min.css - stick footer to the bottom */
 }
 
