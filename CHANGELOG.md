@@ -8,6 +8,9 @@
 - Flat menu template under `biodiversity/templates/menus/flat/level_1.html`. 
 [#9](https://gitlab.com/ymgan/biodiversity-aq-dev/-/issues/9) 
 ([ymgan](https://gitlab.com/ymgan))
+- Flat menu block in project base template `biodiversity/templates/base.html` and `home` app base template. 
+[#9](https://gitlab.com/ymgan/biodiversity-aq-dev/-/issues/9) 
+([ymgan](https://gitlab.com/ymgan))
 
 ### Changed
 

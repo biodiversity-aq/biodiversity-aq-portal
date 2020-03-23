@@ -59,7 +59,6 @@
     </style>
 
 
-
     {% leaflet_js plugins="draw" %}
 
 
@@ -67,7 +66,56 @@
 
 <body class="{% block body_class %}{% endblock %}">
 {% wagtailuserbar %}
-{% main_menu max_levels=3 template="menus/main/level_1.html" %}
+
+{# HEADER MENU #}
+<nav class="navbar navbar-expand-lg fixed-top navbar-dark scrolling-navbar">
+    <span><a class="navbar-brand" href="/"><img src="{% static 'logos/logo-biodiversityaq-white.png' %}"
+                                                alt="biodiversity.aq logo" height="40"></a></span>
+    <!-- Collapsible flat menu content -->
+    {% block flat_menu %}
+    {% endblock %}
+    <!-- Collapse button for flat menu -->
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#flatMenuCollapse"
+            aria-controls="flatMenuCollapse" aria-expanded="false" aria-label="Toggle navigation">
+        <span><i class="fas fa-info"></i></span>
+    </button>
+
+    <!-- Collapsible main menu content -->
+    {% main_menu max_levels=3 template="menus/main/level_1.html" %}
+    <!-- Button to toggle main menu -->
+    <button class="btn btn-outline-white btn-sm" type="button" data-toggle="collapse" data-target="#mainMenuCollapse"
+            aria-controls="mainMenuCollapse" aria-expanded="false" aria-label="Toggle navigation">
+        <span><i class="fas fa-bars"></i></span>
+    </button>
+    <!-- user menu -->
+    <ul id="user-account" class="navbar-nav ml-auto pl-2">
+        <li class="nav-item dropdown">
+            <a class="dropdown-toggle" href="#" id="userDropdownMenu" role="button"
+               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="color: white">
+                <i class="fas fa-user"></i>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdownMenu">
+                {% if user.is_authenticated %}
+                    <h5 class="dropdown-header"><strong>Welcome {{ user.username }}</strong></h5>
+                    {% if user.is_administrator %}
+                        <a class="dropdown-item" href="/admin">Wagtail Admin</a>
+                        <a class="dropdown-item" href="/django-admin">Django Admin</a>
+                    {% endif %}
+                    <a class="dropdown-item"
+                       href="{% url 'accounts:password_change' %}">Change password</a>
+                    <a class="dropdown-item"
+                       href="{% url 'logout' %}?next={{ request.path }}">Log out</a>
+                {% else %}
+                    <a class="dropdown-item" href="{% url 'login' %}?next={{ request.path }}">Log in</a>
+                    <a class="dropdown-item" href="{% url 'accounts:register' %}">Register</a>
+                {% endif %}
+            </div>
+        </li>
+        {% spaceless %}
+        {% endspaceless %}
+    </ul>
+</nav>
+
 
 {# banner needs to be above flex-wrapper otherwise it won't be displayed #}
 {% block banner %}{% endblock %}
@@ -100,7 +148,8 @@
 <link rel="stylesheet" type="text/css" href="//wpcc.io/lib/1.0.2/cookieconsent.min.css"/>
 <script src="//wpcc.io/lib/1.0.2/cookieconsent.min.js"></script>
 <script>window.addEventListener("load", function () {
-    window.wpcc.init({"border": "normal",
+    window.wpcc.init({
+        "border": "normal",
         "colors": {
             "popup": {"background": "#222222", "text": "#ffffff", "border": "#b4eae4"},
             "button": {"background": "#b4eae4", "text": "#000000"}
