@@ -13,7 +13,8 @@
 ([ymgan](https://gitlab.com/ymgan))
 
 ### Changed
-
+- Project css `biodiversity/static/css/main.css`. Smaller navbar brand, smaller header menu and hence smaller top 
+padding for `body`. ([ymgan](https://gitlab.com/ymgan))
 
 ### Removed 
 - Previous `header.html` which is no longer used.
