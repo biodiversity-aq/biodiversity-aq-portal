@@ -31,7 +31,7 @@ ALLOWED_HOSTS = ['*']
 
 # Base URL to use when referring to full URLs within the Wagtail admin backend -
 # e.g. in notification emails. Don't include '/admin' or a trailing slash
-BASE_URL = 'http://biodiversity-aq-dev.herokuapp.com'
+BASE_URL = 'https://biodiversity-aq-dev.herokuapp.com'
 
 SITE_ID = 2
 
@@ -78,7 +78,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'accounts.apps.AccountsConfig',
-
 
     'gunicorn',
     'captcha',
