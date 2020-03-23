@@ -71,7 +71,7 @@ INSTALLED_APPS = [
 
     'django.contrib.admin',
     'django.contrib.auth',
-    'django.contrib.sites',
+    # 'django.contrib.sites',
     'django.contrib.gis',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -303,8 +303,12 @@ WAGTAILADMIN_RICH_TEXT_EDITORS = {
     }
 }
 
-
-
+# wagtailmenus settings
+WAGTAILMENUS_FLAT_MENUS_HANDLE_CHOICES = (
+    ('home', 'Home'),
+    ('data', 'Data'),
+    ('polaaar', 'POLA3R'),
+)
 
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
