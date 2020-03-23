@@ -2,8 +2,13 @@
 
 ## [Unreleased]
 
+### Added
+- Flat menu handle choices in `settings/base.py`. [#9](https://gitlab.com/ymgan/biodiversity-aq-dev/-/issues/9) 
+([ymgan](https://gitlab.com/ymgan))
+
+
 ### Removed 
-- previous `header.html` which is no longer used.
+- Previous `header.html` which is no longer used.
 
 ## [0.1.2](https://gitlab.com/ymgan/biodiversity-aq-dev/-/releases/v0.1.2) - 2020-03-18
 
