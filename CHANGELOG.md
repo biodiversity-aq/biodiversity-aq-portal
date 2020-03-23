@@ -5,6 +5,7 @@
 ### Added
 - Flat menu handle choices in `settings/base.py`. [#9](https://gitlab.com/ymgan/biodiversity-aq-dev/-/issues/9) 
 ([ymgan](https://gitlab.com/ymgan))
+- Flat menu template under `biodiversity/templates/menus/flat/level_1.html`
 
 
 ### Removed 

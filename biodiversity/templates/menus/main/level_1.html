@@ -1,61 +1,22 @@
 {% load static menu_tags %}
-<nav class="navbar fixed-top navbar-dark navbar-expand-md scrolling-navbar">
-    <span><a class="navbar-brand" href="/"><img src="{% static 'logos/logo-biodiversityaq-white.png' %}" alt="biodiversity.aq logo" height="50"></a></span>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarCollapse">
-        <!-- menu list -->
-        <ul class="navbar-nav">
-            {% for item in menu_items %}
-                {% if item.has_children_in_menu %}
-                    <li class="nav-item {{ item.active_class }} dropdown">
-                        <a href="{{ item.href }}" class="nav-link dropdown-toggle"
-                           id="ddtoggle_{{ item.link_page.pk }}"
-                           aria-haspopup="true" aria-expanded="false" data-toggle="dropdown">
-                            {{ item.text }}</a>
-                        <div class="dropdown-menu" aria-labelledby="ddtoggle_{{ item.link_page.pk }}">
-                            {% sub_menu item %}
-                        </div>
-                    </li>
-                {% else %}
-                    <li class="nav-item {{ item.active_class }}">
-                        <a href="{{ item.href }}" class="nav-link">{{ item.text }}</a>
-                    </li>
-                {% endif %}
-            {% endfor %}
-        </ul>
-        <!-- user menu -->
-        <ul id="user-account" class="navbar-nav ml-auto">
-            {% if user.is_authenticated %}
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Welcome {{user.username}}
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <!--<a class="dropdown-item" href='#'> Profile</a>-->
-                        {% if user.is_administrator %}
-                            <a class="dropdown-item" href="/admin">Wagtail Admin</a>
-                            <a class="dropdown-item" href="/django-admin">Django Admin</a>
-                        {% endif %}
-                        <a class="dropdown-item"
-                           href="{% url 'accounts:password_change' %}"> Change password</a>
-                        <a class="dropdown-item"
-                           href="{% url 'logout' %}?next={{request.path}}"> Log out</a>
-
-
-                    </div>
-                </li>
-                {% spaceless %}
-                {% endspaceless %}
-            {% else %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'login' %}?next={{request.path}}"><span class="spot"></span> Log in</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'accounts:register' %}"><span class="spot"></span> Register</a>
-                </li>
-            {% endif %}
-        </ul>
-    </div>
-</nav>
+<div class="collapse" id="mainMenuCollapse">
+    <ul class="nav">
+    {% for item in menu_items %}
+        {% if item.has_children_in_menu %}
+            <li class="nav-item {{ item.active_class }} dropdown">
+                <a href="{{ item.href }}" class="nav-link dropdown-toggle"
+                   id="ddtoggle_{{ item.link_page.pk }}" aria-haspopup="true" aria-expanded="false"
+                   data-toggle="dropdown" style="color:white">
+                    {{ item.text }}</a>
+                <div class="dropdown-menu" aria-labelledby="ddtoggle_{{ item.link_page.pk }}">
+                    {% sub_menu item %}
+                </div>
+            </li>
+        {% else %}
+            <li class="nav-item {{ item.active_class }}">
+                <a href="{{ item.href }}" class="nav-link" style="color:white">{{ item.text }}</a>
+            </li>
+        {% endif %}
+    {% endfor %}
+    </ul>
+</div>
