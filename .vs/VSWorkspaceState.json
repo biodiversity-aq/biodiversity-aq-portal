@@ -4,12 +4,10 @@
     "\\biodiversity",
     "\\biodiversity\\settings",
     "\\biodiversity\\templates",
-    "\\biodiversity\\templates\\registration",
+    "\\biodiversity\\templates\\rest_framework",
     "\\polaaar",
-    "\\polaaar\\templates",
-    "\\polaaar\\templates\\polaaarsearch",
-    "\\polaaar\\templates\\polaaarsubmit"
+    "\\polaaar\\templates"
   ],
-  "SelectedNode": "\\polaaar\\templates\\polaaar_data.html",
+  "SelectedNode": "\\biodiversity\\settings\\base.py",
   "PreviewInSolutionExplorer": false
 }

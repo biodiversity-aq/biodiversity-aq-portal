@@ -7,7 +7,7 @@ from django.contrib.auth import get_user_model, update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib import messages
 from django.utils.translation import ugettext as _
-from django.http import HttpResponsePermanentRedirect, HttpResponse
+from django.http import HttpResponsePermanentRedirect, HttpResponse, JsonResponse
 from django.db.models import Prefetch
 from django.contrib.gis.db.models.functions import AsGeoJSON, Centroid 
 from django.core.files.storage import FileSystemStorage
@@ -34,36 +34,36 @@ def home(request):
 
 
 def polaaar_data(request):
-    qs_results = ProjectMetadata.objects.annotate(geom=AsGeoJSON(Centroid('geomet')))
+    qs_results = Event.objects.annotate(geom=AsGeoJSON(Centroid('footprintWKT')))
     return render(request, 'polaaar_data.html',{'qs_results':qs_results})
 
 def spatial_searching(request):
     qs_results = ProjectMetadata.objects.annotate(geom=AsGeoJSON(Centroid('geomet')))
     return render(request, 'polaaarsearch/spatial_search.html',{'qs_results':qs_results})
 
-#def sitemap(request):
-#    assert isinstance(request, HttpRequest)
-#    X = Sitetable.objects.all()
-#    X3 = X.values_list('site','lat','lon')
-#    X4 = json.dumps(list(X3), cls=DjangoJSONEncoder)
-
-#    data = {'sites':X4}
-
-#    return render(request,'sitemap.html',data)
 
 
 
 
 
-
-
-
-
+########## WRITE A SAVE METHOD THAT INCLUDES A LAT/LON CENTROID! 
 
 #########################################################
 ### Search views
-def polaaar_search(request):
-    return render(request, 'polaaar_search.html')
+def polaaar_search(request):	
+	qs = ProjectMetadata.objects.prefetch_related('event_hierarchy').all()
+	qs_results = Event.objects.annotate(geom=AsGeoJSON(Centroid('footprintWKT')))
+	return render(request, 'polaaar_search.html',{'qs_results':qs_results,'qs':qs})
+
+'''
+def p_s_data(request):
+	if request.method=="GET":
+		idlist = request.GET.get('ids')
+		IDs = idlist.split(",")		
+		qs_results = Event.objects.filter(event_hierarchy__project_metadata__id__in = IDs).annotate(geom=AsGeoJSON(Centroid('footprintWKT')))		
+		return HttpResponse(qs_results,content_type='application/json')
+'''
+
 
 
 def env_search(request):
@@ -73,14 +73,13 @@ def env_search(request):
 
 
 def env_searched(request):
-    qs = Variable.objects.all()
-    if request.method=='GET':
-        var = request.GET.get('var','')
-        
-        #qsenv = Environment.objects.filter(env_variable__name = var)        
-        qsenv = Event.objects.filter(environment__env_variable__name = var)
+	
+	if request.method=='GET':
+		var = request.GET.get('var','')
+		vartype = request.GET.get('vartype','')		
+		qsenv = Event.objects.filter(environment__env_variable__name = var)
                 
-        return render(request,'polaaarsearch/env_searched.html',{'qs':qs,'qsenv':qsenv})
+		return render(request,'polaaarsearch/env_searched.html',{'qsenv':qsenv,'vartype':vartype})
 
 
 
@@ -184,6 +183,7 @@ class ProjectMetadataViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = ProjectMetadataSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = {
+    'id':['in'],
     'project_name':['exact','icontains'],
 	'start_date':['exact','icontains','gte','lte'],
 	'end_date':['exact','icontains','gte','lte'],    
@@ -235,6 +235,7 @@ class EventViewSet(viewsets.ReadOnlyModelViewSet):
     filterset_fields = {
     #'collection_date':['gte','lte'],
      'sample_name':['exact','istartswith'],
+	 'id':['exact','in']
      #'parent_event__project_metadata__project_name':['exact','icontains']
 	}
 
@@ -255,180 +256,6 @@ class EnvironmentViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 ###########################################################################
-'''
-
-
-
-class sampling_methodSerializer(serializers.ModelSerializer):
-	class Meta:
-		model = sampling_method
-		fields =[
-		'url',
-		'shortname',
-		'description'
-		]
-
-class unitsSerializer(serializers.ModelSerializer):
-	class Meta:
-		model = units
-		fields =[
-		'url',
-		'name',
-		'html_tag'
-		]
-    
-
-class VariableSerializer(serializers.ModelSerializer):
-	var_units = serializers.StringRelatedField(many=True)
-	method = serializers.StringRelatedField(many=True)
-	class Meta:
-		model = Variable
-		fields =[
-		'url',
-		'name',
-		'var_units',
-		'method',
-		'var_type'
-		]
-
-
-class EnvironmentSerializer(serializers.ModelSerializer):
-	env_variable = VariableSerializer(many=False,read_only=True)
-	sequences = SequencesSerializer(many=True,read_only=True)
-	
-	class Meta:
-		model = Environment
-		fields =[
-		'url',
-	    'env_sample_name',
-		'created_at',
-		'link_climate_info',
-		'env_variable',
-		'sequences',
-		'env_numeric_value',
-		'env_text_value'
-		]
-
-
-
-
-#########################################################################################################
-
-
-
-class EventTypeSerializer(serializers.ModelSerializer):
-	class Meta:
-		model = EventType
-		fields = [
-		'url',
-		'name']
-
-
-
-class SampleMetadataSerializer(serializers.ModelSerializer): 
-	metadata_creator = serializers.StringRelatedField(many=False)
-	geographic_location = GeogSerializer(many=False,read_only=True)
-	env_package = PackageSerializer(many=False,read_only=True)
-	sequence = SequencesSerializer(many=True,read_only=True)
-
-	class Meta:
-		model = SampleMetadata
-		fields = [
-		'metadata_tag',
-		'md_created_on',
-		'metadata_creator',        # User FK
-		'license',
-		'geographic_location',  #FK geog_loc
-		'locality',
-		'geo_loc_name',
-		'env_biome',
-		'env_package',   #FK Package
-		'env_feature',
-		'env_material',
-		'institutionID',
-		'nucl_acid_amp',
-		'nucl_acid_ext',
-		'ref_biomaterial',
-		'rel_to_oxygen',
-		'rightsHolder',
-		'samp_collect_device',
-		'samp_store_dur',
-		'samp_store_loc',
-		'samp_store_temp',
-		'samp_vol_we_dna_ext',
-		'samplingProtocol',
-		'source_mat_id',
-		'submitted_to_insdc',
-		'investigation_type',
-		'isol_growth_condt',
-		'lib_size',
-		'sequence', #M2M  sequences
-		'additional_information'
-	]
-
-
-
-
-##################### has a router = 'project_metadata'
-class ProjectMetadataSerializer(serializers.ModelSerializer):
-
-	associated_references = ReferenceSerializer(many=True,read_only=True)
-	#associated_references = serializers.StringRelatedField(many=False)
-	project_creator = serializers.StringRelatedField(many=False)
-	class Meta:
-		model = ProjectMetadata
-		fields = [
-		'url',
-		'project_name',
-		'start_date',
-		'end_date',
-		'EML_URL',
-		'abstract',
-		'geomet',
-		'is_public',
-		'associated_references',
-		'associated_media',
-		'created_on',
-		'updated_on',
-		'project_creator',
-		'project_qaqc'
-		]
-
-
-class EventHierarchySerializer(serializers.ModelSerializer):	
-	project_metadata = ProjectMetadataSerializer(many=False,read_only=True)
-	event_type = serializers.StringRelatedField(many=False)
-	parent_event = serializers.StringRelatedField(many=False)
-	event_creator = serializers.StringRelatedField(many=False)
-	class Meta:
-		model = EventHierarchy
-		fields = [
-		'url',
-		'parent_event_name',
-		'event_type',
-		'description',
-		'parent_event',
-		'event_creator',
-		'created_on',
-		'updated_on',
-		'project_metadata']
-
-
-
-class TaxaSerializer(serializers.ModelSerializer):
-	parent_taxa = serializers.StringRelatedField(many=False)
-	class Meta:
-		model = Taxa
-		fields = [
-		'name',
-		'TaxonRank',
-		'taxonID',
-		'parent_taxa'		    
-		]
-
-
-
-'''
 
 
 

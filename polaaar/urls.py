@@ -22,6 +22,7 @@ urlpatterns = [
    
     url(r'^$', views.home, name='home'),
     path('data/', views.polaaar_data, name='polaaar_data'),
+    #url(r'srchDat/$',views.p_s_data,name='ps_data'),
     path('search/',views.polaaar_search,name='polaaar_search'),
     path('submit/',views.polaaar_submit,name='polaaar_submit_data'),
 
@@ -30,7 +31,7 @@ urlpatterns = [
     path('mimsearch/',views.mim_search,name='mim_search'),
     path('seqsearch/',views.seq_search,name='seq_search'),
     path('spatialsearch/',views.spatial_searching,name='spatialsearch'),
-    path('projsearch/',views.proj_search,name='proj_search'),
+    #path('projsearch/',views.proj_search,name='proj_search'),
 
     path('submit_data/',views.email_submission,name='email_submission'),
     path('submit_success/',views.submit_success,name='submit_success'),

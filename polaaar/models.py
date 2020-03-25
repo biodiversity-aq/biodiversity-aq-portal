@@ -1,6 +1,6 @@
 from __future__ import unicode_literals
 
-
+import json
 from django.db import models
 from django.contrib import admin
 from django.utils.translation import gettext as _
@@ -9,7 +9,7 @@ from django.conf import settings
 from django.contrib.gis.gdal import *
 #from djgeojson.fields import PointField
 from django.contrib.gis.db import models
-
+from django.contrib.gis.geos import GEOSGeometry
 from django_countries.fields import CountryField
 from django.core.files.storage import FileSystemStorage
 
@@ -108,17 +108,15 @@ class Taxa(models.Model):
 #### Geographical location table
 
 GEOG_LEVELS = (
-    ('Conti','Continent'),
-    ('Count','Country'),
-    ('Sta','State'),
-    ('Prov','Province'),
-    ('IslG','Island_Group'),
-    ('Isl','Island'),
-    ('Pla','Place_Name'),
-    ('Ocean','Ocean'),
-    ('Sea','Sea'),
-    ('Bay','Bay'),
-    ('Wb','Water_body')
+    ('continent','continent'),
+    ('waterBody','waterBody'),
+    ('country','country'),    
+    ('islandGroup','islandGroup'),    
+    ('island','island'),
+    ('stateProvince','stateProvince'),
+    ('county','county'),
+    ('municipality','municipality'),
+    ('locality','locality'),    
 )
 
 class Geog_Location(models.Model):
@@ -152,13 +150,13 @@ class package(models.Model):
 ### volumes of data coming in, and therefore it can easily be cleaned if need be. 
 
 class Reference(models.Model):
-    full_reference  = models.TextField()                         ### The full reference 
-    doi             = models.CharField(max_length=255,blank=True,null=True) ### doi of the reference if known
+    full_reference      = models.TextField()                         ### The full reference 
+    doi                 = models.CharField(max_length=255,blank=True,null=True) ### doi of the reference if known
     #short_authors = models.CharField(max_length=150)            ### Short authors list. e.g., Humphries et al. / Humphries and van de Putte
     #journal = models.TextField()                                ### The journal or the book that the reference is in
-    year            = models.IntegerField()                      ### The year the reference was published
-
-    #occurrences = models.ManyToManyField(_("Occurrence"),blank=True)
+    year                = models.IntegerField()                      ### The year the reference was published
+    associated_projects = models.ManyToManyField(_("ProjectMetadata"),related_name='associated_references',blank=True)
+    
 
     def __str__(self):
         return self.full_reference
@@ -194,7 +192,7 @@ class ProjectMetadata(models.Model):
     geomet                          = models.PolygonField(srid=4326, blank=True, null=True)
     
     is_public                       = models.BooleanField()
-    associated_references           = models.ManyToManyField(_("Reference"),blank=True)
+    
     associated_media                = models.TextField(blank=True,null=True)
     created_on                      = models.DateField()
     updated_on                      = models.DateField(auto_now=True)
@@ -215,7 +213,7 @@ class ProjectMetadata(models.Model):
 ## Change to EventHierarchy
 
 class EventHierarchy(models.Model):
-    event_hierarchy_name               = models.CharField(max_length=255)                        ## User's project name or cruise name, etc...
+    event_hierarchy_name            = models.CharField(max_length=255)                        ## User's project name or cruise name, etc...
     event_type                      = models.ForeignKey(_("EventType"),related_name='eventtype',
                                                             on_delete=models.DO_NOTHING)        ## Drawn from the Event_type table
        
@@ -263,13 +261,20 @@ class Event(models.Model):
     samplingProtocol    = models.TextField(blank=True,null=True)
 
     event_metadata      = models.ForeignKey(_("SampleMetadata"),blank=True,null=True,on_delete=models.CASCADE)
-    occurrence          = models.ManyToManyField(_("Occurrence"),blank=True)    
-    environment         = models.ManyToManyField(_("Environment"),blank=True)
+    #occurrence          = models.ManyToManyField(_("Occurrence"),blank=True)    
+    #environment         = models.ManyToManyField(_("Environment"),blank=True)
 
     metadata_exists     = models.BooleanField(blank=True,null=True)
     occurrence_exists   = models.BooleanField(blank=True,null=True)
     environment_exists  = models.BooleanField(blank=True,null=True)
-    
+    sequences_exists    = models.BooleanField(blank=True,null=True)
+
+    def save(self, *args, **kwargs):
+        coords = json.loads(GEOSGeometry(self.footprintWKT).centroid.json)["coordinates"]
+        self.Latitude = coords[0]
+        self.Longitude = coords[1]
+        super(Event,self).save(*args,**kwargs)
+
 
     def __str__(self):
         return self.sample_name
@@ -295,6 +300,8 @@ class Occurrence(models.Model):
     recorded_by             = models.TextField(blank=True,null=True)
 
     associated_sequences    = models.ManyToManyField(_("Sequences"),blank=True)
+    event                   = models.ForeignKey(_("Event"),related_name='occurrence',blank=True,null=True,on_delete=models.DO_NOTHING)
+
 
     def __str__(self):
         return self.occurrenceID + ': ' + self.taxon.name
@@ -342,7 +349,7 @@ class SampleMetadata(models.Model):
     isol_growth_condt       = models.CharField(max_length=255,blank=True,null=True)
     lib_size                = models.DecimalField(max_digits=10,decimal_places=3,blank=True,null=True )
 
-    sequence                = models.ManyToManyField(_("Sequences"),blank=True)
+    #sequence                = models.ManyToManyField(_("Sequences"),blank=True)
 
     additional_information  = models.TextField(blank=True,null=True)
     
@@ -375,6 +382,10 @@ class Sequences(models.Model):
     seqData_sampleNumber        = models.CharField(max_length=50,blank=True,null=True)
     seqData_numberOfBases       = models.IntegerField(blank=True,null=True)
     seqData_numberOfSequences   = models.IntegerField(blank=True,null=True)
+    ASV_URL                     = models.URLField(blank=True,null=True)                     ## a URL to the Alternative Sequencing Variants
+    event                       = models.ForeignKey(_("Event"),blank=True,null=True,on_delete=models.DO_NOTHING)
+    environment                 = models.ForeignKey(_("Environment"),blank=True,null=True,on_delete=models.DO_NOTHING)
+
 
     def __str__(self):
         return self.sequence_name
@@ -439,14 +450,14 @@ class Environment(models.Model):
     link_climate_info           = models.URLField(blank=True,null=True)
     env_variable                = models.ForeignKey(_("Variable"),on_delete=models.DO_NOTHING)
     env_method                  = models.ForeignKey(_("sampling_method"),blank=True,null=True,on_delete=models.DO_NOTHING)
-    env_units                   = models.ForeignKey(_("units"),blank=True,null=True,on_delete=models.DO_NOTHING)
-    
-    sequences                   = models.ManyToManyField(_("Sequences"),blank=True)
-    
+    env_units                   = models.ForeignKey(_("units"),blank=True,null=True,on_delete=models.DO_NOTHING)    
+    #sequences                   = models.ManyToManyField(_("Sequences"),blank=True)    
     ## On the front end, if env_variable.var_type is 'Text', then users input value for env_text_value
     ## if env_variable.var_type is 'Numeric', then users input value for env_numeric_value
     env_numeric_value           = models.DecimalField(decimal_places=5,max_digits=15,blank=True,null=True)
     env_text_value              = models.CharField(max_length=100,blank=True,null=True)
+
+    event                       = models.ForeignKey(_("Event"),related_name='environment',blank=True,null=True,on_delete=models.DO_NOTHING)
 
     def __str__(self):
         return self.env_sample_name
@@ -458,12 +469,11 @@ class Environment(models.Model):
 ######################################################################################################
 
 ######################################################################################################
-####
 ### Spare file table ####
 fs = FileSystemStorage(location='/media/files')
 class HomelessFiles(models.Model):
     files                       = models.FileField(storage=fs,blank=True,null=True)
-    event                       = models.ForeignKey(_("Event"),on_delete=models.CASCADE)
+    event                       = models.ForeignKey(_("Event"),blank=True,null=True,on_delete=models.CASCADE)
 
 #####################################################################################################
 

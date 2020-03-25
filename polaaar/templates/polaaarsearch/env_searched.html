@@ -1,24 +1,47 @@
 
+<div class="row">
+    <div class="col-6" style="padding-top:30px;">
+        {% if vartype == "NUM" %}
+        <input class="range-example-input" type="range" min="0" max="100" step="0.1">
+        {% endif %}
+    </div>
+</div>
+
+
+
 <table id="myTable" class="display">
     <thead>
         <tr>
             <th>Project name</th>
-            <th>sample name</th>
-            <th>Location</th>
-            <th>Metadata?</th>
-            <th>Occurrence data?</th>
-            <th>Environmental data?</th>
+            <th>Event hierarchy</th>
+            <th>Event name</th>
+            <th>Location (Lat/Lon)</th>
+            <th>Collection date</th>
+            <th>Sequences</th>
+            <th>Download</th>
         </tr>
     </thead>
     <tbody>
         {% for i in qsenv %}
         <tr>
-            <td>{{i.parent_event.project.project_name}}</td>
-            <td>{{i.parent_event.parent_event_name}}</td>
-            <td>{{i.metadata.geo_loc_name}}</td>
-            <td>{{i.metadata_exists}}</td>
-            <td>{{i.occurrence_exists}}</td>
-            <td>{{i.environment_exists}}</td>
+            <td>{{i.event_hierarchy.project_metadata.project_name}}</td>
+            <td>{{i.event_hierarchy.event_hierarchy_name}}</td>
+            <td>{{i.sample_name}}</td>
+            <td>{{i.Longitude}}/{{i.Latitude}}</td>
+            <td>{{i.collection_date}}</td>
+
+            <td style="text-align:center;font-size:16pt">
+                {% if i.sequences_exists == True %}
+                    <i style="color:green;" class="fas fa-check-circle pl-1"></i>
+                {% else %}
+                    <i style="color:red" class="fas fa-times-circle pl-1"></i>
+                {% endif %}
+            </td>            
+
+            <td style="font-size:25pt;color:black">
+                <a href="#"><i class="fas fa-file-csv pl-1"></i></a>
+                <a href="/polaaar/events/{{i.pk}}"><i class="fas fa-file-code pl-1"></i></a>
+            </td>
         </tr>
         {% endfor %}
     </tbody>
@@ -26,11 +49,39 @@
 
 
 
-
-
 <script>
     $(document).ready(function () {
-        $('#myTable').DataTable();
+    $('#myTable').DataTable();
+
+    $('.range-example-input').asRange({
+    range:true,
+    max:1000,
+    min:0,
+    keyboard:true
     });
+
+    $('#min, #max').keyup( function() {
+    table.draw();
+    });
+    });
+
+</script>
+<script>
+    $.fn.dataTable.ext.search.push(
+    function( settings, data, dataIndex ) {
+    var min = parseInt( $('#min').val(), 10 );
+    var max = parseInt( $('#max').val(), 10 );
+    var age = parseFloat( data[3] ) || 0; // use data for the age column
+
+    if ( ( isNaN( min ) && isNaN( max ) ) ||
+    ( isNaN( min ) && age <= max ) ||
+    ( min <= age   && isNaN( max ) ) ||
+    ( min <= age   && age <= max ) )
+    {
+    return true;
+    }
+    return false;
+    }
+    );
 
 </script>

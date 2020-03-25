@@ -93,7 +93,7 @@ INSTALLED_APPS = [
     'colorful',
     'rest_framework',
     'django_filters',
-
+    'django_extensions',
 
     'django_countries',
     'djconfig',
@@ -360,7 +360,7 @@ FORMS_EXTRA_FIELDS = (
 LEAFLET_CONFIG = {
     'DEFAULT_CENTER':(0,0),    
     'DEFAULT_ZOOM':1,
-    
+    'NO_GLOBALS':False,
     'PLUGINS': {
         'draw': {
             'css': 'https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css',
