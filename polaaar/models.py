@@ -151,9 +151,7 @@ class package(models.Model):
 
 class Reference(models.Model):
     full_reference      = models.TextField()                         ### The full reference 
-    doi                 = models.CharField(max_length=255,blank=True,null=True) ### doi of the reference if known
-    #short_authors = models.CharField(max_length=150)            ### Short authors list. e.g., Humphries et al. / Humphries and van de Putte
-    #journal = models.TextField()                                ### The journal or the book that the reference is in
+    doi                 = models.CharField(max_length=255,blank=True,null=True) ### doi of the reference if known    
     year                = models.IntegerField()                      ### The year the reference was published
     associated_projects = models.ManyToManyField(_("ProjectMetadata"),related_name='associated_references',blank=True)
     
@@ -197,11 +195,12 @@ class ProjectMetadata(models.Model):
     created_on                      = models.DateField()
     updated_on                      = models.DateField(auto_now=True)
 
-    project_creator = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE)
+    project_creator                 = models.ForeignKey(
+                                        settings.AUTH_USER_MODEL,
+                                        on_delete=models.CASCADE)
 
     project_qaqc                    = models.BooleanField(blank=True,null=True)
+    amplicon_image                  = models.ImageField(upload_to='amplicons',blank=True,null=True)
 
     def __str__(self):
         return self.project_name
@@ -261,9 +260,7 @@ class Event(models.Model):
     samplingProtocol    = models.TextField(blank=True,null=True)
 
     event_metadata      = models.ForeignKey(_("SampleMetadata"),blank=True,null=True,on_delete=models.CASCADE)
-    #occurrence          = models.ManyToManyField(_("Occurrence"),blank=True)    
-    #environment         = models.ManyToManyField(_("Environment"),blank=True)
-
+    
     metadata_exists     = models.BooleanField(blank=True,null=True)
     occurrence_exists   = models.BooleanField(blank=True,null=True)
     environment_exists  = models.BooleanField(blank=True,null=True)
@@ -349,7 +346,7 @@ class SampleMetadata(models.Model):
     isol_growth_condt       = models.CharField(max_length=255,blank=True,null=True)
     lib_size                = models.DecimalField(max_digits=10,decimal_places=3,blank=True,null=True )
 
-    #sequence                = models.ManyToManyField(_("Sequences"),blank=True)
+    environment             = models.ManyToManyField(_("Environment"),blank=True)
 
     additional_information  = models.TextField(blank=True,null=True)
     
@@ -384,7 +381,7 @@ class Sequences(models.Model):
     seqData_numberOfSequences   = models.IntegerField(blank=True,null=True)
     ASV_URL                     = models.URLField(blank=True,null=True)                     ## a URL to the Alternative Sequencing Variants
     event                       = models.ForeignKey(_("Event"),blank=True,null=True,on_delete=models.DO_NOTHING)
-    environment                 = models.ForeignKey(_("Environment"),blank=True,null=True,on_delete=models.DO_NOTHING)
+   
 
 
     def __str__(self):
@@ -450,8 +447,7 @@ class Environment(models.Model):
     link_climate_info           = models.URLField(blank=True,null=True)
     env_variable                = models.ForeignKey(_("Variable"),on_delete=models.DO_NOTHING)
     env_method                  = models.ForeignKey(_("sampling_method"),blank=True,null=True,on_delete=models.DO_NOTHING)
-    env_units                   = models.ForeignKey(_("units"),blank=True,null=True,on_delete=models.DO_NOTHING)    
-    #sequences                   = models.ManyToManyField(_("Sequences"),blank=True)    
+    env_units                   = models.ForeignKey(_("units"),blank=True,null=True,on_delete=models.DO_NOTHING)            
     ## On the front end, if env_variable.var_type is 'Text', then users input value for env_text_value
     ## if env_variable.var_type is 'Numeric', then users input value for env_numeric_value
     env_numeric_value           = models.DecimalField(decimal_places=5,max_digits=15,blank=True,null=True)
@@ -491,9 +487,6 @@ class MailFile(models.Model):
 
 
 #####################################################################################################
-#class Amplicon(models.Model):
-#    AmpImg = models.ImageField()
-    
 
 
 #### RESTRICT DATA to USER and to USER selected other users

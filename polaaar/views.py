@@ -28,14 +28,10 @@ from polaaar.serializers import *
 
 
 def home(request):
-    return render(request, 'polaaar_home.html')
-
-
-
-
-def polaaar_data(request):
     qs_results = Event.objects.annotate(geom=AsGeoJSON(Centroid('footprintWKT')))
-    return render(request, 'polaaar_data.html',{'qs_results':qs_results})
+    return render(request, 'polaaar_home.html',{'qs_results':qs_results})
+
+
 
 def spatial_searching(request):
     qs_results = ProjectMetadata.objects.annotate(geom=AsGeoJSON(Centroid('geomet')))

@@ -31,7 +31,7 @@ urlpatterns = [
     url(r'^api_reference/',views.api_reference,name='api_reference'),
 
     path('data/', include('data.urls')),
-    re_path(r'polaaar/', include('polaaar.urls')),
+    re_path(r'pola3r/', include('polaaar.urls')),
     # re_path(r'users/',include('users.urls')),
 
     url(r'',include(puput_urls)),
