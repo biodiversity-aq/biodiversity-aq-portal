@@ -43,6 +43,14 @@ class SequencesSerializer(serializers.ModelSerializer):
 
 
 
+
+
+
+
+
+
+
+
 class sampling_methodSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = sampling_method
@@ -58,7 +66,7 @@ class unitsSerializer(serializers.ModelSerializer):
 		'name',
 		'html_tag'
 		]
-    
+   
 
 class VariableSerializer(serializers.ModelSerializer):
 	var_units = serializers.StringRelatedField(many=True)
@@ -265,12 +273,95 @@ class ProjectMetadataSerializer(serializers.ModelSerializer):
 		'updated_on',
 		'project_creator',
 		'project_qaqc',
-		'event_hierarchy'
+		'event_hierarchy']
+
+
+
+
+
+
+
+##############################################
+#####################
+## Special serializers for downloading specific sequences and keeping links to projects, events
+
+
+class SeqProjectMetadataSerializer(serializers.ModelSerializer):
+			
+	project_creator = serializers.StringRelatedField(many=False)
+	class Meta:
+		model = ProjectMetadata
+		fields = [		
+		'project_name',
+		'start_date',
+		'end_date',
+		'EML_URL',
+		'abstract',		
+		'created_on',	
+		'project_creator']
+
+
+class SeqEventHierarchySerializer(serializers.ModelSerializer):
+	project_metadata = SeqProjectMetadataSerializer(many=False,read_only=True)
+	event_type = serializers.StringRelatedField(many=False)
+	parent_event = serializers.StringRelatedField(many=False)
+	event_creator = serializers.StringRelatedField(many=False)
+	class Meta:
+		model = EventHierarchy
+		fields = [		
+		'event_hierarchy_name',
+		'event_type',
+		'description',
+		'parent_event',
+		'event_creator',
+		'created_on',
+		'project_metadata']
+
+
+class SeqEventSerializer(serializers.ModelSerializer):
+	event_hierarchy = SeqEventHierarchySerializer(many=False,read_only=True)
+	parent_event = serializers.StringRelatedField(many=False)
+	event_metadata = SampleMetadataSerializer(many=False,read_only=True)
+	class Meta:
+		model = Event
+		fields = [
+		'sample_name',
+		'parent_event',
+		'footprintWKT',
+		'Latitude',
+		'Longitude',
+		'eventRemarks',
+		'collection_date',
+        'collection_time',
+		'samplingProtocol',
+		'event_metadata',
+		'event_hierarchy']
+
+class SequencesSerializer2(serializers.ModelSerializer):
+	event = SeqEventSerializer(many=False,read_only=True)
+	class Meta:
+		model = Sequences
+		fields = [		
+		'sequence_name',
+		'MID',
+		'subspecf_gen_lin',
+		'target_gene',
+		'target_subfragment',
+		'type',
+		'primerName_forward',
+		'primerName_reverse',
+		'primer_forward',
+		'primer_reverse',
+		'run_type',
+		'seqData_url',
+		'seqData_accessionNumber',
+		'seqData_projectNumber',
+		'seqData_runNumber',
+		'seqData_sampleNumber',
+		'seqData_numberOfBases',
+		'seqData_numberOfSequences',
+		'event'
 		]
-
-
-
-
 
 
 

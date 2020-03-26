@@ -47,19 +47,15 @@ def spatial_searching(request):
 #########################################################
 ### Search views
 def polaaar_search(request):	
-	qs = ProjectMetadata.objects.prefetch_related('event_hierarchy').all()
-	qs_results = Event.objects.annotate(geom=AsGeoJSON(Centroid('footprintWKT')))
-	return render(request, 'polaaar_search.html',{'qs_results':qs_results,'qs':qs})
+    qs = ProjectMetadata.objects.prefetch_related('event_hierarchy').all()
+    qs_results = Event.objects.annotate(geom=AsGeoJSON(Centroid('footprintWKT')))
+    return render(request, 'polaaar_search.html',{'qs_results':qs_results,'qs':qs})
 
-'''
-def p_s_data(request):
-	if request.method=="GET":
-		idlist = request.GET.get('ids')
-		IDs = idlist.split(",")		
-		qs_results = Event.objects.filter(event_hierarchy__project_metadata__id__in = IDs).annotate(geom=AsGeoJSON(Centroid('footprintWKT')))		
-		return HttpResponse(qs_results,content_type='application/json')
-'''
 
+def proj_search(request):
+    qs = ProjectMetadata.objects.prefetch_related('event_hierarchy').all()
+    qs_results = Event.objects.annotate(geom=AsGeoJSON(Centroid('footprintWKT')))
+    return render(request, 'polaaarsearch/projects.html',{'qs_results':qs_results,'qs':qs})
 
 
 def env_search(request):
@@ -72,24 +68,17 @@ def env_searched(request):
 	
 	if request.method=='GET':
 		var = request.GET.get('var','')
-		vartype = request.GET.get('vartype','')		
+		vartype = request.GET.get('vartype','')
 		qsenv = Event.objects.filter(environment__env_variable__name = var)
-                
 		return render(request,'polaaarsearch/env_searched.html',{'qsenv':qsenv,'vartype':vartype})
 
 
 
-def proj_search(request):
-    qs = ProjectMetadata.objects.all()
-    return render(request, 'polaaarsearch/projects.html',{'qs':qs})
 
-
-def mim_search(request):
-    return render(request, 'polaaarsearch/mimarks.html')
 
 def seq_search(request):
 
-    qs = Sequences.objects.all()
+    qs = Sequences.objects.all().select_related()
 
     return render(request, 'polaaarsearch/sequences.html',{'qs':qs})
 
@@ -160,7 +149,7 @@ class ReferenceViewSet(viewsets.ReadOnlyModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['full_reference','year']
 
-class SequencesViewSet(viewsets.ReadOnlyModelViewSet):
+class SequenceViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Sequences.objects.all()
     serializer_class = SequencesSerializer
     filter_backends = [DjangoFilterBackend]
@@ -170,7 +159,8 @@ class SequencesViewSet(viewsets.ReadOnlyModelViewSet):
 	'primerName_forward':['exact','icontains'],
 	'primerName_reverse':['exact','icontains'],
 	'seqData_numberOfBases':['gte','lte','exact'],
-	'seqData_numberOfSequences':['gte','lte','exact'],    
+	'seqData_numberOfSequences':['gte','lte','exact'],
+    'id':['in']
 	}
 
 
@@ -189,20 +179,22 @@ class ProjectMetadataViewSet(viewsets.ReadOnlyModelViewSet):
 	'project_creator__full_name':['exact','icontains'],
 	## Reference search
 	'associated_references__full_reference':['icontains'],
-	## Event hierarchy search
+
+    ## Event hierarchy search
 	'event_hierarchy__event_hierarchy_name':['exact','icontains'],
 	'event_hierarchy__description':['icontains'],
 	'event_hierarchy__event_type__name':['icontains'],
-	## Event search
+	### Event search
 	'event_hierarchy__event__parent_event__sample_name':['icontains'],							# This references the __str__ argument from the model (back to 'self')
 	'event_hierarchy__event__sample_name':['icontains'],
-	## Sequence search
-	'event_hierarchy__event__event_metadata__sequence__sequence_name':['exact','icontains'],
-	'event_hierarchy__event__event_metadata__sequence__target_gene':['exact','icontains'],
-	'event_hierarchy__event__event_metadata__sequence__primerName_forward':['exact','icontains'],
-	'event_hierarchy__event__event_metadata__sequence__primerName_reverse':['exact','icontains'],
-	'event_hierarchy__event__event_metadata__sequence__seqData_numberOfBases':['gte','lte','exact'],
-	'event_hierarchy__event__event_metadata__sequence__seqData_numberOfSequences':['gte','lte','exact'],    
+	### Sequence search
+	'event_hierarchy__event__sequences__sequence_name':['exact','icontains'],
+	'event_hierarchy__event__sequences__target_gene':['exact','icontains'],
+	'event_hierarchy__event__sequences__primerName_forward':['exact','icontains'],
+	'event_hierarchy__event__sequences__primerName_reverse':['exact','icontains'],
+	'event_hierarchy__event__sequences__seqData_numberOfBases':['gte','lte','exact'],
+	'event_hierarchy__event__sequences__seqData_numberOfSequences':['gte','lte','exact'],    
+
 	}
 
 
@@ -214,6 +206,7 @@ class EventHierarchyViewSet(viewsets.ReadOnlyModelViewSet):
     filterset_fields = {    
      'event_hierarchy_name':['exact','istartswith','icontains'],
      'description':['icontains'],
+     'id':['in']
 	}
 
 class OccurrenceViewSet(viewsets.ReadOnlyModelViewSet):
@@ -253,10 +246,22 @@ class EnvironmentViewSet(viewsets.ReadOnlyModelViewSet):
 
 ###########################################################################
 
+### Special views for the sequence download
 
 
-
-
+class SequencesViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Sequences.objects.all()
+    serializer_class = SequencesSerializer2
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = {
+    'sequence_name':['exact','icontains'],
+	'target_gene':['exact','icontains'],
+	'primerName_forward':['exact','icontains'],
+	'primerName_reverse':['exact','icontains'],
+	'seqData_numberOfBases':['gte','lte','exact'],
+	'seqData_numberOfSequences':['gte','lte','exact'],
+    'id':['in']
+	}
 
 
 

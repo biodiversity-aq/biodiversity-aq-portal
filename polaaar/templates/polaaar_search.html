@@ -43,30 +43,14 @@ POLA3R search
 
 <div class="container">
     <div id="searchcontent">
-        <div class="row">
-            <div class="col-12">
-                <h1>Welcome</h1>
-                <h4>
-                    The POLA<sub>3</sub>R database can be searched using the web interface.<br />
-                    Simply click on any of the tabs above, which will bring you to data tables or search query tools.
-                </h4>
-                <ul style="font-size:14pt">
-                    <li>To search for data, simply begin typing any keyword in the search bar above the table.</li>
-                    <li>Data can be downloaded in CSV (<i class="fas fa-file-csv pl-1"></i>) or JSON (<i class="fas fa-file-code pl-1"></i>) formats.</li>
-                    <li>
-                        The <a href="/polaaar/spatialsearch">spatial searching</a> feature is available as well and allows users to draw polygons on the map to find projects
-                        and associated metadata.
-                    </li>
-                </ul>                
-                <h4>
-                    You can also search using our API which will allow access to all data in JSON format.<br />
-                    <a href="/api_reference">Click here</a> to check out the API reference
-                </h4>
 
-            </div>
-        </div>
 
         <div class="row" style="border-width:0px;">
+            <div class="col-3">
+                <button type="button" class="btn btn-indigo" data-toggle="modal" data-target="#exampleModal">
+                    Instructions
+                </button>
+            </div>
             <div class="col-12">
 
 
@@ -114,7 +98,7 @@ POLA3R search
                             </td>
                             <td style="font-size:25pt;color:black">
                                 <a href="#"><i class="fas fa-file-csv pl-1"></i></a>
-                                <a href="/polaaar/project_metadata/{{i.pk}}"><i class="fas fa-file-code pl-1"></i></a>
+                                <a href="/pola3r/project_metadata/{{i.pk}}"><i class="fas fa-file-code pl-1"></i></a>
                             </td>
                         </tr>
 
@@ -146,6 +130,40 @@ POLA3R search
 </div>
 
 
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" style="padding-left:20px;padding-right:20px;">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Instructions</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h4>
+                    The POLA<sub>3</sub>R database can be searched by clicking on any of the tabs, which will bring you to data tables and search query tools.
+                </h4>
+                <ul style="font-size:14pt">
+                    <li>To search for data, type any keyword in the search bar above the table. The tables can also be sorted by the visible columns</li>
+                    <li>Data can be downloaded in CSV (<i class="fas fa-file-csv pl-1"></i>) or JSON (<i class="fas fa-file-code pl-1"></i>) formats.</li>
+                    <li>
+                        The <a href="/polaaar/spatialsearch">spatial searching</a> feature is available as well and allows users to draw polygons on the map to find projects
+                        and associated metadata.
+                    </li>
+                    <li>NOT all data are visible on the data table to help simplify searching. To view all available columns download the spreadsheets or view the JSON data</li>
+                </ul>
+                <h4>
+                    You can also search using our API which will allow access to all data in JSON format.<br />
+                    <a href="/api_reference">Click here</a> to check out the API reference
+                </h4>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-elegant" data-dismiss="modal">Got it</button>                
+            </div>
+        </div>
+    </div>
+</div>
+
 
 
 {% block extra_js %}
@@ -163,10 +181,10 @@ POLA3R search
     $("#searchcontent").load('../seqsearch')
     };
     function spafunc() {
-    window.location = "/polaaar/spatialsearch"
+    window.location = "/pola3r/spatialsearch"
     };
     function projfunc() {
-    $("#searchcontent").load('../projsearch')
+    window.location = "/pola3r/search"
     };
 
 

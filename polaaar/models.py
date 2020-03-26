@@ -380,7 +380,7 @@ class Sequences(models.Model):
     seqData_numberOfBases       = models.IntegerField(blank=True,null=True)
     seqData_numberOfSequences   = models.IntegerField(blank=True,null=True)
     ASV_URL                     = models.URLField(blank=True,null=True)                     ## a URL to the Alternative Sequencing Variants
-    event                       = models.ForeignKey(_("Event"),blank=True,null=True,on_delete=models.DO_NOTHING)
+    event                       = models.ForeignKey(_("Event"),related_name='sequences',blank=True,null=True,on_delete=models.DO_NOTHING)
    
 
 
@@ -469,7 +469,7 @@ class Environment(models.Model):
 fs = FileSystemStorage(location='/media/files')
 class HomelessFiles(models.Model):
     files                       = models.FileField(storage=fs,blank=True,null=True)
-    event                       = models.ForeignKey(_("Event"),blank=True,null=True,on_delete=models.CASCADE)
+    project                     = models.ForeignKey(_("ProjectMetadata"),blank=True,null=True,on_delete=models.CASCADE)
 
 #####################################################################################################
 

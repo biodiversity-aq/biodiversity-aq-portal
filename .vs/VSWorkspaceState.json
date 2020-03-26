@@ -6,7 +6,8 @@
     "\\biodiversity\\templates",
     "\\biodiversity\\templates\\rest_framework",
     "\\polaaar",
-    "\\polaaar\\templates"
+    "\\polaaar\\templates",
+    "\\polaaar\\templates\\polaaarsearch"
   ],
   "SelectedNode": "\\polaaar\\models.py",
   "PreviewInSolutionExplorer": false

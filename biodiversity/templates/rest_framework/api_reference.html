@@ -19,8 +19,8 @@ Biodiversity.aq API
 			<p>
 				The POLA<sub>3</sub>R API URL search query can be constructed by 
 				appending the URL Endpoint to the domain, and then using the appropriate search string.
-				(e.g., biodiversity.aq/polaaar/project_metadata/?start_date=2020-01-03).
-				This takes the form:  <strong>biodiversity.aq/{URL Endpoint}/?{Search handle}{Search parameter}{value}</strong>.
+				(e.g., biodiversity.aq/pola3r/project_metadata/?start_date=2020-01-03).
+				This takes the form:  <strong>biodiversity.aq/pola3r/{URL Endpoint}/?{Search handle}{Search parameter}{value}</strong>.
 			</p>
 			<p>The POLA<sub>3</sub>R data can be accessed and searched through this API in two ways:</p>
 			<ol>
@@ -46,7 +46,7 @@ Biodiversity.aq API
 					<tbody>
 						<tr>
 							<th scope="row" rowspan="18">Project Metadata</th>
-							<td rowspan="18">'/polaaar/project_metadata/'</td>
+							<td rowspan="18">'/pola3r/project_metadata/'</td>
 							<th>project_name</th>
 							<td>"=","__icontains="</td>
 							<td>The name of the project</td>
@@ -129,32 +129,32 @@ Biodiversity.aq API
 						</tr>
 
 						<tr>
-							<th scope="row">event_hierarchy__event__event_metadata__sequence__primerName_forward</th>
+							<th scope="row">event_hierarchy__event__sequences__primerName_forward</th>
 							<td>"=","__icontains="</td>
 							<td>The forward primer name</td>
 						</tr>
 
 						<tr>
-							<th scope="row">event_hierarchy__event__event_metadata__sequence__primerName_reverse</th>
+							<th scope="row">event_hierarchy__event__sequences__primerName_reverse</th>
 							<td>"=","__icontains="</td>
 							<td>The reverse primer name</td>
 						</tr>
 
 						<tr>
-							<th scope="row">event_hierarchy__event__event_metadata__sequence__seqData_numberOfBases</th>
+							<th scope="row">event_hierarchy__event__sequences__seqData_numberOfBases</th>
 							<td>"=","__gte=","__lte="</td>
 							<td>The number of sequence bases</td>
 						</tr>
 
 						<tr>
-							<th scope="row">event_hierarchy__event__event_metadata__sequence__seqData_numberOfSequences</th>
+							<th scope="row">event_hierarchy__event__sequences__seqData_numberOfSequences</th>
 							<td>"=","__gte=","__lte="</td>
 							<td>The total number of sequences</td>
 						</tr>
 
 						<tr>
 							<th scope="row" rowspan="7">Sequences</th>
-							<td rowspan="7">/polaaar/sequences/</td>
+							<td rowspan="7">/pola3r/sequences/</td>
 							<th scope="row">sequence_name</th>
 							<td>"=","__icontains="</td>
 							<td>The name of the sequence</td>
