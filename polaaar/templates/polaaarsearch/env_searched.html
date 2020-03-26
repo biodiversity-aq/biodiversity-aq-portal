@@ -2,7 +2,7 @@
 <div class="row">
     <div class="col-6" style="padding-top:30px;">
         {% if vartype == "NUM" %}
-        <input class="range-example-input" type="range" min="0" max="100" step="0.1">
+        
         {% endif %}
     </div>
 </div>
@@ -53,12 +53,6 @@
     $(document).ready(function () {
     $('#myTable').DataTable();
 
-    $('.range-example-input').asRange({
-    range:true,
-    max:1000,
-    min:0,
-    keyboard:true
-    });
 
     $('#min, #max').keyup( function() {
     table.draw();
