@@ -273,13 +273,13 @@ FILE_UPLOAD_HANDLERS = [
 
 ############################################################
 ### Cloudinary settings
-CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': 'hhcpob9rq',
-    'API_KEY': '449231933768455',
-    'API_SECRET': 'KEnRK1YkTCIHQ-vCUwe6JJil9gM',
-}
+#CLOUDINARY_STORAGE = {
+#    'CLOUD_NAME': 'hhcpob9rq',
+#    'API_KEY': '449231933768455',
+#    'API_SECRET': 'KEnRK1YkTCIHQ-vCUwe6JJil9gM',
+#}
 
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+#DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 #DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
 
 

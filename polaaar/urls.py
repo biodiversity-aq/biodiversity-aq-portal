@@ -15,10 +15,9 @@ router.register(r'reference',views.ReferenceViewSet)
 router.register(r'geog_location',views.GeogViewSet)
 router.register(r'environment',views.EnvironmentViewSet)
 
-### Special routers for sequences
+### Special routers for sequences and environments
 router.register(r'sequences',views.SequencesViewSet)
-
-
+router.register(r'environmental_variables',views.EnvironmentVariablesViewSet)
 
 app_name = 'polaaar'
 urlpatterns = [
@@ -35,8 +34,7 @@ urlpatterns = [
 
     path('submit_data/',views.email_submission,name='email_submission'),
     path('submit_success/',views.submit_success,name='submit_success'),
-    path('dcsubmit/',views.dc_submit,name='dc_submit'),
-    path('mimsubmit/',views.mim_submit,name='mim_submit'),
+    path('dcsubmit/',views.dc_submit,name='dc_submit'),    
 
     #### REST API URLS
 

@@ -17,8 +17,7 @@ class ReferenceSerializer(serializers.ModelSerializer):
 class SequencesSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Sequences
-		fields = [
-		'url',
+		fields = [		
 		'sequence_name',
 		'MID',
 		'subspecf_gen_lin',
@@ -38,16 +37,6 @@ class SequencesSerializer(serializers.ModelSerializer):
 		'seqData_numberOfBases',
 		'seqData_numberOfSequences'
 		]
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -84,8 +73,7 @@ class VariableSerializer(serializers.ModelSerializer):
 class EnvironmentSerializer(serializers.ModelSerializer):
 	env_variable = serializers.StringRelatedField(many=False)
 	env_method = serializers.StringRelatedField(many=False)
-	env_units = serializers.StringRelatedField(many=False)
-	sequences = SequencesSerializer(many=True,read_only=True)
+	env_units = serializers.StringRelatedField(many=False)	
 	
 	class Meta:
 		model = Environment
@@ -95,8 +83,7 @@ class EnvironmentSerializer(serializers.ModelSerializer):
 		'link_climate_info',
 		'env_variable',
 		'env_method',
-		'env_units',
-		'sequences',
+		'env_units',		
 		'env_numeric_value',
 		'env_text_value'
 		]
@@ -193,8 +180,7 @@ class OccurrenceSerializer(serializers.ModelSerializer):
 	associated_sequences = SequencesSerializer(many=True,read_only=True)
 	class Meta:
 		model = Occurrence
-		fields = [
-		'url',
+		fields = [		
 		'occurrenceID',
 		'taxon',
 		'occurrence_notes',
@@ -214,13 +200,14 @@ class EventSerializer(serializers.ModelSerializer):
 	event_metadata = SampleMetadataSerializer(many=False,read_only=True)
 	class Meta:
 		model = Event
-		fields = [
-		'url',
+		fields = [		
 		'parent_event',
 		'footprintWKT',
 		'eventRemarks',
 		'sample_name',
-		'collection_date',
+		'collection_year',
+		'collection_month',
+		'collection_day',
         'collection_time',				
 		'samplingProtocol',
 		'event_metadata',
@@ -239,8 +226,7 @@ class EventHierarchySerializer(serializers.ModelSerializer):
 	event_creator = serializers.StringRelatedField(many=False)
 	class Meta:
 		model = EventHierarchy
-		fields = [
-		'url',
+		fields = [		
 		'event_hierarchy_name',
 		'event_type',
 		'description',
@@ -331,7 +317,9 @@ class SeqEventSerializer(serializers.ModelSerializer):
 		'Latitude',
 		'Longitude',
 		'eventRemarks',
-		'collection_date',
+		'collection_year',
+		'collection_month',
+		'collection_day',
         'collection_time',
 		'samplingProtocol',
 		'event_metadata',
@@ -341,7 +329,8 @@ class SequencesSerializer2(serializers.ModelSerializer):
 	event = SeqEventSerializer(many=False,read_only=True)
 	class Meta:
 		model = Sequences
-		fields = [		
+		fields = [
+		'event',
 		'sequence_name',
 		'MID',
 		'subspecf_gen_lin',
@@ -359,15 +348,29 @@ class SequencesSerializer2(serializers.ModelSerializer):
 		'seqData_runNumber',
 		'seqData_sampleNumber',
 		'seqData_numberOfBases',
-		'seqData_numberOfSequences',
-		'event'
+		'seqData_numberOfSequences'
 		]
 
 
 
+######################################################################################
+## Special serializers for looking up environmental data
 
-
-
-
-
-
+class EnvironmentSerializer2(serializers.ModelSerializer):
+	env_variable = serializers.StringRelatedField(many=False)
+	env_method = serializers.StringRelatedField(many=False)
+	env_units = serializers.StringRelatedField(many=False)	
+	event = SeqEventSerializer(many=False,read_only=True)
+	class Meta:
+		model = Environment
+		fields =[
+		'event',
+	    'env_sample_name',
+		'created_at',
+		'link_climate_info',
+		'env_variable',
+		'env_method',
+		'env_units',		
+		'env_numeric_value',
+		'env_text_value'
+		]

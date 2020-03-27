@@ -58,7 +58,8 @@ POLA3R search
                 <table id="myTable" class="display nowrap" style="width:100%">
                     <thead>
                         <tr>
-                            <th style="display:none!important">coordinates</th>
+                            <th style="display:none">coordinates</th>
+                            <th>Id</th>
                             <th>Project creator</th>
                             <th>Project name</th>
                             <th>Start date</th>
@@ -78,6 +79,7 @@ POLA3R search
                                 {% endfor %}
                                 {% endfor %}
                             </td>
+                            <td>{{i.id}}</td>
                             <td>{{i.project_creator.full_name}}</td>
                             <td>{{i.project_name}}</td>
                             <td>{{i.start_date}}</td>
@@ -99,6 +101,7 @@ POLA3R search
                             <td style="font-size:25pt;color:black">
                                 <a href="#"><i class="fas fa-file-csv pl-1"></i></a>
                                 <a href="/pola3r/project_metadata/{{i.pk}}"><i class="fas fa-file-code pl-1"></i></a>
+                                <a href="{{i.project_file.url}}"><i class="fas fa-file-alt pl-1"></i></a>
                             </td>
                         </tr>
 
@@ -119,7 +122,7 @@ POLA3R search
                 <button class="btn btn-elegant btn-lg" style="width:100%">Download CSV <i class="fas fa-file-csv pl-1"></i></button>
             </div>
             <div class="col-3">
-                <button class="btn btn-elegant btn-lg" onclick="getallJSON()" style="width:100%">Download JSON <i class="fas fa-file-code pl-1"></i></button>
+                <button class="btn btn-elegant btn-lg" onclick="getallJSONbyID(1,'project_metadata')" style="width:100%">Download JSON <i class="fas fa-file-code pl-1"></i></button>
             </div>
         </div>
 
@@ -152,6 +155,7 @@ POLA3R search
                 <ul style="font-size:14pt">
                     <li>To search for data, type any keyword in the search bar above the table. The tables can also be sorted by the visible columns</li>
                     <li>Data can be downloaded in CSV (<i class="fas fa-file-csv pl-1"></i>) or JSON (<i class="fas fa-file-code pl-1"></i>) formats.</li>
+                    <li>The original project file (<i class="fas fa-file-alt pl-1"></i>) can also be downloaded as an xlsx file.</li>
                     <li>
                         The <a href="/polaaar/spatialsearch">spatial searching</a> feature is available as well and allows users to draw polygons on the map to find projects
                         and associated metadata.
@@ -211,7 +215,7 @@ POLA3R search
         var Mytable = $('#myTable').DataTable();
 
         Mytable.column(0).visible(false)
-
+        Mytable.column(1).visible(false)
 
     });
 
@@ -326,8 +330,8 @@ POLA3R search
 
 </script>
 
+<script type="text/javascript" src="{% static 'js/polarrr.js' %}"></script>
 {% endblock extra_js %}
-
 
 
 {% endblock content %}

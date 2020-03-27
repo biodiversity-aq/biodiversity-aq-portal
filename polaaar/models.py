@@ -180,6 +180,7 @@ class EventType(models.Model):
     class Meta:
         ordering = ['name']
 
+#fsa = FileSystemStorage(location='/media/project_files')
 class ProjectMetadata(models.Model):
     project_name                    = models.CharField(max_length=255)
     start_date                      = models.DateField()
@@ -201,6 +202,7 @@ class ProjectMetadata(models.Model):
 
     project_qaqc                    = models.BooleanField(blank=True,null=True)
     amplicon_image                  = models.ImageField(upload_to='amplicons',blank=True,null=True)
+    project_file                    = models.FileField(upload_to='project_files',blank=True,null=True)
 
     def __str__(self):
         return self.project_name
@@ -261,9 +263,7 @@ class Event(models.Model):
 
     eventRemarks        = models.TextField(blank=True,null=True)
     sample_name         = models.CharField(max_length=255,unique=True)   ### Unique value      ## User provided id for sample
-    
-    
-    #collection_date     = models.DateField()
+           
     collection_year     = models.IntegerField(blank=True,null=True)
     collection_month     = models.IntegerField(blank=True,null=True,choices=MONTHS)
     collection_day      = models.IntegerField(blank=True,null=True)

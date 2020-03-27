@@ -32,18 +32,6 @@ def home(request):
     return render(request, 'polaaar_home.html',{'qs_results':qs_results})
 
 
-
-def spatial_searching(request):
-    qs_results = ProjectMetadata.objects.annotate(geom=AsGeoJSON(Centroid('geomet')))
-    return render(request, 'polaaarsearch/spatial_search.html',{'qs_results':qs_results})
-
-
-
-
-
-
-########## WRITE A SAVE METHOD THAT INCLUDES A LAT/LON CENTROID! 
-
 #########################################################
 ### Search views
 def polaaar_search(request):	
@@ -74,16 +62,14 @@ def env_searched(request):
 		return render(request,'polaaarsearch/env_searched.html',{'qsenv':qsenv,'vartype':vartype})
 
 
-
-
-
 def seq_search(request):
-
     qs = Sequences.objects.all().select_related()
-
     return render(request, 'polaaarsearch/sequences.html',{'qs':qs})
 
 
+def spatial_searching(request):
+    qs_results = Event.objects.annotate(geom=AsGeoJSON(Centroid('footprintWKT')))
+    return render(request, 'polaaarsearch/spatial_search.html',{'qs_results':qs_results})
 
 
 #########################################################
@@ -95,8 +81,7 @@ def polaaar_submit(request):
 def dc_submit(request):
     return render(request, 'polaaarsubmit/submit_dc.html')
 
-def mim_submit(request):
-    return render(request, 'polaaarsubmit/submit_mim.html')
+
 
 
 #######################################################
@@ -223,7 +208,7 @@ class EventViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = EventSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = {
-    #'collection_date':['gte','lte'],
+     'collection_year':['gte','lte','exact','in'],      
      'sample_name':['exact','istartswith'],
 	 'id':['exact','in']
      #'parent_event__project_metadata__project_name':['exact','icontains']
@@ -265,10 +250,20 @@ class SequencesViewSet(viewsets.ReadOnlyModelViewSet):
 	}
 
 
+### Special view for the Environment download
 
-
-
-
-
-
+class EnvironmentVariablesViewSet(viewsets.ReadOnlyModelViewSet):	
+    queryset = Environment.objects.all()
+    serializer_class = EnvironmentSerializer2
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = {
+        'env_sample_name':['icontains'],
+        'env_variable__name':['exact','icontains','in'],
+        'env_method__shortname':['exact','icontains'],
+        'env_text_value':['exact','in','icontains'],
+        'env_numeric_value':['gte','lte'],
+        'event__sample_name':['exact','icontains'],
+        'event__event_hierarchy__project_metadata__project_name':['exact','icontains'],
+        'id':['in']
+        }
 

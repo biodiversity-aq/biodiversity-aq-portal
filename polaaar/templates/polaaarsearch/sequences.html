@@ -34,7 +34,7 @@
         <button class="btn btn-elegant btn-lg" style="width:100%">Download CSV <i class="fas fa-file-csv pl-1"></i></button>        
     </div>
     <div class="col-3">
-        <button class="btn btn-elegant btn-lg" onclick="getallJSON()" style="width:100%">Download JSON <i class="fas fa-file-code pl-1"></i></button>
+        <button class="btn btn-elegant btn-lg" onclick="getallJSONbyID(0,'sequences')" style="width:100%">Download JSON <i class="fas fa-file-code pl-1"></i></button>
     </div>
 
 </div>
@@ -49,21 +49,6 @@
     });
 
 
-    function getallJSON() {
-        var items = []
-
-        ///// IF YOU CHANGE THE LOCATION OF THE HIDDEN ID COLUMN, DON'T FORGET TO CHANGE THE COLUMN NUMBER
-        var COLUMN = 0
-        var myTable = $("#myTable").DataTable()
-        var searData = myTable.rows({search:'applied'}).column(COLUMN,{search:'applied'}).data()
-
-       for(var i=0; i< searData.length; i++){
-            items.push(searData[i])
-        }
-        
-        searchURL = '/pola3r/sequences/?id='.concat(items)
-        window.open(searchURL)
-
-    }
+    
 
 </script>

@@ -21,8 +21,9 @@ POLA3R data
         <div class="col-12 col-md-8">
             <div class="row" style="border-width:0px;">
                 <div class="col-12">
-                    <h3>Search for projects by drawing a polygon: </h3>
-                    <p>Use the toolbar on the left (the hexagon will draw a free form polygon, and the square will allow you to create a bounding box)</p>
+                    <h3>Search for events by drawing a polygon: </h3>
+                    <p>Use the toolbar on the left (the hexagon will draw a free form polygon, and the square will allow you to create a bounding box).
+                     You can download your selection as a JSON file or data spreadsheet (XLSX format)</p>
                 </div>
                 <div class="col-12">
                     {% leaflet_map "landing_map" callback="window.map_init"  %}
@@ -44,9 +45,14 @@ POLA3R data
 
                 </div>
                 <div class="col-12" style="padding-top:40px">
-                    <a role="button" href="{% url 'polaaar:home' %}" class="btn btn-dark-green btn-lg waves-effect" style="width:100%;">
-                        Search <i class="fas fa-search pl-1"></i>
-                    </a>
+                    <button class="btn btn-elegant btn-lg waves-effect" style="width:100%;" onclick="searchEvents()">
+                        Download JSON <i class="fas fa-file-code pl-1"></i>
+                    </button>
+                </div>
+                <div class="col-12" style="padding-top:40px">
+                    <button class="btn btn-elegant btn-lg waves-effect" style="width:100%;" onclick="searchEvents()">
+                        Download CSV <i class="fas fa-file-csv pl-1"></i>
+                    </button>
                 </div>
             </div>
         </div>
@@ -94,7 +100,7 @@ POLA3R data
             fillOpacity: 0.8
         };
 
-        L.geoJson(collection,{
+        var ggJSON = L.geoJson(collection,{
             pointToLayer: function(feature,latlng){
                 return L.circleMarker(latlng,geojsonMarkerOptions);
             }
@@ -129,8 +135,23 @@ POLA3R data
     
 
 
+        L.Polygon.include({
+            contains: function (latLng) {
+                return turf.inside(new L.circleMarker(latLng).toGeoJSON(), this.toGeoJSON());
+            } 
+        });
+
+        L.Rectangle.include({
+            contains: function (latLng) {
+                return this.getBounds().contains(latLng);
+            }
+        });
+
+
+
         map.on("draw:created", function (e) {
             var layer = e.layer;
+            //window.layer = layer
             drawnItems.addLayer(layer);
 
             
@@ -139,7 +160,15 @@ POLA3R data
             pcoords = pcoords.replace(/\),/g,")\n")
 
             document.getElementById("coordbox").value = pcoords
-            
+
+            IDvals = []
+            ggJSON.eachLayer(function (marker) {                
+                if (layer.contains(marker.getLatLng())) {
+                    IDvals.push(marker.feature.id)
+                    marker.setStyle({fillColor:'#ba1111'})
+                }
+            });
+            window.IDvals=IDvals
 
 
             drawControl.setDrawingOptions({
@@ -152,6 +181,10 @@ POLA3R data
 
         map.on("draw:deleted", function (e) {
 
+            ggJSON.eachLayer(function (marker) {                
+                marker.setStyle({fillColor:'#ff7800'})
+            });
+
             document.getElementById("coordbox").value = ""
             drawControl.setDrawingOptions({
                 polygon:true,
@@ -160,6 +193,16 @@ POLA3R data
             map.removeControl(drawControl);
             map.addControl(drawControl);
         });
+
+ 
+            
+            
+
+    }
+
+    function searchEvents() {
+        srcURL = '/pola3r/events/?id__in='.concat(window.IDvals)
+        window.open(srcURL)
 
     }
 

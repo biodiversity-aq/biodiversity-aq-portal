@@ -42,7 +42,7 @@
                     <td>{{i.env_text_value}}</td>
                     {% endif %}
                     <td>{{i.env_units.name}}</td>
-                    <td>{{i.event.collection_date}}</td>
+                    <td>{{i.event.collection_year|default_if_none:"NA"}}-{{i.event.collection_month|default_if_none:"NA"}}-{{i.event.collection_day|default_if_none:"NA"}}</td>
 
                     <td style="text-align:center;font-size:16pt">
                         {% if i.event.sequences_exists == True %}
@@ -67,7 +67,7 @@
         <button class="btn btn-elegant btn-lg" style="width:100%">Download CSV <i class="fas fa-file-csv pl-1"></i></button>
     </div>
     <div class="col-3">
-        <button class="btn btn-elegant btn-lg" onclick="getallJSON()" style="width:100%">Download JSON <i class="fas fa-file-code pl-1"></i></button>
+        <button class="btn btn-elegant btn-lg" onclick="getallJSONbyID(0,'environmental_variables')" style="width:100%">Download JSON <i class="fas fa-file-code pl-1"></i></button>
     </div>
 </div>
 
