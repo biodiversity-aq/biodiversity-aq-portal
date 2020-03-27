@@ -238,7 +238,20 @@ class EventHierarchy(models.Model):
 
 ## This table refers to specific samples taken, and is recursive - so if a sample gets SUBSAMPLED
 ## then a new event (sample) can be defined with the original sample as a parent.
-
+MONTHS = (
+    (1,'01'),
+    (2,'02'),
+    (3,'03'),
+    (4,'04'),
+    (5,'05'),
+    (6,'06'),
+    (7,'07'),
+    (8,'08'),
+    (9,'09'),
+    (10,'10'),
+    (11,'11'),
+    (12,'12')
+    )
 class Event(models.Model):
     
     footprintWKT        = models.GeometryField(srid=4326,blank=True,null=True)
@@ -248,7 +261,13 @@ class Event(models.Model):
 
     eventRemarks        = models.TextField(blank=True,null=True)
     sample_name         = models.CharField(max_length=255,unique=True)   ### Unique value      ## User provided id for sample
-    collection_date     = models.DateField()
+    
+    
+    #collection_date     = models.DateField()
+    collection_year     = models.IntegerField(blank=True,null=True)
+    collection_month     = models.IntegerField(blank=True,null=True,choices=MONTHS)
+    collection_day      = models.IntegerField(blank=True,null=True)
+
     collection_time     = models.TimeField()
     event_hierarchy     = models.ForeignKey(_("EventHierarchy"),related_name='event',on_delete=models.CASCADE)
     ### Sample is a recursive table, and can be sub-sampled (in other words, it refers back to itself so you can build on itself)    
@@ -276,7 +295,7 @@ class Event(models.Model):
     def __str__(self):
         return self.sample_name
     class Meta:
-        ordering = ['-collection_date','-collection_time']
+        ordering = ['-collection_year','-collection_month','-collection_day','-collection_time']
 
 #### End of event models block        
 ####################################################################################################

@@ -1,9 +1,7 @@
 <div class="row" style="border-width:0px;">
     <div class="col-12">
 
-
-
-        <table id="myTable" class="display">
+        <table id="myTable" class="display nowrap" width="100%">
             <thead>
                 <tr>
                     <th style="display:none">id</th>
@@ -33,10 +31,10 @@
     </div>
 
     <div class="col-3">
-        <button class="btn btn-elegant btn-lg">Download CSV <i class="fas fa-file-csv pl-1"></i></button>        
+        <button class="btn btn-elegant btn-lg" style="width:100%">Download CSV <i class="fas fa-file-csv pl-1"></i></button>        
     </div>
     <div class="col-3">
-        <button class="btn btn-elegant btn-lg" onclick="getallJSON()">Download JSON <i class="fas fa-file-code pl-1"></i></button>
+        <button class="btn btn-elegant btn-lg" onclick="getallJSON()" style="width:100%">Download JSON <i class="fas fa-file-code pl-1"></i></button>
     </div>
 
 </div>
@@ -46,20 +44,23 @@
 
 <script>
     $(document).ready(function () {
-        $('#myTable').DataTable();
+        var Mytable = $('#myTable').DataTable();
+        Mytable.column(0).visible(false)
     });
 
 
     function getallJSON() {
         var items = []
-    
-        ///// IF YOU CHANGE THE LOCATION OF THE HIDDEN COORDINATES COLUMN, DON'T FORGET TO CHANGE THE NTH CHILD LOCATION
 
-        //Iterate all td's in second column
-        $('#myTable tbody tr td:nth-child(1)').each( function(){
-           //add item to array
-           items.push( $(this).text() );
-        });
+        ///// IF YOU CHANGE THE LOCATION OF THE HIDDEN ID COLUMN, DON'T FORGET TO CHANGE THE COLUMN NUMBER
+        var COLUMN = 0
+        var myTable = $("#myTable").DataTable()
+        var searData = myTable.rows({search:'applied'}).column(COLUMN,{search:'applied'}).data()
+
+       for(var i=0; i< searData.length; i++){
+            items.push(searData[i])
+        }
+        
         searchURL = '/pola3r/sequences/?id='.concat(items)
         window.open(searchURL)
 

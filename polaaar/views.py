@@ -69,7 +69,8 @@ def env_searched(request):
 	if request.method=='GET':
 		var = request.GET.get('var','')
 		vartype = request.GET.get('vartype','')
-		qsenv = Event.objects.filter(environment__env_variable__name = var)
+		#qsenv = Event.objects.filter(environment__env_variable__name = var)
+		qsenv = Environment.objects.filter(env_variable__name = var)
 		return render(request,'polaaarsearch/env_searched.html',{'qsenv':qsenv,'vartype':vartype})
 
 
