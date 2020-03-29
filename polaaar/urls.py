@@ -6,18 +6,18 @@ from . import views
 from rest_framework import routers
 
 router = routers.DefaultRouter()
-router.register(r'occurrence',views.OccurrenceViewSet)
-router.register(r'events',views.EventViewSet)
-router.register(r'eventhierarchy',views.EventHierarchyViewSet)
+router.register(r'occurrence',views.OccurrenceViewSet,basename='occurrence')
+router.register(r'events',views.EventViewSet,basename='events')
+router.register(r'eventhierarchy',views.EventHierarchyViewSet,basename='eventhierarchy')
 router.register(r'project_metadata',views.ProjectMetadataViewSet,basename='projectmetadata')
-router.register(r'sequence',views.SequenceViewSet)
-router.register(r'reference',views.ReferenceViewSet)
-router.register(r'geog_location',views.GeogViewSet)
-router.register(r'environment',views.EnvironmentViewSet)
+router.register(r'sequence',views.SequenceViewSet,basename='sequence')
+router.register(r'reference',views.ReferenceViewSet,basename='reference')
+router.register(r'geog_location',views.GeogViewSet,basename='geoglocation')
+router.register(r'environment',views.EnvironmentViewSet,basename='environment')
 
 ### Special routers for sequences and environments
-router.register(r'sequences',views.SequencesViewSet)
-router.register(r'environmental_variables',views.EnvironmentVariablesViewSet)
+router.register(r'sequences',views.SequencesViewSet,basename='sequences')
+router.register(r'environmental_variables',views.EnvironmentVariablesViewSet,basename='environmentalvariables')
 
 app_name = 'polaaar'
 urlpatterns = [
