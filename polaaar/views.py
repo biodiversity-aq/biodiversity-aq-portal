@@ -31,7 +31,7 @@ def home(request):
 
 
 #########################################################
-### Search views
+### DJANGO Search views
 ##########  
 
 def polaaar_search(request):
@@ -149,8 +149,8 @@ def submit_success(request):
 
 
 ###################################################################################################################
-
 #### REST API views
+#### These views are instantiated with viewsets to keep the query calls simple and avoid us having to write custom CRUD calls. 
 
 class ReferenceViewSet(viewsets.ReadOnlyModelViewSet):	
 	serializer_class = ReferenceSerializer
@@ -404,7 +404,7 @@ class EnvironmentVariablesViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 ###################################################################################################################################################################################
-### Project level CSV download  ->  Implemented on /pola3r/search 
+### Project level XLSX download
 ### This creates an XLSX sheet with multiple worksheets 
 
 #########################################################################################################################################
@@ -412,7 +412,7 @@ class EnvironmentVariablesViewSet(viewsets.ReadOnlyModelViewSet):
 #########################################################################################################################################
 
 def export_projects(request):
-    
+    user = request.user
     if request.method=='GET':
         IDS = request.GET.getlist('id')        
         IDS = IDS[0].split(',')        
@@ -465,8 +465,8 @@ def export_projects(request):
                     sample_metadata__event_sample_metadata__event_hierarchy__project_metadata__project_creator__username=user.username))
             
             R = Reference.objects.filter(associated_projects__id__in=IDS).filter(
-				Q(associated_projects__project_metadata__is_public=True)|Q(
-					associated_projects__project_metadata__project_creator__username=user.username))
+				Q(associated_projects__is_public=True)|Q(
+					associated_projects__project_creator__username=user.username))
             
             T = Taxa.objects.filter(occurrence__event__event_hierarchy__project_metadata__id__in=IDS).filter(Q(
                 occurrence__event__event_hierarchy__project_metadata__is_public=True)|Q(
@@ -488,7 +488,7 @@ def export_projects(request):
             G = Geog_Location.objects.filter(sample_metadata__event_sample_metadata__event_hierarchy__project_metadata__id__in=IDS).filter(Q(
                 sample_metadata__event_sample_metadata__event_hierarchy__project_metadata__is_public=True))
             
-            R = Reference.objects.filter(associated_projects__id__in=IDS).filter(Q(associated_projects__project_metadata__is_public=True))
+            R = Reference.objects.filter(associated_projects__id__in=IDS).filter(Q(associated_projects__is_public=True))
             
             T = Taxa.objects.filter(occurrence__event__event_hierarchy__project_metadata__id__in=IDS).filter(Q(
                 occurrence__event__event_hierarchy__project_metadata__is_public=True))
@@ -942,7 +942,8 @@ def export_projects(request):
 #######################################################################################################################################
 #### Returns an excel spreadsheet for the environmental data
 
-def export_environment(request):    
+def export_environment(request):
+    user = request.user
     if request.method=='GET':
         IDS = request.GET.getlist('id')
         IDS = IDS[0].split(',')
@@ -1291,11 +1292,11 @@ def export_environment(request):
 
 ###################################################################################################################################################
 #### View for returning sequence and event data as an EXCEL spreadsheet
-def export_sequences(request):    
+def export_sequences(request):
+    user = request.user
     if request.method=='GET':
         IDS = request.GET.getlist('id')
         IDS = IDS[0].split(',')
-
 
         ########################################################################
         ### Authentication checks 
@@ -1600,7 +1601,8 @@ def export_sequences(request):
 ##########################################################################################################################################################
 #### This view is to return the spreadsheet when searching by events in the spatial search  - emulates project_metadata 
 
-def export_events(request):    
+def export_events(request):
+    user = request.user
     if request.method=='GET':
         IDS = request.GET.getlist('id')        
         IDS = IDS[0].split(',')
@@ -1656,8 +1658,8 @@ def export_events(request):
                     sample_metadata__event_sample_metadata__event_hierarchy__project_metadata__project_creator__username=user.username)).order_by('name').distinct('name')
 
             R = Reference.objects.filter(associated_projects__event_hierarchy__event__id__in=IDS).filter(
-				Q(associated_projects__project_metadata__is_public=True)|Q(
-					associated_projects__project_metadata__project_creator__username=user.username)).order_by('full_reference').distinct('full_reference')
+				Q(associated_projects__is_public=True)|Q(
+					associated_projects__project_creator__username=user.username)).order_by('full_reference').distinct('full_reference')
 
             T = Taxa.objects.filter(occurrence__event__id__in=IDS).filter(Q(
                 occurrence__event__event_hierarchy__project_metadata__is_public=True)|Q(
@@ -1682,7 +1684,7 @@ def export_events(request):
                 sample_metadata__event_sample_metadata__event_hierarchy__project_metadata__is_public=True)).order_by('name').distinct('name')
 
             R = Reference.objects.filter(associated_projects__event_hierarchy__event__id__in=IDS).filter(Q(
-                associated_projects__project_metadata__is_public=True)).order_by('full_reference').distinct('full_reference')
+                associated_projects__is_public=True)).order_by('full_reference').distinct('full_reference')
 
             T = Taxa.objects.filter(occurrence__event__id__in=IDS).filter(Q(
                 occurrence__event__event_hierarchy__project_metadata__is_public=True)).order_by('name').distinct('name')

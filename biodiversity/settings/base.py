@@ -97,9 +97,7 @@ INSTALLED_APPS = [
 
     'django_countries',
     'djconfig',
-    'data',
-    'cloudinary',
-    'cloudinary_storage',
+    'data',    
     'polaaar'       
 ]
 
