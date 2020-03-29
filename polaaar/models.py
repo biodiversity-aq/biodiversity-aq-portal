@@ -128,7 +128,8 @@ class Geog_Location(models.Model):
         return self.geog_level+': '+self.name  
     class Meta:
         ordering=['name']
-
+        verbose_name = "Geography"
+        verbose_name_plural = "Geographic Locations"
 
 
 
@@ -141,6 +142,8 @@ class package(models.Model):
         return self.name
     class Meta:
         ordering=['name']
+        verbose_name = 'MiXS packages'
+        verbose_name_plural = 'MiXS packages'
 
 ##### End of MIxS package model block
 #####################################################################################################
@@ -208,6 +211,8 @@ class ProjectMetadata(models.Model):
         return self.project_name
     class Meta:
         ordering = ['project_name']
+        verbose_name = 'Project metadata'
+        verbose_name_plural = 'Project metadata'
 
 ####################################################################################################################
 
@@ -233,6 +238,8 @@ class EventHierarchy(models.Model):
         return self.event_type.name +': '+ self.event_hierarchy_name
     class Meta:
         ordering=['event_hierarchy_name']
+        verbose_name = 'Event hierarchy'
+        verbose_name_plural = 'Event hierarchy'
 
 #### End of parent event models block
 ####################################################################################################

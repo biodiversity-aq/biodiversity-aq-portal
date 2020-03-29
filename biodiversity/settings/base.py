@@ -15,6 +15,72 @@ import os, socket
 from os import environ
 from .secrets import *
 
+
+######################################################################################################################
+## Settings that need changing for running in production
+
+DEBUG=True
+
+# Base URL to use when referring to full URLs within the Wagtail admin backend -
+# e.g. in notification emails. Don't include '/admin' or a trailing slash
+BASE_URL = 'https://biodiversity-aq-dev.herokuapp.com'
+
+SITE_ID = 2
+
+if socket.gethostname() == "DESKTOP-8K2LJ17":
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.contrib.gis.db.backends.postgis',
+            'NAME': 'biodiversity_aq',
+            'USER': 'biodiversity_aq_admin',
+            'PASSWORD': 'bi0diversity',   ##'p0l@radmin!1',
+            'HOST': '',
+            'PORT': '5432'
+        }
+    }
+elif socket.gethostname() == 'HDLT15':
+     DATABASES = {
+        'default': {
+            'ENGINE': 'django.contrib.gis.db.backends.postgis',
+            'NAME': 'biodiversity_aq',
+            'USER': 'biodiversity_aq_admin',
+            'PASSWORD': 'bi0diversity',
+            'HOST': '',
+            'PORT': '5432'
+        }
+    }
+else:        
+    
+    
+    DATABASES = {
+            'default': {
+                'ENGINE': 'django.contrib.gis.db.backends.postgis',
+                'NAME': 'd86hngmf7e303f',
+                'USER': 'hwyoarfegnhrwn',
+                'PASSWORD': '286e142ad8f2d8aa4d5ad529c43bbe847f4037ddc4f065f51bf18366cfac4cd5',
+                'HOST': 'ec2-54-217-234-157.eu-west-1.compute.amazonaws.com',
+                'PORT': '5432'
+            }
+        }
+
+    import dj_database_url
+    
+    #db_from_env = dj_database_url.config(conn_max_age=500)
+    #DATABASES['default'].update(db_from_env)
+    DATABASES['default'] = dj_database_url.config()
+    DATABASES['default']['ENGINE'] = 'django.contrib.gis.db.backends.postgis'
+
+    SECURE_PROXY_SSL_HEADER = (
+    "HTTP_X_FORWARDED_PROTO", 
+    "https"
+)
+
+
+###################################################################################################################
+
+
+
+
 PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BASE_DIR = os.path.dirname(PROJECT_DIR)
 
@@ -29,11 +95,7 @@ SECRET_KEY = SECRET_KEY
 # SECURITY WARNING: define the correct hosts in production!
 ALLOWED_HOSTS = ['*'] 
 
-# Base URL to use when referring to full URLs within the Wagtail admin backend -
-# e.g. in notification emails. Don't include '/admin' or a trailing slash
-BASE_URL = 'https://biodiversity-aq-dev.herokuapp.com'
 
-SITE_ID = 2
 
 
 #### GEO Libraries
@@ -149,58 +211,6 @@ TEMPLATES = [
 WSGI_APPLICATION = 'biodiversity.wsgi.application'
 
 
-# Database
-# https://docs.djangoproject.com/en/2.2/ref/settings/#databases
-
-if socket.gethostname() == "DESKTOP-8K2LJ17":
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.contrib.gis.db.backends.postgis',
-            'NAME': 'biodiversity_aq',
-            'USER': 'biodiversity_aq_admin',
-            'PASSWORD': 'bi0diversity',   ##'p0l@radmin!1',
-            'HOST': '',
-            'PORT': '5432'
-        }
-    }
-elif socket.gethostname() == 'HDLT15':
-     DATABASES = {
-        'default': {
-            'ENGINE': 'django.contrib.gis.db.backends.postgis',
-            'NAME': 'biodiversity_aq',
-            'USER': 'biodiversity_aq_admin',
-            'PASSWORD': 'bi0diversity',
-            'HOST': '',
-            'PORT': '5432'
-        }
-    }
-else:        
-    
-    
-    DATABASES = {
-            'default': {
-                'ENGINE': 'django.contrib.gis.db.backends.postgis',
-                'NAME': 'd86hngmf7e303f',
-                'USER': 'hwyoarfegnhrwn',
-                'PASSWORD': '286e142ad8f2d8aa4d5ad529c43bbe847f4037ddc4f065f51bf18366cfac4cd5',
-                'HOST': 'ec2-54-217-234-157.eu-west-1.compute.amazonaws.com',
-                'PORT': '5432'
-            }
-        }
-
-    import dj_database_url
-    
-    #db_from_env = dj_database_url.config(conn_max_age=500)
-    #DATABASES['default'].update(db_from_env)
-    DATABASES['default'] = dj_database_url.config()
-    DATABASES['default']['ENGINE'] = 'django.contrib.gis.db.backends.postgis'
-
-    SECURE_PROXY_SSL_HEADER = (
-    "HTTP_X_FORWARDED_PROTO", 
-    "https"
-)
-
-DEBUG=True
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
 
@@ -266,19 +276,6 @@ FILE_UPLOAD_HANDLERS = [
  "django.core.files.uploadhandler.MemoryFileUploadHandler",
  "django.core.files.uploadhandler.TemporaryFileUploadHandler"
 ]
-
-
-
-############################################################
-### Cloudinary settings
-#CLOUDINARY_STORAGE = {
-#    'CLOUD_NAME': 'hhcpob9rq',
-#    'API_KEY': '449231933768455',
-#    'API_SECRET': 'KEnRK1YkTCIHQ-vCUwe6JJil9gM',
-#}
-
-#DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-#DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
 
 
 # Wagtail settings
@@ -369,10 +366,6 @@ LEAFLET_CONFIG = {
 
     }
 
-
-
-
-
 #############################################
 #### Requirement for Puput blog app 
 PUPUT_AS_PLUGIN = True
@@ -392,8 +385,7 @@ LOGOUT_REDIRECT_URL = '/'
 AUTH_USER_MODEL = 'accounts.UserProfile'
 LOGIN_URL = 'accounts/login/?next=/'
 
-ADMINS = (
-    #('You', 'wsuadmin@seabirds.net'),
+ADMINS = (    
     ('Grant','grwhumphries@blackbawks.net')
 )
 
