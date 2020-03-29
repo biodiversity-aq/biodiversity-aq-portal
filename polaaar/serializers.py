@@ -260,6 +260,22 @@ class ProjectMetadataSerializer(serializers.ModelSerializer):
 		'project_creator',
 		'project_qaqc',
 		'event_hierarchy']
+		#,
+		pandas_index = ['associated_references']
+		pandas_unstacked_header = [		
+		'url',
+		'project_name',
+		'start_date',
+		'end_date',
+		'EML_URL',
+		'abstract',
+		'geomet',
+		'is_public',		
+		'associated_media',
+		'created_on',
+		'updated_on',
+		'project_creator',
+		'project_qaqc']
 
 
 

@@ -24,9 +24,7 @@ POLA3R search
                 <label class="btn btn-elegant form-check-label" onclick="envfunc()">
                     <input class="form-check-input" type="radio" name="options" value="environment" autocomplete="off">Environmental
                 </label>
-                <!--<label class="btn btn-elegant form-check-label" onclick="mimfunc()">
-                    <input class="form-check-input" type="radio" name="options" value="mimarks" autocomplete="off"> MiMARKS
-                </label>-->
+
                 <label class="btn btn-elegant form-check-label" onclick="seqfunc()">
                     <input class="form-check-input" type="radio" name="options" value="sequence" autocomplete="off"> Sequence set
                 </label>
@@ -46,9 +44,14 @@ POLA3R search
 
 
         <div class="row" style="border-width:0px;">
-            <div class="col-3">
-                <button type="button" class="btn btn-indigo" data-toggle="modal" data-target="#exampleModal">
+            <div class="col-2">
+                <button type="button" class="btn btn-indigo" data-toggle="modal" data-target="#exampleModal" style="width:100%">
                     Instructions
+                </button>
+            </div>
+            <div class="col-2">
+                <button type="button" class="btn btn-indigo" data-toggle="modal" data-target="#exampleModal2" style="width:100%">
+                    Database schema
                 </button>
             </div>
             <div class="col-12">
@@ -99,7 +102,7 @@ POLA3R search
                                 {% endif %}
                             </td>
                             <td style="font-size:25pt;color:black">
-                                <a href="#"><i class="fas fa-file-csv pl-1"></i></a>
+                                <a href="/pola3r/export_projects/?id={{i.id}}"><i class="fas fa-file-excel pl-1"></i></a>
                                 <a href="/pola3r/project_metadata/{{i.pk}}"><i class="fas fa-file-code pl-1"></i></a>
                                 <a href="{{i.project_file.url}}"><i class="fas fa-file-alt pl-1"></i></a>
                             </td>
@@ -119,10 +122,10 @@ POLA3R search
                 <button class="btn btn-indigo btn-lg" style="width:100%" onclick="map_refresh()">Refresh map</button>
             </div>
             <div class="col-3">
-                <button class="btn btn-elegant btn-lg" style="width:100%">Download CSV <i class="fas fa-file-csv pl-1"></i></button>
+                <button class="btn btn-elegant btn-lg" style="width:100%" onclick="getPOLA3Rdata(1,'export_projects','EXCEL')">Download EXCEL <i class="fas fa-file-excel pl-1"></i></button>
             </div>
             <div class="col-3">
-                <button class="btn btn-elegant btn-lg" onclick="getallJSONbyID(1,'project_metadata')" style="width:100%">Download JSON <i class="fas fa-file-code pl-1"></i></button>
+                <button class="btn btn-elegant btn-lg" onclick="getPOLA3Rdata(1,'project_metadata','JSON')" style="width:100%">Download JSON <i class="fas fa-file-code pl-1"></i></button>
             </div>
         </div>
 
@@ -132,7 +135,7 @@ POLA3R search
 
                 {% leaflet_map "landing_map" callback="window.map_init"  %}
 
-
+                <p style="font-size:10pt;">Map attribution: Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012</p>
             </div>
         </div>
     </div>
@@ -154,7 +157,7 @@ POLA3R search
                 </h4>
                 <ul style="font-size:14pt">
                     <li>To search for data, type any keyword in the search bar above the table. The tables can also be sorted by the visible columns</li>
-                    <li>Data can be downloaded in CSV (<i class="fas fa-file-csv pl-1"></i>) or JSON (<i class="fas fa-file-code pl-1"></i>) formats.</li>
+                    <li>Data can be downloaded in EXCEL (<i class="fas fa-file-excel pl-1"></i>) or JSON (<i class="fas fa-file-code pl-1"></i>) formats.</li>
                     <li>The original project file (<i class="fas fa-file-alt pl-1"></i>) can also be downloaded as an xlsx file.</li>
                     <li>
                         The <a href="/polaaar/spatialsearch">spatial searching</a> feature is available as well and allows users to draw polygons on the map to find projects
@@ -176,6 +179,31 @@ POLA3R search
 
 
 
+
+<div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModal2Label" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" style="padding-left:20px;padding-right:20px;">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModal2Label">Database Schema</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="img-zoom-container">
+                    <img src="{% static 'imgs/database_Schema.png' %}" width="100%" alt="dbSchema"/>                    
+                </div>
+                
+            </div>
+            <div class="modal-footer">
+                <a href="{% static 'imgs/database_Schema.png' %}" download role="button" class="btn btn-elegant">Download PNG</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
 {% block extra_js %}
 
 
@@ -183,9 +211,6 @@ POLA3R search
 
     function envfunc() {
         $("#searchcontent").load('../envsearch')
-    };
-    function mimfunc() {
-        $("#searchcontent").load('../mimsearch')
     };
     function seqfunc() {
         $("#searchcontent").load('../seqsearch')
@@ -241,6 +266,9 @@ POLA3R search
     .django-leaflet-raw-textarea {
         width: 100%;
     }
+    .leaflet-control-attribution{
+        display:none;
+    }
 </style>
 
 <script type="text/javascript">
@@ -271,7 +299,7 @@ POLA3R search
     function map_init(map, options) {
          ggJSON.addTo(map);
          L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
-                    attribution: 'Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012'
+                    attribution: ''
          }).addTo(map);
         
       }
@@ -331,6 +359,9 @@ POLA3R search
 </script>
 
 <script type="text/javascript" src="{% static 'js/polarrr.js' %}"></script>
+
+
+
 {% endblock extra_js %}
 
 

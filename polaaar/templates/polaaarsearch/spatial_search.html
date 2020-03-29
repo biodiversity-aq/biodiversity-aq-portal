@@ -27,6 +27,7 @@ POLA3R data
                 </div>
                 <div class="col-12">
                     {% leaflet_map "landing_map" callback="window.map_init"  %}
+                    <p style="font-size:10pt;">Map attribution: Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012</p>
                 </div>
             </div>
         </div>
@@ -45,13 +46,13 @@ POLA3R data
 
                 </div>
                 <div class="col-12" style="padding-top:40px">
-                    <button class="btn btn-elegant btn-lg waves-effect" style="width:100%;" onclick="searchEvents()">
+                    <button class="btn btn-elegant btn-lg waves-effect" style="width:100%;" onclick="searchEvents('JSON')">
                         Download JSON <i class="fas fa-file-code pl-1"></i>
                     </button>
                 </div>
                 <div class="col-12" style="padding-top:40px">
-                    <button class="btn btn-elegant btn-lg waves-effect" style="width:100%;" onclick="searchEvents()">
-                        Download CSV <i class="fas fa-file-csv pl-1"></i>
+                    <button class="btn btn-elegant btn-lg waves-effect" style="width:100%;" onclick="searchEvents('EXCEL')">
+                        Download EXCEL <i class="fas fa-file-excel pl-1"></i>
                     </button>
                 </div>
             </div>
@@ -83,6 +84,10 @@ POLA3R data
     .django-leaflet-raw-textarea {
         width: 100%;
     }
+
+    .leaflet-control-attribution{
+        display:none;
+    }
 </style>
 
 <script type="text/javascript">
@@ -107,7 +112,7 @@ POLA3R data
         }).addTo(map);
 
         L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
-            attribution: 'Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012'
+            attribution: ''
         }).addTo(map);
 
         var drawnItems = L.featureGroup().addTo(map)
@@ -200,9 +205,16 @@ POLA3R data
 
     }
 
-    function searchEvents() {
-        srcURL = '/pola3r/events/?id__in='.concat(window.IDvals)
-        window.open(srcURL)
+    function searchEvents(FORMAT) {
+
+        if (FORMAT == 'JSON') {
+            srcURL = '/pola3r/events/?id__in='.concat(window.IDvals)
+            window.open(srcURL)
+        } else if (FORMAT == 'EXCEL') {
+            srcURL = '/pola3r/export_events/?id='.concat(window.IDvals)
+            window.open(srcURL,'_parent')
+        }
+        
 
     }
 

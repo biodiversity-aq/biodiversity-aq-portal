@@ -9,7 +9,7 @@ router = routers.DefaultRouter()
 router.register(r'occurrence',views.OccurrenceViewSet)
 router.register(r'events',views.EventViewSet)
 router.register(r'eventhierarchy',views.EventHierarchyViewSet)
-router.register(r'project_metadata',views.ProjectMetadataViewSet)
+router.register(r'project_metadata',views.ProjectMetadataViewSet,basename='projectmetadata')
 router.register(r'sequence',views.SequenceViewSet)
 router.register(r'reference',views.ReferenceViewSet)
 router.register(r'geog_location',views.GeogViewSet)
@@ -30,17 +30,20 @@ urlpatterns = [
     url(r'var/',views.env_searched,name='env_searched'),    
     path('seqsearch/',views.seq_search,name='seq_search'),
     path('spatialsearch/',views.spatial_searching,name='spatialsearch'),
-    path('projsearch/',views.proj_search,name='proj_search'),
+    
 
     path('submit_data/',views.email_submission,name='email_submission'),
-    path('submit_success/',views.submit_success,name='submit_success'),
-    path('dcsubmit/',views.dc_submit,name='dc_submit'),    
+    path('submit_success/',views.submit_success,name='submit_success'),    
 
-    #### REST API URLS
+    ###  EXCEL export views
+    url(r'^export_projects/',views.export_projects,name='export_projects'),
+    url(r'^export_environment/',views.export_environment,name='export_environment'),
+    url(r'^export_sequences/',views.export_sequences,name='export_sequences'),
+    url(r'^export_events/',views.export_events,name='export_events'),
+
+    #### REST API URLS    
 
     path('',include(router.urls)),
     path('api-auth/',include('rest_framework.urls',namespace='rest_framework'))
-    
-
  
 ]

@@ -278,7 +278,7 @@ class Event(models.Model):
     
     samplingProtocol    = models.TextField(blank=True,null=True)
 
-    event_metadata      = models.ForeignKey(_("SampleMetadata"),blank=True,null=True,on_delete=models.CASCADE)
+    event_metadata      = models.ForeignKey(_("SampleMetadata"),related_name='event_sample_metadata',blank=True,null=True,on_delete=models.CASCADE)
     
     metadata_exists     = models.BooleanField(blank=True,null=True)
     occurrence_exists   = models.BooleanField(blank=True,null=True)
@@ -304,7 +304,7 @@ class Event(models.Model):
 ### This is a table which records any occurrences associated with a sample. 
 class Occurrence(models.Model):
     occurrenceID            = models.CharField(max_length=255,blank=True,null=True)
-    taxon                   = models.ForeignKey(_('Taxa'),on_delete=models.DO_NOTHING)
+    taxon                   = models.ForeignKey(_('Taxa'),related_name='occurrence',on_delete=models.DO_NOTHING)
 
     occurrence_notes        = models.TextField(blank=True,null=True)
     occurrence_status       = models.TextField(blank=True,null=True)
@@ -337,7 +337,7 @@ class SampleMetadata(models.Model):
     
     license                 = models.CharField(max_length=100,blank=True,null=True)
     
-    geographic_location     = models.ForeignKey(_("Geog_Location"),on_delete=models.DO_NOTHING,blank=True,null=True)
+    geographic_location     = models.ForeignKey(_("Geog_Location"),related_name='sample_metadata',on_delete=models.DO_NOTHING,blank=True,null=True)
     locality                = models.CharField(max_length=50,blank=True,null=True)
     
     geo_loc_name            = models.CharField(max_length=50,blank=True,null=True)                 ## MIxS field

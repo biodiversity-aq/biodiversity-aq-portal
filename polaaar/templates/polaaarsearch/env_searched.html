@@ -53,8 +53,9 @@
                     </td>
 
                     <td style="font-size:25pt;color:black">
-                        <a href="#"><i class="fas fa-file-csv pl-1"></i></a>
-                        <a href="/polae3r/events/{{i.pk}}"><i class="fas fa-file-code pl-1"></i></a>
+                        <a href="/pola3r/export_environment/?id={{i.id}}"><i class="fas fa-file-excel pl-1"></i></a>
+                        <a href="/pola3r/events/{{i.pk}}"><i class="fas fa-file-code pl-1"></i></a>
+                        <a href="{{i.event.event_hierarchy.project_metadata.project_file.url}}"><i class="fas fa-file-alt pl-1"></i></a>
                     </td>
                 </tr>
                 {% endfor %}
@@ -64,10 +65,10 @@
     </div>
 
     <div class="col-3">
-        <button class="btn btn-elegant btn-lg" style="width:100%">Download CSV <i class="fas fa-file-csv pl-1"></i></button>
+        <button class="btn btn-elegant btn-lg" style="width:100%" onclick="getPOLA3Rdata(0,'export_environment','EXCEL')">Download Excel <i class="fas fa-file-excel pl-1"></i></button>
     </div>
     <div class="col-3">
-        <button class="btn btn-elegant btn-lg" onclick="getallJSONbyID(0,'environmental_variables')" style="width:100%">Download JSON <i class="fas fa-file-code pl-1"></i></button>
+        <button class="btn btn-elegant btn-lg" onclick="getPOLA3Rdata(0,'environmental_variables','JSON')" style="width:100%">Download JSON <i class="fas fa-file-code pl-1"></i></button>
     </div>
 </div>
 
@@ -83,8 +84,8 @@
             if ( settings.nTable.id !== 'myTable' ) {
                 return true;
             }
-            var min = parseInt( $('#min').val(), 10 );
-            var max = parseInt( $('#max').val(), 10 );
+            var min = parseFloat( $('#min').val(), 10 );
+            var max = parseFloat( $('#max').val(), 10 );
             var valu = parseFloat( data[5] ) || 0; //Use the 5th column (Value) to filter the data. 
 
     if ( ( isNaN( min ) && isNaN( max ) ) ||
