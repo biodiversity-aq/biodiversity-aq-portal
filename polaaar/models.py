@@ -204,8 +204,7 @@ class ProjectMetadata(models.Model):
                                         on_delete=models.CASCADE)
 
     project_qaqc                    = models.BooleanField(blank=True,null=True)
-    amplicon_image                  = models.ImageField(upload_to='amplicons',blank=True,null=True)
-    project_file                    = models.FileField(upload_to='project_files',blank=True,null=True)
+    amplicon_image                  = models.ImageField(upload_to='amplicons',blank=True,null=True)    
 
     def __str__(self):
         return self.project_name
@@ -223,7 +222,7 @@ class EventHierarchy(models.Model):
     event_type                      = models.ForeignKey(_("EventType"),related_name='eventtype',
                                                             on_delete=models.DO_NOTHING)        ## Drawn from the Event_type table
        
-    description                     = models.TextField()                                            ## Description of the event
+    description                     = models.TextField(blank=True,null=True)                                            ## Description of the event
     
     parent_event_hierarchy          = models.ForeignKey('self',on_delete=models.DO_NOTHING,related_name='EventRank',blank=True,null=True)
     event_creator                   = models.ForeignKey(
@@ -275,7 +274,7 @@ class Event(models.Model):
     collection_month     = models.IntegerField(blank=True,null=True,choices=MONTHS)
     collection_day      = models.IntegerField(blank=True,null=True)
 
-    collection_time     = models.TimeField()
+    collection_time     = models.TimeField(blank=True,null=True)
     event_hierarchy     = models.ForeignKey(_("EventHierarchy"),related_name='event',on_delete=models.CASCADE)
     ### Sample is a recursive table, and can be sub-sampled (in other words, it refers back to itself so you can build on itself)    
     parent_event        = models.ForeignKey('self',
@@ -493,7 +492,7 @@ class Environment(models.Model):
 ######################################################################################################
 ### Spare file table ####
 fs = FileSystemStorage(location='/media/files')
-class HomelessFiles(models.Model):
+class ProjectFiles(models.Model):                                           
     files                       = models.FileField(storage=fs,blank=True,null=True)
     project                     = models.ForeignKey(_("ProjectMetadata"),blank=True,null=True,on_delete=models.CASCADE)
 

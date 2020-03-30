@@ -3,11 +3,11 @@
     "",
     "\\biodiversity",
     "\\biodiversity\\settings",
-    "\\biodiversity\\templates",
+    "\\biodiversity\\static\\css",
+    "\\biodiversity\\static\\imgs",
+    "\\biodiversity\\static\\js",
     "\\biodiversity\\templates\\rest_framework",
-    "\\polaaar",
-    "\\polaaar\\templates",
-    "\\polaaar\\templates\\polaaarsearch"
+    "\\polaaar"
   ],
   "SelectedNode": "\\polaaar\\models.py",
   "PreviewInSolutionExplorer": false
