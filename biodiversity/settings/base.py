@@ -27,7 +27,7 @@ BASE_URL = 'https://biodiversity-aq-dev.herokuapp.com'
 
 SITE_ID = 2
 
-if socket.gethostname() == "DESKTOP-8K2LJ17":
+if socket.gethostname() == "DESKTOP-8K2LJ17" or socket.gethostname() == 'HDLT15':
     DATABASES = {
         'default': {
             'ENGINE': 'django.contrib.gis.db.backends.postgis',
@@ -38,20 +38,8 @@ if socket.gethostname() == "DESKTOP-8K2LJ17":
             'PORT': '5432'
         }
     }
-elif socket.gethostname() == 'HDLT15':
-     DATABASES = {
-        'default': {
-            'ENGINE': 'django.contrib.gis.db.backends.postgis',
-            'NAME': 'biodiversity_aq',
-            'USER': 'biodiversity_aq_admin',
-            'PASSWORD': 'bi0diversity',
-            'HOST': '',
-            'PORT': '5432'
-        }
-    }
+
 else:        
-    
-    
     DATABASES = {
             'default': {
                 'ENGINE': 'django.contrib.gis.db.backends.postgis',

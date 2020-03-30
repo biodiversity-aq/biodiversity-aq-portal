@@ -250,3 +250,34 @@ a.waves-effect, a.waves-light {
 #myTable_wrapper{
     width:95%
 }
+
+
+.btn-biodiversity-lightblue {
+    color: #fff;
+    background-color: #0099CC !important;
+}
+
+.btn-biodiversity-blue {
+    color: #fff;
+    background-color: #3952a4 !important;
+}
+
+.btn-biodiversity-darkblue {
+    color: #fff;
+    background-color: #003a4e !important;
+}
+
+.btn-biodiversity-teal {
+    color: #fff;
+    background-color: #006f71 !important;
+}
+
+.btn-biodiversity-red {
+    color: #fff;
+    background-color: #d51e47 !important;
+}
+
+.btn-biodiversity-orange {
+    color: #fff;
+    background-color: #ec6633 !important;
+}

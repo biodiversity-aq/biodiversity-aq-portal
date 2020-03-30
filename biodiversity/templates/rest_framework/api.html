@@ -10,7 +10,7 @@
     <img src="{% static 'logos/logo-biodiversityaq-white.png' %}"
          alt="biodiversity.aq logo" height="60px">
 </a>
-<h2><a href="/api_reference/">API reference</a></h2>
+<h2><a style="color:#fff" href="/api_reference/">API reference</a></h2>
 
 {% endblock %}
 
@@ -18,7 +18,7 @@
 
 {% if user.is_authenticated %}
 <div class="dropdown">
-    <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+    <button class="btn btn-biodiversity-blue dropdown-toggle" type="button" data-toggle="dropdown">
         {{user.username}}
         <span class="caret"></span>
     </button>
@@ -32,7 +32,7 @@
 </div>
 
 {% else %}
-    <a role="button" href="{% url 'login' %}?next={{ request.path }}" class="btn btn-primary">Login</a>
+    <a role="button" href="{% url 'login' %}?next={{ request.path }}" class="btn btn-biodiversity-teal">Login</a>
 {% endif %}
 
 

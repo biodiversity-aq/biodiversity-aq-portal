@@ -43,14 +43,14 @@ POLA3R
         </div>
         <div class="col-12 col-lg-3 fadeinclass">
             <div style="background-color:rgba(255,255,255,0.75);border-radius:15px;padding-bottom:5px;padding-right:12px; padding-top:5px;">
-                <a role="button" href="{% url 'polaaar:polaaar_search' %}" class="btn btn-elegant btn-lg waves-effect" style="width:100%">
+                <a role="button" href="{% url 'polaaar:polaaar_search' %}" class="btn btn-biodiversity-lightblue btn-lg waves-effect" style="width:100%">
                 Search the database <i class="fas fa-search pl-1"></i>
                 </a>
-                <a role="button" href="http://share.biodiversity.aq/MARS/Vision/mARSVision.pdf" class="btn btn-elegant btn-lg" style="width:100%">
+                <a role="button" href="http://share.biodiversity.aq/MARS/Vision/mARSVision.pdf" class="btn btn-biodiversity-lightblue btn-lg" style="width:100%">
                     Read the vision paper <i class="fas fa-book-reader pl-1"></i>
                 </a>
             {% if user.is_authenticated %}
-                <a role="button" href="{% url 'polaaar:polaaar_submit_data' %}" class="btn btn-elegant btn-lg" style="width:100%">
+                <a role="button" href="{% url 'polaaar:polaaar_submit_data' %}" class="btn btn-biodiversity-lightblue btn-lg" style="width:100%">
                     Submit a dataset <i class="fas fa-cloud-upload-alt pl-1"></i>
                 </a>
             {% endif %}    
@@ -60,10 +60,10 @@ POLA3R
             {% else %}
             <div style="background-color:rgba(255,255,255,0.75);border-radius:15px;margin-top:5px;padding-bottom:5px;padding-right:12px">
                 <p style="font-size:18pt">To submit data:</p>
-                <a role="button" href="{% url 'login' %}?next={{request.path}}" class="btn btn-lime btn-lg" style="width:100%">
+                <a role="button" href="{% url 'login' %}?next={{request.path}}" class="btn btn-biodiversity-teal btn-lg" style="width:100%">
                     Login <i class="fas fa-user pl-1"></i>
                 </a>
-                <a role="button" href="/accounts/register" class="btn btn-deep-orange btn-lg" style="width:100%">
+                <a role="button" href="/accounts/register" class="btn btn-biodiversity-teal btn-lg" style="width:100%">
                     Register <i class="fas fa-user-plus pl-1"></i>
                 </a>
             </div>

@@ -959,7 +959,9 @@ def export_environment(request):
             
             E = Event.objects.filter(environment__id__in=IDS).order_by('sample_name').distinct('sample_name')
             
-            S = Sequences.objects.filter(event__environment__id__in=IDS).order_by('sequence_name').distinct('sequence_name')        
+            S = Sequences.objects.filter(event__environment__id__in=IDS).order_by('sequence_name').distinct('sequence_name')
+            
+            O = Occurrence.objects.filter(event__environment__id__in=IDS).order_by('occurrenceID').distinct('occurrenceID')
             
             Env = Environment.objects.filter(id__in=IDS)
 
@@ -980,6 +982,10 @@ def export_environment(request):
 				Q(event__event_hierarchy__project_metadata__is_public=True)|Q(
 					event__event_hierarchy__project_metadata__project_creator__username=user.username)).order_by('sequence_name').distinct('sequence_name')
 
+            O = Occurrence.objects.filter(event__environment__id__in=IDS).filter(
+				Q(event__event_hierarchy__project_metadata__is_public=True)|Q(
+					event__event_hierarchy__project_metadata__project_creator__username=user.username)).order_by('occurrenceID').distinct('occurrenceID')
+
             Env = Environment.objects.filter(id__in=IDS).filter(
 				Q(event__event_hierarchy__project_metadata__is_public=True)|Q(
 					event__event_hierarchy__project_metadata__project_creator__username=user.username))
@@ -994,7 +1000,10 @@ def export_environment(request):
                 event_hierarchy__project_metadata__is_public=True)).order_by('sample_name').distinct('sample_name')
             
             S = Sequences.objects.filter(event__environment__id__in=IDS).filter(Q(
-                event__event_hierarchy__project_metadata__is_public=True)).order_by('sequence_name').distinct('sequence_name')        
+                event__event_hierarchy__project_metadata__is_public=True)).order_by('sequence_name').distinct('sequence_name')
+            
+            O = Occurrence.objects.filter(event__environment__id__in=IDS).filter(
+				Q(event__event_hierarchy__project_metadata__is_public=True)).order_by('occurrenceID').distinct('occurrenceID')
             
             Env = Environment.objects.filter(id__in=IDS).filter(Q(event__event_hierarchy__project_metadata__is_public=True))
         ###########################################################################################################
@@ -1004,7 +1013,8 @@ def export_environment(request):
         projectsheet = workbook.add_worksheet("Project metadata")
         eventHsheet = workbook.add_worksheet("Event Hierarchy")
         eventsheet = workbook.add_worksheet("Events")    
-        sequencesheet = workbook.add_worksheet("Sequences")        
+        sequencesheet = workbook.add_worksheet("Sequences")
+        occursheet = workbook.add_worksheet("Occurences")
         envirsheet = workbook.add_worksheet("Environmental")
 
         tdformat = workbook.add_format({'num_format':'yyyy-mm-dd'})
@@ -1238,6 +1248,49 @@ def export_environment(request):
         for col_num, data in enumerate(Slist,1):
             for row_num, data2 in enumerate(data):            
                 sequencesheet.write(col_num,row_num,data2)        
+
+
+
+        #######################################################################################
+        ### Occurrence data worksheet
+        occur_header = [
+            'project_name',
+            'event_hierarchy',
+            'event',
+            'occurrenceID',
+            'taxon',
+            'occurrence_notes',
+            'occurrence_status',
+            'occurrence_class',
+            'catalog_number',
+            'date_identified',
+            'other_catalog_numbers',
+            'recorded_by'        
+            ]
+        occur_query = [
+            'event__event_hierarchy__project_metadata__project_name',
+            'event__event_hierarchy__event_hierarchy_name',
+            'event__sample_name',
+            'occurrenceID',
+            'taxon__name',
+            'occurrence_notes',
+            'occurrence_status',
+            'occurrence_class',
+            'catalog_number',
+            'date_identified',
+            'other_catalog_numbers',
+            'recorded_by'        
+            ]
+        Olist = O.values_list(*occur_query)
+        for col_num, data in enumerate(occur_header):
+            occursheet.write(0,col_num,data)
+
+        for col_num, data in enumerate(Olist,1):
+            for row_num, data2 in enumerate(data):
+                if(row_num==9):
+                    occursheet.write(col_num,row_num,data2,tdformat)
+                else:
+                    occursheet.write(col_num,row_num,data2)
 
         #######################################################################################
         ### Environmental data worksheet
