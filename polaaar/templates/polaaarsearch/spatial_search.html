@@ -91,7 +91,7 @@ POLA3R data
 </style>
 
 <script type="text/javascript">
-    var collection = {{ qs_results|geojsonfeature|safe }};
+    var collection = {{ qs_results|geojsonfeature:"popupContent"|safe }};
 
     function map_init(map, options) {
 
@@ -108,6 +108,9 @@ POLA3R data
         var ggJSON = L.geoJson(collection,{
             pointToLayer: function(feature,latlng){
                 return L.circleMarker(latlng,geojsonMarkerOptions);
+			},
+            onEachFeature: function (feature, layer) {
+                layer.bindPopup(feature.properties.popupContent);
             }
         }).addTo(map);
 

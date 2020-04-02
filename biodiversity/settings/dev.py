@@ -3,6 +3,7 @@ from .secrets import *
 
 # SECURITY WARNING: don't run with debug turned on in production!
 
+DEBUG = True
 
 TEMPLATES[0]['OPTIONS']['debug'] = True
 
@@ -14,24 +15,22 @@ ALLOWED_HOSTS = ['*']
 
 #EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
+BASE_URL = 'https://127.0.0.1:8000'
 
 try:
     from .local import *
 except ImportError:
     pass
 
+DATABASES = {
+        'default': {
+            'ENGINE': 'django.contrib.gis.db.backends.postgis',
+            'NAME': 'biodiversity_aq',
+            'USER': 'biodiversity_aq_admin',
+            'PASSWORD': 'bi0diversity',
+            'HOST': '',
+            'PORT': '5432'
+        }
+    }
 
-#CACHES.update({
-#    'default': {
-#        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
-#    },
-#    'st_rate_limit': {
-#        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
-#        'LOCATION': 'spirit_rl_cache',
-#        'TIMEOUT': None
-#    }
-#})
 
-PASSWORD_HASHERS = [
-    'django.contrib.auth.hashers.MD5PasswordHasher',
-]

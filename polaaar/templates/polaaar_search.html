@@ -54,6 +54,21 @@ POLA3R search
                     Database schema
                 </button>
             </div>
+            <div class="col-2">
+                <a role="button" class="btn btn-biodiversity-lightblue" href="{% static 'files/POLA3R_read_merge_XLSX.R' %}" style="width:100%">
+                    Sample R script
+                </a>
+            </div>
+            {% if viewprojs %}
+            <div class="col-2">
+                <a role="button" class="btn btn-biodiversity-lightblue" href="/pola3r/search/" style="width:100%">
+                    View all projects
+                </a>
+            </div>
+            {% else %}
+            {% endif %}
+
+
             <div class="col-12">
 
 
@@ -84,7 +99,16 @@ POLA3R search
                             </td>
                             <td>{{i.id}}</td>
                             <td>{{i.project_creator.full_name}}</td>
-                            <td>{{i.project_name}}</td>
+
+
+                            <td>
+                                <div class="popup" onclick="myFunction()">
+                                    {{i.project_name}}
+                                    <span class="popuptext" id="myPopup">A Simple Popup!</span>
+                                </div>
+                            </td>
+
+
                             <td>{{i.start_date}}</td>
                             <td>{{i.end_date}}</td>
                             <td style="text-align:center;font-size:16pt">
@@ -119,7 +143,7 @@ POLA3R search
 
             </div>
             <div class="col-3">
-                <button class="btn btn-biodiversity-blue btn-lg" style="width:100%" onclick="map_refresh()">Refresh map</button>
+                <button class="btn btn-biodiversity-blue btn-lg" style="width:100%" onclick="map_refresh()">{{ buttondisplay }}</button>
             </div>
             <div class="col-3">
                 <button class="btn btn-biodiversity-teal btn-lg" style="width:100%" onclick="getPOLA3Rdata(1,'export_projects','EXCEL')">Download EXCEL <i class="fas fa-file-excel pl-1"></i></button>
@@ -210,7 +234,8 @@ POLA3R search
 <script>
 
     function envfunc() {
-        $("#searchcontent").load('../envsearch')
+		$("#searchcontent").load('../../pola3r/envsearch')
+        
     };
     function seqfunc() {
         $("#searchcontent").load('../seqsearch')
@@ -269,9 +294,84 @@ POLA3R search
     .leaflet-control-attribution{
         display:none;
     }
+
+    .popup {
+        position: relative;
+        display: inline-block;
+        cursor: pointer;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+
+        /* The actual popup */
+    .popup .popuptext {
+        visibility: hidden;
+        width: 160px;
+        background-color: #555;
+        color: #fff;
+        text-align: center;
+        border-radius: 6px;
+        padding: 8px 0;
+        position: absolute;
+        z-index: 1;
+        bottom: 125%;
+        left: 50%;
+        margin-left: -80px;
+    }
+
+        /* Popup arrow */
+    .popup .popuptext::after {
+        content: "";
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        margin-left: -5px;
+        border-width: 5px;
+        border-style: solid;
+        border-color: #555 transparent transparent transparent;
+    }
+
+        /* Toggle this class - hide and show the popup */
+    .popup .show {
+        visibility: visible;
+        -webkit-animation: fadeIn 1s;
+        animation: fadeIn 1s;
+    }
+
+    /* Add animation (fade in the popup) */
+    @-webkit-keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
+        }
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
+        }
+    }
+
 </style>
 
+
+
 <script type="text/javascript">
+    function myFunction() {
+      var popup = document.getElementById("myPopup");
+      popup.classList.toggle("show");
+    }
+
+
     // Javascript will load the data initially from the database and then use the hidden coordinates column to re-populate a new set of markers
 
 

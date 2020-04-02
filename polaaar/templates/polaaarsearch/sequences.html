@@ -17,7 +17,7 @@
                 {% for i in qs %}
                 <tr>
                     <td style="display:none">{{i.id}}</td>
-                    <td>{{i.event.event_hierarchy.project_metadata.project_name}}</td>
+                    <td><a href="/pola3r/search/?pid={{ i.event.event_hierarchy.project_metadata.id }}">{{i.event.event_hierarchy.project_metadata.project_name}}</a></td>
                     <td>{{i.event.event_hierarchy.event_hierarchy_name}}</td>
                     <td>{{i.event.sample_name}}</td>
                     <td>{{i.sequence_name}}</td>
