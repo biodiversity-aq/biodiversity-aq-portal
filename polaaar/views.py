@@ -139,6 +139,27 @@ def spatial_searching(request):
     return render(request, 'polaaarsearch/spatial_search.html',{'qs_results':qs_results})
 
 
+def spatial_search_table(request):
+    user = request.user
+    if request.method== "GET":
+        IDS = request.GET.getlist('id')        
+        IDS = IDS[0].split(',')  
+        if user.is_authenticated and user.is_superuser:
+            qs_results = Event.objects.annotate(geom=AsGeoJSON(Centroid('footprintWKT'))).filter(pk__in=IDS).select_related()
+        if user.is_authenticated:
+            qs_results = Event.objects.annotate(geom=AsGeoJSON(Centroid('footprintWKT'))).filter(
+                Q(event_hierarchy__project_metadata__is_public=True)|Q(
+                    event_hierarchy__project_metadata__project_creator__username = user.username)).filter(pk__in=IDS)
+        else:
+            qs_results = Event.objects.annotate(geom=AsGeoJSON(Centroid('footprintWKT'))).filter(
+                Q(event_hierarchy__project_metadata__is_public=True)).filter(pk__in=IDS)
+
+    return render(request, 'polaaarsearch/spatial_search_table.html',{'qs_results':qs_results})
+
+
+
+
+
 #########################################################
 ### Submit views
 def polaaar_submit(request):

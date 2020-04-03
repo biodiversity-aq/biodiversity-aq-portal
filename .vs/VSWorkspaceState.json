@@ -1,16 +1,15 @@
 {
   "ExpandedNodes": [
     "",
-    "\\biodiversity",
-    "\\biodiversity\\static",
-    "\\biodiversity\\static\\css",
-    "\\biodiversity\\static\\files",
-    "\\biodiversity\\static\\rest_framework",
+    "\\biodiversity\\settings",
+    "\\biodiversity\\static\\logos",
     "\\biodiversity\\static\\rest_framework\\css",
-    "\\biodiversity\\templates",
     "\\biodiversity\\templates\\rest_framework",
-    "\\biodiversity\\templates\\rest_framework\\css"
+    "\\biodiversity\\templates\\rest_framework\\css",
+    "\\polaaar",
+    "\\polaaar\\templates",
+    "\\polaaar\\templates\\polaaarsearch"
   ],
-  "SelectedNode": "\\polaaar\\templates\\polaaar_search.html",
+  "SelectedNode": "\\polaaar\\views.py",
   "PreviewInSolutionExplorer": false
 }

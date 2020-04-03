@@ -45,21 +45,29 @@ POLA3R data
                     <textarea id="coordbox" rows="5" ,cols="80"></textarea>
 
                 </div>
-                <div class="col-12" style="padding-top:40px">
+                <div class="col-12" style="padding-top:20px">
+                    <button class="btn btn-biodiversity-teal btn-lg waves-effect" style="width:100%;" onclick="showTable()">
+                        Search <i class="fas fa-search pl-1"></i>
+                    </button>
+                </div>
+
+                <!--<div class="col-12" style="padding-top:20px">
                     <button class="btn btn-biodiversity-teal btn-lg waves-effect" style="width:100%;" onclick="searchEvents('JSON')">
                         Download JSON <i class="fas fa-file-code pl-1"></i>
                     </button>
                 </div>
-                <div class="col-12" style="padding-top:40px">
+                <div class="col-12" style="padding-top:20px">
                     <button class="btn btn-biodiversity-teal btn-lg waves-effect" style="width:100%;" onclick="searchEvents('EXCEL')">
                         Download EXCEL <i class="fas fa-file-excel pl-1"></i>
                     </button>
-                </div>
+                </div>-->
             </div>
         </div>
         <div class="col-12"><hr /></div>
 
     </div>
+    
+    <div id="spatialsearched"></div>
 
 </div>
 
@@ -202,11 +210,19 @@ POLA3R data
             map.addControl(drawControl);
         });
 
- 
-            
-            
+  
 
     }
+
+    
+	function showTable() {
+        URL = '/pola3r/spatial_search_table/?id='.concat(window.IDvals)
+		$("#spatialsearched").load(URL)
+		setTimeout(function () {
+            document.getElementById('spatialsearched').scrollIntoView();
+		},500)
+        
+    };
 
     function searchEvents(FORMAT) {
 
@@ -217,7 +233,7 @@ POLA3R data
             srcURL = '/pola3r/export_events/?id='.concat(window.IDvals)
             window.open(srcURL,'_parent')
         }
-        
+
 
     }
 

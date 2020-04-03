@@ -1,0 +1,71 @@
+
+<div class="row">
+	<div class="col-12">
+		<table id="myTable" class="display nowrap" style="width:100%">
+			<thead>
+				<tr>
+					<th style="display:none">id</th>
+					<th>Project name</th>
+					<th>Event hierarchy</th>
+					<th>Event name</th>
+					<th>Location (Lat/Lon)</th>
+					<th>Collection date</th>
+					<th>Metadata</th>
+					<th>Sequences</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for i in qs_results %}
+				<tr>
+					<td style="display:none">{{i.id}}</td>
+					<td><a href="/pola3r/search/?pid={{ i.event_hierarchy.project_metadata.id }}">{{i.event_hierarchy.project_metadata.project_name}}</a></td>
+					<td>{{i.event_hierarchy.event_hierarchy_name}}</td>
+					<td>{{i.sample_name}}</td>
+					<td>{{i.Longitude}}/{{i.Latitude}}</td>
+					<td>{{i.collection_year|default_if_none:"NA"}}-{{i.collection_month|default_if_none:"NA"}}-{{i.collection_day|default_if_none:"NA"}}</td>
+
+					<td style="text-align:center;font-size:16pt">
+						{% if i.metadata_exists == True %}
+						<i style="color:green;" class="fas fa-check-circle pl-1"></i>
+						{% else %}
+						<i style="color:red" class="fas fa-times-circle pl-1"></i>
+						{% endif %}
+					</td>
+
+					<td style="text-align:center;font-size:16pt">
+						{% if i.sequences_exists == True %}
+						<i style="color:green;" class="fas fa-check-circle pl-1"></i>
+						{% else %}
+						<i style="color:red" class="fas fa-times-circle pl-1"></i>
+						{% endif %}
+					</td>
+
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+
+	</div>
+
+	<div class="col-3">
+		<button class="btn btn-biodiversity-teal btn-lg" style="width:100%" onclick="getPOLA3Rdata(0,'export_events','EXCEL')">Download Excel <i class="fas fa-file-excel pl-1"></i></button>
+	</div>
+	<div class="col-3">
+		<button class="btn btn-biodiversity-teal btn-lg" onclick="getPOLA3Rdata(0,'events','JSON')" style="width:100%">Download JSON <i class="fas fa-file-code pl-1"></i></button>
+	</div>
+</div>
+
+
+
+
+
+<script>
+
+	$(document).ready(function () {
+		var table = $('#myTable').DataTable();
+
+		table.column(0).visible(false)
+
+	});
+
+</script>

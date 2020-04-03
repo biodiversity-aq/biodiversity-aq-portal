@@ -98,14 +98,13 @@ POLA3R search
                                 {% endfor %}
                             </td>
                             <td>{{i.id}}</td>
-                            <td>{{i.project_creator.full_name}}</td>
+                            <td>  {{i.project_creator.full_name}}</td>
 
 
                             <td>
-                                <div class="popup" onclick="myFunction()">
+                                <a href="#" data-toggle="modal" data-target="#project_{{i.id}}" style="width:100%">
                                     {{i.project_name}}
-                                    <span class="popuptext" id="myPopup">A Simple Popup!</span>
-                                </div>
+                                </a>
                             </td>
 
 
@@ -226,6 +225,28 @@ POLA3R search
     </div>
 </div>
 
+<!-- Block of modals that will open the project abstract -->
+{% for i in qs %}
+    <div class="modal fade" id="project_{{i.id}}" tabindex="-1" role="dialog" aria-labelledby="Label_{{i.id}}" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content" style="padding-left:20px;padding-right:20px;">
+                <div class="modal-header">
+                    <h3 class="modal-title" id="Label_{{i.id}}"><strong>{{ i.project_name }} abstract</strong></h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                
+                    <p>{{ i.abstract }}</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-elegant" data-dismiss="modal">Got it</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endfor %}
 
 
 {% block extra_js %}
@@ -234,8 +255,7 @@ POLA3R search
 <script>
 
     function envfunc() {
-		$("#searchcontent").load('../../pola3r/envsearch')
-        
+		$("#searchcontent").load('../../pola3r/envsearch') 
     };
     function seqfunc() {
         $("#searchcontent").load('../seqsearch')
@@ -246,10 +266,6 @@ POLA3R search
     function projfunc() {
         window.location = "/pola3r/search"
     };
-
-
-
-
 
 
 </script>
@@ -295,71 +311,66 @@ POLA3R search
         display:none;
     }
 
-    .popup {
-        position: relative;
-        display: inline-block;
-        cursor: pointer;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
-    }
 
-        /* The actual popup */
-    .popup .popuptext {
-        visibility: hidden;
-        width: 160px;
-        background-color: #555;
-        color: #fff;
-        text-align: center;
-        border-radius: 6px;
-        padding: 8px 0;
-        position: absolute;
-        z-index: 1;
-        bottom: 125%;
-        left: 50%;
-        margin-left: -80px;
-    }
 
-        /* Popup arrow */
-    .popup .popuptext::after {
-        content: "";
-        position: absolute;
-        top: 100%;
-        left: 50%;
-        margin-left: -5px;
-        border-width: 5px;
-        border-style: solid;
-        border-color: #555 transparent transparent transparent;
-    }
-
-        /* Toggle this class - hide and show the popup */
-    .popup .show {
-        visibility: visible;
-        -webkit-animation: fadeIn 1s;
-        animation: fadeIn 1s;
-    }
-
-    /* Add animation (fade in the popup) */
-    @-webkit-keyframes fadeIn {
-        from {
-            opacity: 0;
-        }
-
-        to {
-            opacity: 1;
-        }
-    }
-
-    @keyframes fadeIn {
-        from {
-            opacity: 0;
-        }
-
-        to {
-            opacity: 1;
-        }
-    }
+    /* Popup box BEGIN */
+.hover_bkgr_fricc{
+    background:rgba(0,0,0,.4);
+    cursor:pointer;
+    display:none;
+    height:100%;
+    position:fixed;
+    text-align:center;
+    top:0;
+    width:100%;
+    z-index:10000;
+}
+.hover_bkgr_fricc .helper{
+    display:inline-block;
+    height:100%;
+    vertical-align:middle;
+}
+.hover_bkgr_fricc > div {
+    background-color: #fff;
+    box-shadow: 10px 10px 60px #555;
+    display: inline-block;
+    height: auto;
+    max-width: 551px;
+    min-height: 100px;
+    vertical-align: middle;
+    width: 60%;
+    position: relative;
+    border-radius: 8px;
+    padding: 15px 5%;
+}
+.popupCloseButton {
+    background-color: #fff;
+    border: 3px solid #999;
+    border-radius: 50px;
+    cursor: pointer;
+    display: inline-block;
+    font-family: arial;
+    font-weight: bold;
+    position: absolute;
+    top: -20px;
+    right: -20px;
+    font-size: 25px;
+    line-height: 30px;
+    width: 30px;
+    height: 30px;
+    text-align: center;
+}
+.popupCloseButton:hover {
+    background-color: #ccc;
+}
+.trigger_popup_fricc {
+    cursor: pointer;
+    font-size: 20px;
+    margin: 20px;
+    display: inline-block;
+    font-weight: bold;
+}
+/* Popup box BEGIN */
 
 </style>
 

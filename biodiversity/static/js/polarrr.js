@@ -13,13 +13,13 @@ function getPOLA3Rdata(COLUMN, URLSTR, FORMAT) {
         items.push(searData[i])
     }
 
-    searchURL = '/pola3r/'.concat(URLSTR).concat('/?id=').concat(items)
-
-
+   
     if (FORMAT == "EXCEL") {
+        searchURL = '/pola3r/'.concat(URLSTR).concat('/?id=').concat(items)
         window.open(searchURL, '_parent')             
         
     } else if (FORMAT == "JSON") {
+        searchURL = '/pola3r/'.concat(URLSTR).concat('/?id__in=').concat(items)
         window.open(searchURL)
     }
 

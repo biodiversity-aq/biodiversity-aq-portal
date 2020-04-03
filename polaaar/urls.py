@@ -30,7 +30,7 @@ urlpatterns = [
     url(r'var/',views.env_searched,name='env_searched'),    
     path('seqsearch/',views.seq_search,name='seq_search'),
     path('spatialsearch/',views.spatial_searching,name='spatialsearch'),
-    
+    path('spatial_search_table/',views.spatial_search_table,name='spatial_search_table'),
 
     path('submit_data/',views.email_submission,name='email_submission'),
     path('submit_success/',views.submit_success,name='submit_success'),    
