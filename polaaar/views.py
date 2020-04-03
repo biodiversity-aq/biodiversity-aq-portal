@@ -22,7 +22,7 @@ from rest_framework import viewsets, filters
 from rest_framework import permissions
 from polaaar.serializers import *
 
-import xlsxwriter, io, datetime
+import xlsxwriter, io, datetime, zipfile, os
 
 
 def home(request):
@@ -156,6 +156,49 @@ def spatial_search_table(request):
 
     return render(request, 'polaaarsearch/spatial_search_table.html',{'qs_results':qs_results})
 
+
+#########################################################
+### Download project files
+
+def GetProjectFiles(request):
+    # Files (local path) to put in the .zip
+    # FIXME: Change this (get paths from DB etc)
+    if request.method == "GET":
+        idval = request.GET.get('id')
+
+        pf = ProjectFiles.objects.filter(project__id=idval)
+        filenames = [x.files.path for x in pf]
+        pfnm = ProjectMetadata.objects.filter(id=idval).values_list('project_name')[0][0]
+
+        # Folder name in ZIP archive which contains the above files
+        # E.g [thearchive.zip]/somefiles/file2.txt
+        # FIXME: Set this to something better
+        zip_subdir = "%s_raw_files" % pfnm
+        zip_filename = "%s.zip" % zip_subdir
+
+        # Open StringIO to grab in-memory ZIP contents
+        s = io.BytesIO()
+
+        # The zip compressor
+        zf = zipfile.ZipFile(s, "w")
+
+        for fpath in filenames:
+            # Calculate path for file in zip
+            fdir, fname = os.path.split(fpath)
+            zip_path = os.path.join(zip_subdir, fname)
+
+            # Add file, at correct path
+            zf.write(fpath, zip_path)
+
+        # Must close zip for all contents to be written
+        zf.close()
+
+        # Grab ZIP file from in-memory, make response with correct MIME-type
+        resp = HttpResponse(s.getvalue(), content_type = "application/x-zip-compressed")
+        # ..and correct content-disposition
+        resp['Content-Disposition'] = 'attachment; filename=%s' % zip_filename
+
+        return resp
 
 
 

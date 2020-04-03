@@ -41,6 +41,9 @@ urlpatterns = [
     url(r'^export_sequences/',views.export_sequences,name='export_sequences'),
     url(r'^export_events/',views.export_events,name='export_events'),
 
+    ###  View to export raw data files
+    path('export_raw_data/',views.GetProjectFiles,name='GetProjectFiles'),
+
     #### REST API URLS    
 
     path('',include(router.urls)),

@@ -158,12 +158,25 @@ class ProjectMetadataAdmin(ModelAdmin):
     list_display = ('project_name','start_date','end_date','is_public','abstract','project_qaqc')
 
 
+class ProjectFilesAdmin(ModelAdmin):
+    model = ProjectFiles
+    menu_label='Project files'
+    menu_icon='cog'
+    menu_order=101
+    add_to_settings_menu=False
+    exclude_from_explorer=False
+    list_display = ('url','projectname')
+
+    def url(self,obj):
+        return obj.files.url
+    def projectname(self,obj):
+        return obj.project.project_name
 
 class EventHierarchyAdmin(ModelAdmin):
     model=EventHierarchy
     menu_label='Event Hierarchy'
     menu_icon='arrow-up-big'
-    menu_order = 101
+    menu_order = 102
     add_to_settings_menu=False
     exclude_from_explorer=False
     search_fields=('event_creator__username','event_creator__first_name','event_creator__last_name','event_hierarchy_name')        
@@ -179,7 +192,7 @@ class EventAdmin(ModelAdmin):
     model=Event
     menu_label='Event'
     menu_icon='arrow-up'
-    menu_order=102
+    menu_order=103
     add_to_settings_menu=False
     exclude_from_explorer=False
     search_fields=('sample_name','parent_event__sample_name',
@@ -194,7 +207,7 @@ class EventTypeAdmin(ModelAdmin):
     model=EventType
     menu_label='Event types'
     menu_icon='cog'
-    menu_order=103
+    menu_order=104
     add_to_settings_menu=False
     exclude_from_explorer=False
 
@@ -264,7 +277,7 @@ class pola3rAdmin(ModelAdminGroup):
     menu_order = 300
     items = (MetadataAdmin,OccurrencesAdmin,SequencesAdmin,EventAdmin,EventTypeAdmin,EventHierarchyAdmin,
             ProjectMetadataAdmin,MIxSAdmin,EnvironmentalSample,SamplingVariable,SamplingUnitsAdmin,SamplingMethodAdmin,
-            ReferencesAdmin,TaxaAdmin,GeogAdmin)
+            ReferencesAdmin,TaxaAdmin,GeogAdmin,ProjectFilesAdmin)
 
 
 
@@ -535,3 +548,4 @@ admin.site.register(EventType,EventTypeAdminImpExp)
 admin.site.register(Sequences,SequencesAdminImpExp)
 admin.site.register(Occurrence,OcurrencesAdminImpExp)
 admin.site.register(SampleMetadata,MetadataResourceAdminImpExp)
+#admin.site.register(ProjectFiles, ProjectFilesAdmin)
