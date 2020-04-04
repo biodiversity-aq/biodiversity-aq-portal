@@ -95,21 +95,44 @@ def env_search(request):
     qs = Variable.objects.all()       
     return render(request, 'polaaarsearch/environment.html',{'qs':qs})
 
+
+
 def env_searched(request):
     user = request.user
     if request.method=='GET':
         var = request.GET.get('var','')
-        vartype = request.GET.get('vartype','')
+        vars = var.split(',')
+        
+        #vartype = request.GET.get('vartype','')
         if user.is_authenticated and user.is_superuser:
-            qsenv = Environment.objects.filter(env_variable__name = var)
+
+            qsenv = Environment.objects.filter(env_variable__name__in = vars)
+
         elif user.is_authenticated:		
-            qsenv = Environment.objects.filter(env_variable__name = var).filter(
+
+            qsenv = Environment.objects.filter(env_variable__name__in = vars).filter(
             Q(event__event_hierarchy__project_metadata__is_public=True)|Q(
                 event__event_hierarchy__project_metadata__project_creator__username = user.username))
+
         else:
-            qsenv = Environment.objects.filter(env_variable__name = var).filter(
+
+            qsenv = Environment.objects.filter(env_variable__name__in = vars).filter(
             Q(event__event_hierarchy__project_metadata__is_public=True))
-        return render(request,'polaaarsearch/env_searched.html',{'qsenv':qsenv,'vartype':vartype})
+        
+        Y = qsenv.values_list('env_variable__var_type')
+        
+
+        try:
+            x = list(Y).index(('NUM',))
+            x = True
+        except:
+            x = False
+
+
+        return render(request,'polaaarsearch/env_searched.html',{'qsenv':qsenv,'test':x})#,'vartype':vartype
+
+
+
 
 
 def seq_search(request):

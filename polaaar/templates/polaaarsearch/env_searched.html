@@ -1,13 +1,19 @@
+{% load polaaar_tags %}
+
 
 <div class="row">
-    {% if vartype == "NUM" %}
-    <div class="col-3" style="padding-top:30px;">        
-            Min: <input id="min" name="min" type="number" step="0.01">
+  
+    {% if test %}
+
+    <div class="col-1" style="padding-top:30px;">
+        Min: <input id="min" name="min" type="number" step="0.01">
     </div>
-    <div class="col-3" style="padding-top:30px;">                    
-            Max: <input id="max" name="max" type="number" step="0.01">        
+    <div class="col-1" style="padding-top:30px;">
+        Max: <input id="max" name="max" type="number" step="0.01">
     </div>
+    {% else %}
     {% endif %}
+
 </div>
 
 
@@ -21,6 +27,7 @@
                     <th>Event hierarchy</th>
                     <th>Event name</th>
                     <th>Location (Lat/Lon)</th>
+
                     <th>Value</th>
                     <th>Units</th>
                     <th>Collection date</th>
@@ -36,7 +43,7 @@
                     <td>{{i.event.event_hierarchy.event_hierarchy_name}}</td>
                     <td>{{i.event.sample_name}}</td>
                     <td>{{i.event.Longitude}}/{{i.event.Latitude}}</td>
-                    {% if vartype == "NUM" %}
+                    {% if i.env_variable.var_type == "NUM" %}
                     <td>{{i.env_numeric_value}}</td>
                     {% else %}
                     <td>{{i.env_text_value}}</td>
@@ -81,32 +88,31 @@
     $.fn.dataTable.ext.search.push(
         function (settings, data, dataIndex) {
 
-            if ( settings.nTable.id !== 'myTable' ) {
+            if (settings.nTable.id !== 'myTable') {
                 return true;
             }
-            var min = parseFloat( $('#min').val(), 10 );
-            var max = parseFloat( $('#max').val(), 10 );
-            var valu = parseFloat( data[5] ) || 0; //Use the 5th column (Value) to filter the data. 
+            var min = parseFloat($('#min').val(), 10);
+            var max = parseFloat($('#max').val(), 10);
+            var valu = parseFloat(data[5]) || 0; //Use the 5th column (Value) to filter the data.
 
-    if ( ( isNaN( min ) && isNaN( max ) ) ||
-    ( isNaN( min ) && valu <= max ) ||
-    ( min <= valu   && isNaN( max ) ) ||
-    ( min <= valu   && valu <= max ) )
-    {
-    return true;
-    }
-    return false;
-    }
+            if ((isNaN(min) && isNaN(max)) ||
+                (isNaN(min) && valu <= max) ||
+                (min <= valu && isNaN(max)) ||
+                (min <= valu && valu <= max)) {
+                return true;
+            }
+            return false;
+        }
     );
 
     $(document).ready(function () {
-    var table = $('#myTable').DataTable();
+        var table = $('#myTable').DataTable();
 
-    table.column(0).visible(false)
+        table.column(0).visible(false)
 
-    $('#min, #max').keyup( function() {
-        table.draw();
-    });
+        $('#min, #max').keyup(function () {
+            table.draw();
+        });
 
     });
 

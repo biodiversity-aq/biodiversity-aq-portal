@@ -1,22 +1,24 @@
 
 
-<div class="row" style="border-width:0px;">
+<div class="row" style="border-width:0px">
     
     <div class="col-12">
-        <h2>Search below to find the projects that have sampled specific environmental data: </h2>
+        <h2>Search below to find the projects that have sampled specific environmental data (you can filter by multiple variables): </h2>
     </div>
-    <div class="col-12 col-md-3">       
-        <select style="display:inline-block" class="selectpicker show-tick" data-live-search="true" id="Search">
-            <option>All</option>
+    <div class="col-12 col-md-6">       
+        <select style="display:inline-block;width:100%" class="selectpicker show-tick" data-live-search="true" id="Search" multiple data-width="100%">
             {% for i in qs %}
-                <option value="{{i.name}} {{i.var_type}}">{{i.name}} ({{i.var_type}})</option>                
+                <option value="{{i.name}}">{{i.name}} ({{i.var_type}})</option>                
             {% endfor %}
         </select>
         
     </div>
+</div>    
+<div class="row" style="border-width:0px;">
     <div class="col-12 col-md-3">
-        <button style="display:inline-block" type="button" class="btn btn-biodiversity-lightblue" id="searchbut" onclick="search()"><span class="glyphicon glyphicon-search"></span> Search</button>
+        <button style="display:inline-block;width:100%" type="button" class="btn btn-biodiversity-lightblue" id="searchbut" onclick="search()"><span class="glyphicon glyphicon-search"></span> Search</button>
     </div>
+
     <div class="col-12" id="dataholder">
 
     </div>
@@ -33,10 +35,15 @@
         });
 
     function search() {
-        var X = $('#Search option:selected').val();
-        var vals = X.split(' ')
+		var X = $('#Search option:selected');
 
-        var URL = 'polaaar/data/var/?var='.concat(vals[0]).concat('&vartype=').concat(vals[1]);
+        var vars = []
+        for (var i = 0; i < X.length; i++) {
+			vars.push(X[i].getAttribute('value'));
+        }
+        //var vals = X.split(' ')
+        
+        var URL = 'polaaar/data/var/?var='.concat(vars)//.concat('&vartype=').concat(vals[1]);
 
         $.ajax({
         url: URL,
