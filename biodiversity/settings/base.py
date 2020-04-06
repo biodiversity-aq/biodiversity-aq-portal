@@ -17,23 +17,28 @@ import dj_database_url
 
 SITE_ID = 2
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': 'd86hngmf7e303f',
-        'USER': 'hwyoarfegnhrwn',
-        'PASSWORD': '286e142ad8f2d8aa4d5ad529c43bbe847f4037ddc4f065f51bf18366cfac4cd5',
-        'HOST': 'ec2-54-217-234-157.eu-west-1.compute.amazonaws.com',
-        'PORT': '5432'
-    }
-}
+POSTGRES_URL = "DATABASE_URL"
+DATABASES = {'default': dj_database_url.config(default=os.environ[POSTGRES_URL])}
+
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
+ALLOWED_HOSTS = ['*']
+
+#DATABASES = {
+#    'default': {
+#        'ENGINE': 'django.contrib.gis.db.backends.postgis',
+#        'NAME': 'd86hngmf7e303f',
+#        'USER': 'hwyoarfegnhrwn',
+#        'PASSWORD': '286e142ad8f2d8aa4d5ad529c43bbe847f4037ddc4f065f51bf18366cfac4cd5',
+#        'HOST': 'ec2-54-217-234-157.eu-west-1.compute.amazonaws.com',
+#        'PORT': '5432'
+#    }
+#}
     
 #DATABASES['default'] = dj_database_url.config()
 #DATABASES['default']['ENGINE'] = 'django.contrib.gis.db.backends.postgis'
 
-SECURE_PROXY_SSL_HEADER = (
-"HTTP_X_FORWARDED_PROTO", 
-"https")
+
 
 
 
