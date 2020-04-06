@@ -14,6 +14,7 @@ BASE_URL = 'https://biodiversity-aq-dev.herokuapp.com'
 
 SITE_ID = 2
 
+
 if socket.gethostname() == "DESKTOP-8K2LJ17" or socket.gethostname() == 'HDLT15':
     DATABASES = {
         'default': {
