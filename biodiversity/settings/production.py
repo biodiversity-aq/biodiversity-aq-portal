@@ -9,7 +9,7 @@ DEBUG = False
 #except ImportError:
 #    pass
 
-BASE_URL = 'https://www.biodiversity.aq'
+#BASE_URL = 'https://www.biodiversity.aq'
 
 DATABASES = {
     'default': {
