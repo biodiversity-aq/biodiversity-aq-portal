@@ -4,10 +4,10 @@ from .secrets import *
 
 DEBUG = False
 
-try:
-    from .local import *
-except ImportError:
-    pass
+#try:
+#    from .local import *
+#except ImportError:
+#    pass
 
 
 BASE_URL = 'https://biodiversity-aq-dev.herokuapp.com'
