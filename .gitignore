@@ -16,6 +16,8 @@ venv
 
 # local settings
 biodiversity/settings/local.py
+biodiversity/settings/secrets.py
+
 
 
 # media directories

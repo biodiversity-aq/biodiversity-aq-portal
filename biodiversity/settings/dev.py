@@ -22,15 +22,6 @@ try:
 except ImportError:
     pass
 
-DATABASES = {
-        'default': {
-            'ENGINE': 'django.contrib.gis.db.backends.postgis',
-            'NAME': 'biodiversity_aq',
-            'USER': 'biodiversity_aq_admin',
-            'PASSWORD': 'bi0diversity',
-            'HOST': '',
-            'PORT': '5432'
-        }
-    }
+DATABASES = LOCAL_DATABASE
 
 
