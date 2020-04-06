@@ -1,6 +1,6 @@
 from .base import *
 import dj_database_url
-
+from .secrets import * 
 
 DEBUG = False
 
