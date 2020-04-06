@@ -2,16 +2,17 @@ from .base import *
 import dj_database_url
 from .secrets import * 
 
-DEBUG = True
+DEBUG = False
 
 try:
     from .local import *
 except ImportError:
     pass
 
-BASE_URL = 'https://www.biodiversity.aq'
 
-DATABASES = BIOD_DATABASE
+BASE_URL = 'https://biodiversity-aq-dev.herokuapp.com'
+
+DATABASES = HEROKU_DATABASE
 
 
 DATABASES['default'] = dj_database_url.config()
