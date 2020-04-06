@@ -15,7 +15,7 @@ __pycache__/
 venv
 
 # local settings
-biodiversity/settings/dev.py
+biodiversity/settings/local.py
 
 
 # media directories
