@@ -11,7 +11,7 @@ DEBUG = False
 
 BASE_URL = 'https://www.biodiversity.aq'
 
-DATABASES = BIODIVERSITY.DATABASE
+DATABASES = BIODIVERSITYDATABASE
 
     
 #db_from_env = dj_database_url.config(conn_max_age=500)
