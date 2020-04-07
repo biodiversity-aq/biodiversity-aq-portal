@@ -1,6 +1,5 @@
 import os, socket
 from os import environ
-from .secrets import *
 
 
 ######################################################################################################################
@@ -23,14 +22,14 @@ BASE_DIR = os.path.dirname(PROJECT_DIR)
 
 # Add serializationfor geojson
 SERIALIZATION_MODULES = {
-    "geojson": "django.contrib.gis.serializers.geojson", 
+    "geojson": "django.contrib.gis.serializers.geojson",
 }
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = SECRET_KEY
 
 # SECURITY WARNING: define the correct hosts in production!
-ALLOWED_HOSTS = ['*'] 
+ALLOWED_HOSTS = ['*']
 
 
 
@@ -83,7 +82,7 @@ INSTALLED_APPS = [
     'storages',
     'crispy_forms',
     'import_export',
-    
+
     'wagtail.contrib.sitemaps',
     'wagtail.contrib.routable_page',
     'wagtailmenus',
@@ -96,8 +95,8 @@ INSTALLED_APPS = [
 
     'django_countries',
     'djconfig',
-    'data',    
-    'polaaar'       
+    'data',
+    'polaaar'
 ]
 
 
@@ -292,7 +291,7 @@ FORMS_EXTRA_FIELDS = (
 #### Django Leaflet settings
 
 LEAFLET_CONFIG = {
-    'DEFAULT_CENTER':(0,0),    
+    'DEFAULT_CENTER':(0,0),
     'DEFAULT_ZOOM':1,
     'NO_GLOBALS':False,
     'PLUGINS': {
@@ -306,7 +305,7 @@ LEAFLET_CONFIG = {
     }
 
 #############################################
-#### Requirement for Puput blog app 
+#### Requirement for Puput blog app
 PUPUT_AS_PLUGIN = True
 
 
@@ -324,7 +323,7 @@ LOGOUT_REDIRECT_URL = '/'
 AUTH_USER_MODEL = 'accounts.UserProfile'
 LOGIN_URL = 'accounts/login/?next=/'
 
-ADMINS = (    
+ADMINS = (
     ('Grant','grwhumphries@blackbawks.net')
 )
 
@@ -359,7 +358,7 @@ REST_FRAMEWORK = {
         'rest_framework_csv.renderers.CSVRenderer',
     ),
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.NamespaceVersioning',    
+    'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.NamespaceVersioning',
     'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',),
     'PAGE_SIZE': 10
 }
