@@ -26,7 +26,7 @@ SERIALIZATION_MODULES = {
 }
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = ''  # nosec
+SECRET_KEY = '!OVERRIDE ME! somekey !OVERRIDE ME!'  # nosec
 
 # SECURITY WARNING: define the correct hosts in production!
 ALLOWED_HOSTS = ['*']
@@ -339,14 +339,14 @@ FIXTURE_DIRS = ['fixtures',]
 
 EMAIL_HOST = 'smtp.sendgrid.net'
 EMAIL_HOST_USER = 'apikey'
-EMAIL_HOST_PASSWORD = SENDGRID_API_KEY
+EMAIL_HOST_PASSWORD = '!OVERRIDE ME! SENDGRID_API_KEY !OVERRIDE ME!'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
 
 ####################################
 ### Google recaptcha SETTINGS
-RECAPTCHA_PRIVATE_KEY = GOOGLE_SECRET_KEY
+RECAPTCHA_PRIVATE_KEY = '!OVERRIDE ME! GOOGLE_SECRET_KEY !OVERRIDE ME!'
 
 
 ####################################################################################
