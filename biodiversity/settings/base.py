@@ -339,14 +339,14 @@ FIXTURE_DIRS = ['fixtures',]
 
 EMAIL_HOST = 'smtp.sendgrid.net'
 EMAIL_HOST_USER = 'apikey'
-EMAIL_HOST_PASSWORD = '!OVERRIDE ME! SENDGRID_API_KEY !OVERRIDE ME!'
+EMAIL_HOST_PASSWORD = '!OVERRIDE ME! SENDGRID_API_KEY !OVERRIDE ME!'   # nosec
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
 
 ####################################
 ### Google recaptcha SETTINGS
-RECAPTCHA_PRIVATE_KEY = '!OVERRIDE ME! GOOGLE_SECRET_KEY !OVERRIDE ME!'
+RECAPTCHA_PRIVATE_KEY = '!OVERRIDE ME! GOOGLE_SECRET_KEY !OVERRIDE ME!'   # nosec
 
 
 ####################################################################################
