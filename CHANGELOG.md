@@ -3,8 +3,14 @@
 ## [Unreleased]
 
 ### Fixed
+
 - Only load `scrolling-navbar` in `app_landing_page.html` template. 
 [#4](https://git.bebif.be/antabif/biodiversityaq/issues/4) ([ymgan](https://git.bebif.be/ymgan))
+
+### Changed
+
+- Show page title in `app_landing_page.html`. 
+[#5](https://git.bebif.be/antabif/biodiversityaq/issues/5) ([ymgan](https://git.bebif.be/ymgan))
 
 ## [0.1.3](https://gitlab.com/ymgan/biodiversity-aq-dev/-/releases/v0.1.3) - 2020-03-23
 

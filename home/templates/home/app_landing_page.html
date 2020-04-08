@@ -42,6 +42,7 @@
                 {% image page.logo height-100 as app_logo %}
                 <img src="{{ app_logo.url }}" alt="{{ app_logo.alt }}" class="center"/>
                 <div class="my-4 d-none d-md-block">
+                    <h1>{{ page.title }}</h1>
                     <strong>{{ page.short_description|richtext }}</strong>
                 </div>
                 <!-- buttons -->
