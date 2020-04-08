@@ -52,10 +52,6 @@
             height: 80%
         }
 
-        .navbar {
-            background-color: rgba(0, 0, 0, .2)
-        }
-
         .top-nav-collapse {
             background-color: #0099CC;
         }
@@ -72,7 +68,7 @@
 {% wagtailuserbar %}
 
 {# HEADER MENU #}
-<nav class="navbar navbar-expand-lg fixed-top navbar-dark scrolling-navbar">
+<nav class="navbar navbar-expand-lg fixed-top navbar-dark {% block scrolling_navbar %}{% endblock %}">
     <span><a class="navbar-brand" href="/"><img src="{% static 'logos/logo-biodiversityaq-white.png' %}"
                                                 alt="biodiversity.aq logo" height="40"></a></span>
     <!-- Collapsible flat menu content -->
