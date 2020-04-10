@@ -6,6 +6,10 @@
 
 - Only load `scrolling-navbar` in `app_landing_page.html` template. 
 [#4](https://git.bebif.be/antabif/biodiversityaq/issues/4) ([ymgan](https://git.bebif.be/ymgan))
+- Load dropdown options to wagtail cms and django admin interface when user is superuser. 
+[#6](https://git.bebif.be/antabif/biodiversityaq/issues/6) ([ymgan](https://git.bebif.be/ymgan))
+- URLs not redirecting properly to root page. All hard coded urls are replaced using `{% url %}` or `{% pageurl %}` 
+tag in base template. [#6](https://git.bebif.be/antabif/biodiversityaq/issues/6) ([ymgan](https://git.bebif.be/ymgan))
 
 ### Changed
 
