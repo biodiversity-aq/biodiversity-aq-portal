@@ -10,10 +10,10 @@ from wagtail.admin.edit_handlers import FieldPanel, StreamFieldPanel
 from wagtail.images.edit_handlers import ImageChooserPanel
 from wagtail.images.blocks import ImageChooserBlock
 from wagtail.images.models import Image, AbstractImage, AbstractRendition
-from wagtailmenus.models import MenuPage
-from wagtailmenus.panels import menupage_panel
 from wagtail.snippets.models import register_snippet
 from wagtail.snippets.edit_handlers import SnippetChooserPanel
+from wagtailmenus.models import MenuPage, AbstractLinkPage
+from wagtailmenus.panels import menupage_panel
 
 from modelcluster.fields import ParentalKey
 from modelcluster.models import ClusterableModel
@@ -60,6 +60,15 @@ class BaseMenuPage(MenuPage):
     class Meta:
         abstract = True
         ordering = ['-last_published_at']
+
+
+class LinkPage(AbstractLinkPage):
+    """
+    AbstractLinkPage model can be used to add additional links to menus,
+    by adding additional pages to the page tree.
+    https://wagtailmenus.readthedocs.io/en/stable/abstractlinkpage.html
+    """
+    pass
 
 
 class OverviewPage(BaseMenuPage):
