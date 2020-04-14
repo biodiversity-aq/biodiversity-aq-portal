@@ -10,8 +10,12 @@
             <div class="text-center">
                 <h1>{{ page.title }}</h1>
                 {{ page.short_description|richtext }}
-                <hr>
-                {{ page.body }}
+                {% if page.body %}
+                    <div class="text-left">
+                        <hr>
+                        {{ page.body }}
+                    </div>
+                {% endif %}
             </div>
         </div>
         <section class="container">
