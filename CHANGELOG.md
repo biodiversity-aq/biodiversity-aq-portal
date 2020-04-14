@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+### Added
+
+- `LinkPage` (a subclass of [AbstractLinkPage](https://wagtailmenus.readthedocs.io/en/stable/abstractlinkpage.html)) 
+will be used to link to a page in the page tree. 
+[#9](https://git.bebif.be/antabif/biodiversityaq/issues/9) ([ymgan](https://git.bebif.be/ymgan))
+
 ### Fixed
 
 - Only load `scrolling-navbar` in `app_landing_page.html` template. 
