@@ -151,7 +151,8 @@ class CustomImage(AbstractImage):
     """
     Custom image model to include license and author for credits
     """
-    CC_BY = 'https://creativecommons.org/licenses/by/4.0/'
+    CC_BY_3 = 'https://creativecommons.org/licenses/by/3.0/'
+    CC_BY_4 = 'https://creativecommons.org/licenses/by/4.0/'
     CC_BY_SA = 'https://creativecommons.org/licenses/by-sa/4.0/'
     CC_BY_ND = 'https://creativecommons.org/licenses/by-nd/4.0/'
     CC_BY_NC = 'https://creativecommons.org/licenses/by-nc/4.0/'
@@ -160,7 +161,8 @@ class CustomImage(AbstractImage):
     CC0 = 'https://creativecommons.org/publicdomain/zero/1.0/'
 
     LICENSE_CHOICES = [
-        (CC_BY, 'CC BY 4.0'),
+        (CC_BY_3, 'CC BY 3.0'),
+        (CC_BY_4, 'CC BY 4.0'),
         (CC_BY_SA, 'CC BY-SA 4.0'),
         (CC_BY_ND, 'CC BY-ND 4.0'),
         (CC_BY_NC, 'CC BY-NC 4.0'),
@@ -175,7 +177,7 @@ class CustomImage(AbstractImage):
                   '"{caption}" by {owner} licensed under {license}.')
     owner = models.CharField(max_length=255, blank=True, null=True,
                              help_text='Please fill in this field to give credit to the owner of the image.')
-    license = models.CharField(max_length=200, choices=LICENSE_CHOICES, default=CC_BY, blank=True, null=True,
+    license = models.CharField(max_length=200, choices=LICENSE_CHOICES, default=CC_BY_4, blank=True, null=True,
                                help_text='Please select a license.')
 
     admin_form_fields = Image.admin_form_fields + (
