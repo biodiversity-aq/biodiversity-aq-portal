@@ -177,7 +177,7 @@ class CustomImage(AbstractImage):
                   '"{caption}" by {owner} licensed under {license}.')
     owner = models.CharField(max_length=255, blank=True, null=True,
                              help_text='Please fill in this field to give credit to the owner of the image.')
-    license = models.CharField(max_length=200, choices=LICENSE_CHOICES, default=CC_BY_4, blank=True, null=True,
+    license = models.CharField(max_length=200, choices=LICENSE_CHOICES, default=CC_BY_NC, blank=True, null=True,
                                help_text='Please select a license.')
 
     admin_form_fields = Image.admin_form_fields + (
@@ -202,12 +202,15 @@ class CustomImage(AbstractImage):
         owner = ''
         img_license = ''
         if self.caption.startswith('<p>') and self.caption.endswith('</p>'):
-            caption = '"{}"'.format(self.caption[3:][:-4])
+            caption = '"{}" '.format(self.caption[3:][:-4])
         if self.owner:
-            owner = ' by {}'.format(self.owner)
+            owner = 'by {} '.format(self.owner)
         if self.license:
-            img_license = ' licensed under <a href="{}">{}</a>.'.format(self.license, self.get_license_display())
-        img_credit = caption + owner + img_license
+            img_license = 'licensed under <a href="{}">{}</a>.'.format(self.license, self.get_license_display())
+        if self.caption:
+            img_credit = caption + owner + img_license
+        else:
+            img_credit = 'Photo/Image ' + owner + img_license
         return img_credit
 
 
