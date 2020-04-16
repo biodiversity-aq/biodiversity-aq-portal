@@ -26,7 +26,7 @@ tag in base template. [#6](https://git.bebif.be/antabif/biodiversityaq/issues/6)
 
 - Show page title in `app_landing_page.html`. 
 [#5](https://git.bebif.be/antabif/biodiversityaq/issues/5) ([ymgan](https://git.bebif.be/ymgan))
-- Upgrade packages: `Django==2.2.12`
+- Upgrade packages: `Django==2.2.12`, `wagtail==2.7.2`
 
 ## [0.1.3](https://gitlab.com/ymgan/biodiversity-aq-dev/-/releases/v0.1.3) - 2020-03-23
 
