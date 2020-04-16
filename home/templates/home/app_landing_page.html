@@ -40,7 +40,8 @@
             <!-- Content -->
             <div class="text-center white-text flex-column mt-auto">
                 {% image page.logo height-100 as app_logo %}
-                <img src="{{ app_logo.url }}" alt="{{ app_logo.alt }}" class="center"/>
+                <img src="{{ app_logo.url }}" alt="{{ app_logo.alt }}" height="{{ app_logo.height }}"
+                     class="center" style="width: 100%; object-fit: contain;"/>
                 <div class="my-4 d-none d-md-block">
                     <h1>{{ page.title }}</h1>
                     <strong>{{ page.short_description|richtext }}</strong>
@@ -87,8 +88,8 @@
                             <div class="view overlay" style="background: black;">
                                 <a href="{{ pinned_page.value.url }}">
                                     {% image pinned_page.value.specific.cover height-200 as cover_img %}
-                                    <img src="{{ cover_img.url }}" alt="{{ cover_img.alt }}" width="{{ cover_img.width }}"
-                                         height="{{ cover_img.height }}" class="center"/>
+                                    <img src="{{ cover_img.url }}" alt="{{ cover_img.alt }}"
+                                         height="{{ cover_img.height }}" class="center fix-height-card-cover"/>
                                     <div class="mask rgba-white-slight"></div>
                                 </a>
                             </div><!-- /.Card image -->
@@ -139,8 +140,7 @@
                                 <a href="{{ child_page.url }}">
                                     {% image child_page.specific.cover height-200 as child_cover_img %}
                                     <img src="{{ child_cover_img.url }}" alt="{{ child_cover_img.alt }}"
-                                         width="{{ child_cover_img.width }}"
-                                         height="{{ child_cover_img.height }}" class="center"/>
+                                         height="{{ child_cover_img.height }}" class="center fix-height-card-cover"/>
                                     <div class="mask rgba-white-slight"></div>
                                 </a>
                             </div>

@@ -281,3 +281,10 @@ a.waves-effect, a.waves-light {
     color: #fff;
     background-color: #ec6633 !important;
 }
+
+/* Use for card cover image when height is fixed so that image will not be squished but cropped
+<img src="{{ image.url }}" alt="{{ image.alt }}" height="{{ image.height }}" class="center fix-height-card-cover"/>*/
+.fix-height-card-cover {
+    width: 100%;
+    object-fit: cover;
+}
