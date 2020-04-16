@@ -7,6 +7,7 @@
 - `LinkPage` (a subclass of [AbstractLinkPage](https://wagtailmenus.readthedocs.io/en/stable/abstractlinkpage.html)) 
 will be used to link to a page in the page tree. 
 [#9](https://git.bebif.be/antabif/biodiversityaq/issues/9) ([ymgan](https://git.bebif.be/ymgan))
+- CC BY 3.0 license for images. [#8](https://git.bebif.be/antabif/biodiversityaq/issues/8) ([ymgan](https://git.bebif.be/ymgan))
 
 ### Fixed
 
@@ -17,6 +18,8 @@ will be used to link to a page in the page tree.
 - URLs not redirecting properly to root page. All hard coded urls are replaced using `{% url %}` or `{% pageurl %}` 
 tag in base template. [#6](https://git.bebif.be/antabif/biodiversityaq/issues/6) ([ymgan](https://git.bebif.be/ymgan))
 - Fix card cover images shrink/max out when screen resize. 
+[#8](https://git.bebif.be/antabif/biodiversityaq/issues/8) ([ymgan](https://git.bebif.be/ymgan))
+- Image attribution generation when caption is not provided. 
 [#8](https://git.bebif.be/antabif/biodiversityaq/issues/8) ([ymgan](https://git.bebif.be/ymgan))
 
 ### Changed
