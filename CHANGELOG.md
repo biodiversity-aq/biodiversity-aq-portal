@@ -16,6 +16,8 @@ will be used to link to a page in the page tree.
 [#6](https://git.bebif.be/antabif/biodiversityaq/issues/6) ([ymgan](https://git.bebif.be/ymgan))
 - URLs not redirecting properly to root page. All hard coded urls are replaced using `{% url %}` or `{% pageurl %}` 
 tag in base template. [#6](https://git.bebif.be/antabif/biodiversityaq/issues/6) ([ymgan](https://git.bebif.be/ymgan))
+- Fix card cover images shrink/max out when screen resize. 
+[#8](https://git.bebif.be/antabif/biodiversityaq/issues/8) ([ymgan](https://git.bebif.be/ymgan))
 
 ### Changed
 
