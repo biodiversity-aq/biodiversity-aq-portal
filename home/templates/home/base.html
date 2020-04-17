@@ -6,8 +6,9 @@
 {% leaflet_css %}
 {% endblock extra_css %}
 
-{% block flat_menu %}
-    {% flat_menu 'home' max_levels=1 template='menus/flat/level_1.html' %}
+{% block left_menu %}
+    {# use flat menu template to keep the menus expanded #}
+    {% main_menu max_levels=3 template="menus/flat/level_1.html" %}
 {% endblock %}
 
 {% block content %}

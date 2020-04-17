@@ -71,12 +71,13 @@
 <nav class="navbar navbar-expand-lg fixed-top navbar-dark {% block scrolling_navbar %}{% endblock %}">
     <span><a class="navbar-brand" href="{% pageurl request.site.root_page %}"><img src="{% static 'logos/logo-biodiversityaq-white.png' %}"
                                                 alt="biodiversity.aq logo" height="40"></a></span>
-    <!-- Collapsible flat menu content -->
-    {% block flat_menu %}
+    <!-- Expanded menu content -->
+    {% block left_menu %}
     {% endblock %}
 
-    <!-- Collapsible main menu content -->
-    {% main_menu max_levels=3 template="menus/main/level_1.html" %}
+    <!-- Collapsed menu content (toggle to expand) -->
+    {% block right_menu %}
+    {% endblock %}
 
     <!-- user menu -->
     <ul id="user-account" class="navbar-nav ml-auto pl-2">
