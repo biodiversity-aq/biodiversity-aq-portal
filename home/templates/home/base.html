@@ -7,8 +7,8 @@
 {% endblock extra_css %}
 
 {% block left_menu %}
-    {# use flat menu template to keep the menus expanded #}
-    {% main_menu max_levels=3 template="menus/flat/level_1.html" %}
+    {# use left_expanded_menu menu template to keep the menus expanded #}
+    {% main_menu max_levels=3 template="menus/left_expanded_menu/level_1.html" %}
 {% endblock %}
 
 {% block content %}

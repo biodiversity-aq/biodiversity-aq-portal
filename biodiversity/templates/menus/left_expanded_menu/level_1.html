@@ -1,4 +1,4 @@
-{# LEFT: default expanded menu for flat menu to keep the flat menu items (level 1) expanded by default #}
+{# LEFT: keep the menu items (level 1) expanded by default #}
 {# use of navbar-collapse and navbar-toggler for toggling #}
 {% load menu_tags %}
 <!-- Collapsible content -->
@@ -23,7 +23,7 @@
         {% endfor %}
     </ul>
 </div>
-<!-- Collapse button for flat menu -->
+<!-- Collapse button for left_expanded_menu menu -->
 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#flatMenuCollapse"
         aria-controls="flatMenuCollapse" aria-expanded="false" aria-label="Toggle navigation">
     <span><i class="fas fa-info"></i></span>
