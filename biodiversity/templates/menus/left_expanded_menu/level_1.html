@@ -1,6 +1,9 @@
-{% load static menu_tags %}
-<div class="collapse" id="mainMenuCollapse">
-    <ul class="nav">
+{# LEFT: keep the menu items (level 1) expanded by default #}
+{# use of navbar-collapse and navbar-toggler for toggling #}
+{% load menu_tags %}
+<!-- Collapsible content -->
+<div class="collapse navbar-collapse" id="flatMenuCollapse">
+    <ul class="navbar-nav mr-auto">
         {% for item in menu_items %}
             {% if item.has_children_in_menu %}
                 <li class="nav-item {{ item.active_class }} dropdown">
@@ -20,8 +23,9 @@
         {% endfor %}
     </ul>
 </div>
-<!-- Button to toggle main menu -->
-<button class="btn btn-outline-white btn-sm" type="button" data-toggle="collapse" data-target="#mainMenuCollapse"
-        aria-controls="mainMenuCollapse" aria-expanded="false" aria-label="Toggle navigation">
-    <span><i class="fas fa-bars"></i></span>
+<!-- Collapse button for left_expanded_menu menu -->
+<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#flatMenuCollapse"
+        aria-controls="flatMenuCollapse" aria-expanded="false" aria-label="Toggle navigation">
+    <span><i class="fas fa-info"></i></span>
 </button>
+

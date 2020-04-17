@@ -21,11 +21,15 @@ tag in base template. [#6](https://git.bebif.be/antabif/biodiversityaq/issues/6)
 [#8](https://git.bebif.be/antabif/biodiversityaq/issues/8) ([ymgan](https://git.bebif.be/ymgan))
 - Image attribution generation when caption is not provided. 
 [#8](https://git.bebif.be/antabif/biodiversityaq/issues/8) ([ymgan](https://git.bebif.be/ymgan))
+- Always show menus in home page. 
+[#10](https://git.bebif.be/antabif/biodiversityaq/issues/10) ([ymgan](https://git.bebif.be/ymgan))
 
 ### Changed
 
 - Show page title in `app_landing_page.html`. 
 [#5](https://git.bebif.be/antabif/biodiversityaq/issues/5) ([ymgan](https://git.bebif.be/ymgan))
+- Rename menu templates in `biodiversity/templates/menus/`. ([ymgan](https://git.bebif.be/ymgan))
+- Change block name for menus in `biodiversity/templates/base.html` ([ymgan](https://git.bebif.be/ymgan))
 
 ## [0.1.3](https://gitlab.com/ymgan/biodiversity-aq-dev/-/releases/v0.1.3) - 2020-03-23
 
