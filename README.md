@@ -78,3 +78,7 @@ python manage.py runserver
 ```
 
 Open a browser and go to [http://localhost:8000](http://localhost:8000) to view the application.
+
+## Contributors
+
+[List of contributors](https://git.bebif.be/antabif/biodiversityaq/-/graphs/master)
