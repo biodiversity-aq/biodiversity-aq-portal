@@ -40,10 +40,10 @@ class BaseMenuPage(MenuPage):
         ('paragraph', blocks.RichTextBlock(required=False)),
         ('image', ImageChooserBlock(required=False))
     ], blank=True)
-    show_in_parent = models.BooleanField(
+    show_in_recent = models.BooleanField(
         default=False, null=True, blank=True,
-        help_text='If true, this page will appear in the parent page if parent page type is '
-                  'AppLandingPage or OverviewPage.'
+        help_text='If true, this page will appear in the "Recent" section of its parent if it is an AppLandingPage '
+                  'order by last published date'
     )
 
     content_panels = Page.content_panels + [
@@ -51,7 +51,7 @@ class BaseMenuPage(MenuPage):
             ImageChooserPanel('cover'),
             FieldPanel('short_description'),
         ]),
-        FieldPanel('show_in_parent'),
+        FieldPanel('show_in_recent'),
         StreamFieldPanel('body'),
     ]
 
