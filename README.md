@@ -1,6 +1,6 @@
 # biodiversity-aq
 
-Django app for SCAR Antarctic Biodiversity Portal ([www.biodiversity.aq](http://www.biodiversity.aq)).
+Django project for SCAR Antarctic Biodiversity Portal ([www.biodiversity.aq](http://www.biodiversity.aq)).
 
 Pre-installed apps:
 - accounts (authentication)
