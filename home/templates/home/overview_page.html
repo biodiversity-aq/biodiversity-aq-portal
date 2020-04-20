@@ -22,67 +22,14 @@
             <!-- Pinned pages -->
             {% if page.pin %}
                 <h3 class="text-center">Pinned</h3>
-            {% endif %}
-            <div class="card-deck">
-                {% for pinned_page in page.pin %}
-                    <div class="col mb-4">
-                        <div class="card h-100 hoverable"> <!-- h-100: same height for each card, height 100% -->
-                            <!-- Card image -->
-                            <div class="view overlay">
-                                <a href="{{ pinned_page.value.url }}">
-                                    {% image pinned_page.value.specific.cover height-200 as cover_img %}
-                                    <img src="{{ cover_img.url }}" alt="{{ cover_img.alt }}"
-                                         height="{{ cover_img.height }}" class="center fix-height-card-cover"/>
-                                    <div class="mask rgba-white-slight"></div>
-                                </a>
-                            </div><!-- /.Card image -->
-                            <!-- Card body -->
-                            <div class="card-body">
-                                <!-- Card title -->
-                                <div>
-                                    <!-- Title -->
-                                    <h4 class="card-title mb-2"><a href="{{ pinned_page.value.specific.url }}"
-                                                                   style="color: inherit;">{{ pinned_page.value.specific.title }}</a>
-                                    </h4>
-                                    <!-- Short description -->
-                                    <div class="card-text">
-                                        {{ pinned_page.value.specific.short_description|richtext }}
-                                    </div>
-                                </div>
-                                <!-- tags -->
-                                <div>
-                                    {% if pinned_page.value.specific.tags %}
-                                        <ul class="list-unstyled list-inline justify-content-between mb-0">
-                                            {% for tag in pinned_page.value.specific.tags.all %}
-                                                <li class="list-inline-item mr-1">
-                                                    <div class="chip mr-0">
-                                                        <a href="{% slugurl 'tags' %}?tag={{ tag }}"
-                                                           style="color: rgba(0,0,0,0.6);;">{{ tag }}</a>
-                                                    </div>
-                                                </li>
-                                            {% endfor %}
-                                        </ul>
-                                    {% endif %}
-                                </div><!-- /.tags -->
-                            </div><!-- /.Card body -->
-                        </div><!--/.Card -->
-                    </div>
-                {% endfor %}
-            </div>
-            <!-- Recent child pages -->
-            {% if page.get_children %}
-                <hr>
-                <h3 class="text-center">Recent</h3>
-            {% endif %}
-            <div class="row row-cols-1 row-cols-md-3">
-                {% for child_page in page.get_children %}
-                    {% if child_page.specific.show_in_parent and forloop.counter0 <= 6 %}
+                <div class="card-deck">
+                    {% for pinned_page in page.pin %}
                         <div class="col mb-4">
                             <div class="card h-100 hoverable"> <!-- h-100: same height for each card, height 100% -->
                                 <!-- Card image -->
                                 <div class="view overlay">
-                                    <a href="{{ child_page.url }}">
-                                        {% image child_page.specific.cover height-200 as cover_img %}
+                                    <a href="{{ pinned_page.value.url }}">
+                                        {% image pinned_page.value.specific.cover height-200 as cover_img %}
                                         <img src="{{ cover_img.url }}" alt="{{ cover_img.alt }}"
                                              height="{{ cover_img.height }}" class="center fix-height-card-cover"/>
                                         <div class="mask rgba-white-slight"></div>
@@ -93,19 +40,19 @@
                                     <!-- Card title -->
                                     <div>
                                         <!-- Title -->
-                                        <h4 class="card-title mb-2"><a href="{{ child_page.url }}"
-                                                                       style="color: inherit;">{{ child_page.specific.title }}</a>
+                                        <h4 class="card-title mb-2"><a href="{{ pinned_page.value.specific.url }}"
+                                                                       style="color: inherit;">{{ pinned_page.value.specific.title }}</a>
                                         </h4>
                                         <!-- Short description -->
                                         <div class="card-text">
-                                            {{ child_page.specific.short_description|richtext }}
+                                            {{ pinned_page.value.specific.short_description|richtext }}
                                         </div>
                                     </div>
                                     <!-- tags -->
                                     <div>
-                                        {% if child_page.specific.tags %}
+                                        {% if pinned_page.value.specific.tags %}
                                             <ul class="list-unstyled list-inline justify-content-between mb-0">
-                                                {% for tag in child_page.specific.tags.all %}
+                                                {% for tag in pinned_page.value.specific.tags.all %}
                                                     <li class="list-inline-item mr-1">
                                                         <div class="chip mr-0">
                                                             <a href="{% slugurl 'tags' %}?tag={{ tag }}"
@@ -119,9 +66,9 @@
                                 </div><!-- /.Card body -->
                             </div><!--/.Card -->
                         </div>
-                    {% endif %}
-                {% endfor %}
-            </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
         </section>
     </main>
     {% block extra_js %}
