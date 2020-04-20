@@ -12,6 +12,8 @@ The data app will eventually be installed in this project.
 
 ### Setup database
 
+Currently using PostgreSQL 11 on production server.
+
 1. Create an empty PostgreSQL database (e.g. biodiversityaq)
 2. Enable PostGIS: `CREATE EXTENSION postgis;`
 
