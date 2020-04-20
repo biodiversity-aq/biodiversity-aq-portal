@@ -78,8 +78,6 @@
         <section class="container">
         <!-- Pinned pages -->
         {% if page.pin %}
-            <h3 class="text-center">Pinned</h3>
-        {% endif %}
             <div class="card-deck">
                 {% for pinned_page in page.pin %}
                     <div class="col mb-4">
@@ -126,6 +124,7 @@
                     </div>
                 {% endfor %}
             </div>
+        {% endif %}
         {% if page.get_descendants %}
             <hr>
             <h3 class="text-center">Recent</h3>
