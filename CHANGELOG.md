@@ -30,6 +30,7 @@ tag in base template. [#6](https://git.bebif.be/antabif/biodiversityaq/issues/6)
 [#5](https://git.bebif.be/antabif/biodiversityaq/issues/5) ([ymgan](https://git.bebif.be/ymgan))
 - Rename menu templates in `biodiversity/templates/menus/`. ([ymgan](https://git.bebif.be/ymgan))
 - Change block name for menus in `biodiversity/templates/base.html` ([ymgan](https://git.bebif.be/ymgan))
+- Upgrade packages: `Django==2.2.12`, `wagtail==2.7.2`
 
 ## [0.1.3](https://gitlab.com/ymgan/biodiversity-aq-dev/-/releases/v0.1.3) - 2020-03-23
 
