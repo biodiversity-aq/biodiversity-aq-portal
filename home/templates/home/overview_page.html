@@ -21,7 +21,7 @@
         <section class="container">
             <!-- Pinned pages -->
             {% if page.pin %}
-                <div class="card-deck">
+                <div class="row justify-content-center row-cols-1 row-cols-md-3">
                     {% for pinned_page in page.pin %}
                         <div class="col mb-4">
                             <div class="card h-100 hoverable"> <!-- h-100: same height for each card, height 100% -->
