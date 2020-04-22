@@ -2,11 +2,10 @@ from django.db import models
 from django.http import Http404
 from django.shortcuts import redirect, render
 
-from wagtail.admin.edit_handlers import PageChooserPanel, MultiFieldPanel, InlinePanel
+from wagtail.admin.edit_handlers import PageChooserPanel, MultiFieldPanel, InlinePanel, FieldPanel, StreamFieldPanel
 from wagtail.core.models import Page, Orderable
 from wagtail.core import blocks
 from wagtail.core.fields import StreamField, RichTextField
-from wagtail.admin.edit_handlers import FieldPanel, StreamFieldPanel
 from wagtail.images.edit_handlers import ImageChooserPanel
 from wagtail.images.blocks import ImageChooserBlock
 from wagtail.images.models import Image, AbstractImage, AbstractRendition
