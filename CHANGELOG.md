@@ -7,7 +7,10 @@
 - `LinkPage` (a subclass of [AbstractLinkPage](https://wagtailmenus.readthedocs.io/en/stable/abstractlinkpage.html)) 
 will be used to link to a page in the page tree. 
 [#9](https://git.bebif.be/antabif/biodiversityaq/issues/9) ([ymgan](https://git.bebif.be/ymgan))
-- CC BY 3.0 license for images. [#8](https://git.bebif.be/antabif/biodiversityaq/issues/8) ([ymgan](https://git.bebif.be/ymgan))
+- CC BY 3.0 license for images. 
+[#8](https://git.bebif.be/antabif/biodiversityaq/issues/8) ([ymgan](https://git.bebif.be/ymgan))
+- Add `pdf-icon` feature to Draftail editor. 
+[#8](https://git.bebif.be/antabif/biodiversityaq/issues/8) ([ymgan](https://git.bebif.be/ymgan))
 
 ### Fixed
 
@@ -23,6 +26,12 @@ tag in base template. [#6](https://git.bebif.be/antabif/biodiversityaq/issues/6)
 [#8](https://git.bebif.be/antabif/biodiversityaq/issues/8) ([ymgan](https://git.bebif.be/ymgan))
 - Always show menus in home page. 
 [#10](https://git.bebif.be/antabif/biodiversityaq/issues/10) ([ymgan](https://git.bebif.be/ymgan))
+- OverviewPage is now left-aligned.
+[#8](https://git.bebif.be/antabif/biodiversityaq/issues/8) ([ymgan](https://git.bebif.be/ymgan))
+- Pin pages in OverviewPage and AppLandingPage are now centered and max 3 cards per row.
+[#8](https://git.bebif.be/antabif/biodiversityaq/issues/8) ([ymgan](https://git.bebif.be/ymgan))
+- Use specific submenu templates. 
+[#8](https://git.bebif.be/antabif/biodiversityaq/issues/8) ([ymgan](https://git.bebif.be/ymgan))
 
 ### Changed
 
@@ -30,6 +39,20 @@ tag in base template. [#6](https://git.bebif.be/antabif/biodiversityaq/issues/6)
 [#5](https://git.bebif.be/antabif/biodiversityaq/issues/5) ([ymgan](https://git.bebif.be/ymgan))
 - Rename menu templates in `biodiversity/templates/menus/`. ([ymgan](https://git.bebif.be/ymgan))
 - Change block name for menus in `biodiversity/templates/base.html` ([ymgan](https://git.bebif.be/ymgan))
+- Recent pages only shown in AppLandingPage, no longer shown in OverviewPage.
+[#8](https://git.bebif.be/antabif/biodiversityaq/issues/8) ([ymgan](https://git.bebif.be/ymgan))
+- Rename `show_in_parent` to `show_in_recent` for BaseMenuPage.
+[#8](https://git.bebif.be/antabif/biodiversityaq/issues/8) ([ymgan](https://git.bebif.be/ymgan))
+- Remove word `pinned pages` from AppLandingPage
+[#8](https://git.bebif.be/antabif/biodiversityaq/issues/8) ([ymgan](https://git.bebif.be/ymgan))
+- Full width cover image for DetailPage.
+[#8](https://git.bebif.be/antabif/biodiversityaq/issues/8) ([ymgan](https://git.bebif.be/ymgan))
+
+### Removed
+
+- old README.md from home app. 
+[#8](https://git.bebif.be/antabif/biodiversityaq/issues/8) ([ymgan](https://git.bebif.be/ymgan))
+
 
 ## [0.1.3](https://gitlab.com/ymgan/biodiversity-aq-dev/-/releases/v0.1.3) - 2020-03-23
 
