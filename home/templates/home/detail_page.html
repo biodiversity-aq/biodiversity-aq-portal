@@ -2,30 +2,59 @@
 {% load static wagtailcore_tags wagtailimages_tags %}
 
 {% block extra_css %}
+    <style>
+        body {
+            padding-top: 0;
+        }
+
+        @media (min-width: 800px) and (max-width: 850px) {
+            .navbar:not(.top-nav-collapse) {
+                background: #0099CC !important;
+            }
+        }
+
+        .view, body, html {
+            height: 80%
+        }
+
+        .navbar {
+            background-color: rgba(0, 0, 0, .2)
+        }
+
+        .top-nav-collapse {
+            background-color: #0099CC;
+        }
+
+    </style>
+{% endblock %}
+
+{% block scrolling_navbar %}scrolling-navbar{% endblock %}
+
+{% block banner %}
+    {% image page.cover original as cover_img %}
+    <div class="view"
+         style="background-image: url('{{ cover_img.url }}'); background-repeat: no-repeat; background-size: cover;
+                 height: 50%;">
+        <!-- Mask & flexbox options-->
+        <div class="mask rgba-black-light d-flex flex-column justify-content-center align-items-center">
+            <!-- Content -->
+            <div class="text-center white-text flex-column mt-auto">
+                <div class="my-4 d-none d-md-block">
+                    <h1>{{ page.title }}</h1>
+                    <strong>{{ page.short_description|richtext }}</strong>
+                </div>
+            </div><!-- text-center -->
+            <div class="white-text align-items-end flex-column mt-auto ml-auto">
+                {{ page.cover.get_image_credit|richtext }}
+            </div>
+        </div><!-- Content -->
+
+    </div><!-- Mask & flexbox options-->
 {% endblock %}
 
 {% block content %}
-    <!-- Jumbotron -->
-    <div class="jumbotron text-center">
-        <!-- Title -->
-        <h1 class="h1-responsive">{{ page.title }}</h1>
-        <!-- One line description -->
-        <h5>{{ page.short_description|richtext }}</h5>
-        <!-- Image overlay -->
-        {% if page.cover %}
-        <div class="view overlay">
-            {% image page.cover height-400 as cover_img %}
-            <img src="{{ cover_img.url }}" alt="{{ cover_img.alt }}" class="center figure-img z-depth-1"/>
-            <div class="mask rgba-white-slight"></div>
-        </div>
-        <!-- Attribution of the image -->
-            <!-- get_image_cover consist of fields from custom image model, so need to be accessed through
-            page.cover.get_image_credit, not cover_img.get_image_credit -->
-        <div class="figure-caption">{{ page.cover.get_image_credit|richtext }}</div>
-    {% endif %}
-    </div>
     <!-- Body -->
-    <div class="container">
+    <div class="container mt-4">
         {{ page.body }}
         <!-- Tags -->
         {% if page.tags.exists %}

@@ -2,11 +2,10 @@ from django.db import models
 from django.http import Http404
 from django.shortcuts import redirect, render
 
-from wagtail.admin.edit_handlers import PageChooserPanel, MultiFieldPanel, InlinePanel
+from wagtail.admin.edit_handlers import PageChooserPanel, MultiFieldPanel, InlinePanel, FieldPanel, StreamFieldPanel
 from wagtail.core.models import Page, Orderable
 from wagtail.core import blocks
 from wagtail.core.fields import StreamField, RichTextField
-from wagtail.admin.edit_handlers import FieldPanel, StreamFieldPanel
 from wagtail.images.edit_handlers import ImageChooserPanel
 from wagtail.images.blocks import ImageChooserBlock
 from wagtail.images.models import Image, AbstractImage, AbstractRendition
@@ -40,10 +39,10 @@ class BaseMenuPage(MenuPage):
         ('paragraph', blocks.RichTextBlock(required=False)),
         ('image', ImageChooserBlock(required=False))
     ], blank=True)
-    show_in_parent = models.BooleanField(
+    show_in_recent = models.BooleanField(
         default=False, null=True, blank=True,
-        help_text='If true, this page will appear in the parent page if parent page type is '
-                  'AppLandingPage or OverviewPage.'
+        help_text='If true, this page will appear in the "Recent" section of its parent if it is an AppLandingPage '
+                  'order by last published date'
     )
 
     content_panels = Page.content_panels + [
@@ -51,7 +50,7 @@ class BaseMenuPage(MenuPage):
             ImageChooserPanel('cover'),
             FieldPanel('short_description'),
         ]),
-        FieldPanel('show_in_parent'),
+        FieldPanel('show_in_recent'),
         StreamFieldPanel('body'),
     ]
 

@@ -10,7 +10,7 @@
                        data-toggle="dropdown" style="color:white">
                         {{ item.text }}</a>
                     <div class="dropdown-menu" aria-labelledby="ddtoggle_{{ item.link_page.pk }}">
-                        {% sub_menu item %}
+                        {% sub_menu item template="menus/right_toggle_menu/level_2.html" %}
                     </div>
                 </li>
             {% else %}

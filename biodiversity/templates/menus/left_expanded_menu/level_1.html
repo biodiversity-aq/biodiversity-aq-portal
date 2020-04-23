@@ -6,13 +6,13 @@
     <ul class="navbar-nav mr-auto">
         {% for item in menu_items %}
             {% if item.has_children_in_menu %}
-                <li class="nav-item {{ item.active_class }} dropdown">
+                <li class="nav-item dropdown {{ item.active_class }}">
                     <a href="{{ item.href }}" class="nav-link dropdown-toggle"
                        id="ddtoggle_{{ item.link_page.pk }}" aria-haspopup="true" aria-expanded="false"
-                       data-toggle="dropdown" style="color:white">
+                       data-toggle="dropdown" style="color:white;">
                         {{ item.text }}</a>
                     <div class="dropdown-menu" aria-labelledby="ddtoggle_{{ item.link_page.pk }}">
-                        {% sub_menu item %}
+                        {% sub_menu item template="menus/left_expanded_menu/level_2.html" %}
                     </div>
                 </li>
             {% else %}
@@ -26,6 +26,6 @@
 <!-- Collapse button for left_expanded_menu menu -->
 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#flatMenuCollapse"
         aria-controls="flatMenuCollapse" aria-expanded="false" aria-label="Toggle navigation">
-    <span><i class="fas fa-info"></i></span>
+    <span><i class="fas fa-info" style="color: white;"></i></span>
 </button>
 
