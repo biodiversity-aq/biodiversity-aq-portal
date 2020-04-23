@@ -1,5 +1,5 @@
 from django.utils.html import escape
-from wagtail.images.formats import Format, register_image_format
+from wagtail.images.formats import Format, register_image_format, unregister_image_format
 
 
 class CaptionedImageFormat(Format):
@@ -32,6 +32,7 @@ class CaptionedImageFormat(Format):
         return custom_html
 
 
+unregister_image_format(Format('right', 'Right-aligned', 'richtext-image right', 'width-500'))
 register_image_format(CaptionedImageFormat('center_captioned_fullwidth', 'Full width, center-aligned, captioned', 'center', 'original'))
 register_image_format(CaptionedImageFormat('center_captioned_width_500', 'Width: 500 px, center-aligned, captioned', 'center', 'width-500'))
 register_image_format(CaptionedImageFormat('left_captioned_width_500', 'Width: 500 px, left-aligned, captioned', 'left', 'width-500'))
