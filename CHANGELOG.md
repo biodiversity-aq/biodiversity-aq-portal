@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [0.2.0](https://gitlab.com/ymgan/biodiversity-aq-dev/-/releases/v0.2.0) - 2020-04-23
+
 ### Added
 
 - `LinkPage` (a subclass of [AbstractLinkPage](https://wagtailmenus.readthedocs.io/en/stable/abstractlinkpage.html)) 
@@ -14,8 +16,9 @@ will be used to link to a page in the page tree.
 
 ### Fixed
 
-- Only load `scrolling-navbar` in `app_landing_page.html` template. 
-[#4](https://git.bebif.be/antabif/biodiversityaq/issues/4) ([ymgan](https://git.bebif.be/ymgan))
+- Only load `scrolling-navbar` in AppLandingPage and DetailPage. 
+[#4](https://git.bebif.be/antabif/biodiversityaq/issues/4), [#8](https://git.bebif.be/antabif/biodiversityaq/issues/8) 
+([ymgan](https://git.bebif.be/ymgan))
 - Load dropdown options to wagtail cms and django admin interface when user is superuser. 
 [#6](https://git.bebif.be/antabif/biodiversityaq/issues/6) ([ymgan](https://git.bebif.be/ymgan))
 - URLs not redirecting properly to root page. All hard coded urls are replaced using `{% url %}` or `{% pageurl %}` 
