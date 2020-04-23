@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+### Added 
+
+- Different size and alignment options when inserting image in StreamField 
+[#12](https://git.bebif.be/antabif/biodiversityaq/issues/12) ([ymgan](https://git.bebif.be/ymgan))
+
+
 ## [0.2.0](https://gitlab.com/ymgan/biodiversity-aq-dev/-/releases/v0.2.0) - 2020-04-23
 
 ### Added
