@@ -33,7 +33,7 @@ class CaptionedImageFormat(Format):
 
 
 unregister_image_format(Format('right', 'Right-aligned', 'richtext-image right', 'width-500'))
-register_image_format(CaptionedImageFormat('center_captioned_fullwidth', 'Full width, center-aligned, captioned', 'center', 'original'))
+register_image_format(CaptionedImageFormat('captioned_fullwidth', 'Full width, center-aligned, captioned', 'center', 'original'))
 register_image_format(CaptionedImageFormat('center_captioned_width_500', 'Width: 500 px, center-aligned, captioned', 'center', 'width-500'))
 register_image_format(CaptionedImageFormat('left_captioned_width_500', 'Width: 500 px, left-aligned, captioned', 'left', 'width-500'))
 register_image_format(CaptionedImageFormat('center_captioned_width_750', 'Width: 750 px, center-aligned, captioned', 'center', 'width-750'))
