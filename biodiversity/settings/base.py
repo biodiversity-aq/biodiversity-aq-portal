@@ -86,7 +86,6 @@ INSTALLED_APPS = [
     'wagtail.contrib.sitemaps',
     'wagtail.contrib.routable_page',
     'wagtailmenus',
-    'django_social_share',
     'puput',
     'colorful',
     'rest_framework',
