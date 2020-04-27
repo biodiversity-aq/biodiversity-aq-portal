@@ -17,16 +17,16 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='detailpage',
             name='body',
-            field=wagtail.core.fields.StreamField([('insert_html', wagtail.core.blocks.RawHTMLBlock(help_text='This is a standard HTML block. Anything written in HTML here will be rendered in a DIV element', required=False)), ('paragraph', wagtail.core.blocks.RichTextBlock(required=False)), ('image', wagtail.images.blocks.ImageChooserBlock(required=False)), ('table', wagtail.contrib.table_block.blocks.TableBlock(required=False, template='home/table_block.html'))], blank=True),
+            field=wagtail.core.fields.StreamField([('insert_html', wagtail.core.blocks.RawHTMLBlock(help_text='This is a standard HTML block. Anything written in HTML here will be rendered in a DIV element', required=False)), ('paragraph', wagtail.core.blocks.RichTextBlock(required=False)), ('image', wagtail.images.blocks.ImageChooserBlock(required=False)), ('table', wagtail.contrib.table_block.blocks.TableBlock(required=False, template='home/blocks/table_block.html'))], blank=True),
         ),
         migrations.AlterField(
             model_name='overviewpage',
             name='body',
-            field=wagtail.core.fields.StreamField([('insert_html', wagtail.core.blocks.RawHTMLBlock(help_text='This is a standard HTML block. Anything written in HTML here will be rendered in a DIV element', required=False)), ('paragraph', wagtail.core.blocks.RichTextBlock(required=False)), ('image', wagtail.images.blocks.ImageChooserBlock(required=False)), ('table', wagtail.contrib.table_block.blocks.TableBlock(required=False, template='home/table_block.html'))], blank=True),
+            field=wagtail.core.fields.StreamField([('insert_html', wagtail.core.blocks.RawHTMLBlock(help_text='This is a standard HTML block. Anything written in HTML here will be rendered in a DIV element', required=False)), ('paragraph', wagtail.core.blocks.RichTextBlock(required=False)), ('image', wagtail.images.blocks.ImageChooserBlock(required=False)), ('table', wagtail.contrib.table_block.blocks.TableBlock(required=False, template='home/blocks/table_block.html'))], blank=True),
         ),
         migrations.AlterField(
             model_name='redirectdummypage',
             name='body',
-            field=wagtail.core.fields.StreamField([('insert_html', wagtail.core.blocks.RawHTMLBlock(help_text='This is a standard HTML block. Anything written in HTML here will be rendered in a DIV element', required=False)), ('paragraph', wagtail.core.blocks.RichTextBlock(required=False)), ('image', wagtail.images.blocks.ImageChooserBlock(required=False)), ('table', wagtail.contrib.table_block.blocks.TableBlock(required=False, template='home/table_block.html'))], blank=True),
+            field=wagtail.core.fields.StreamField([('insert_html', wagtail.core.blocks.RawHTMLBlock(help_text='This is a standard HTML block. Anything written in HTML here will be rendered in a DIV element', required=False)), ('paragraph', wagtail.core.blocks.RichTextBlock(required=False)), ('image', wagtail.images.blocks.ImageChooserBlock(required=False)), ('table', wagtail.contrib.table_block.blocks.TableBlock(required=False, template='home/blocks/table_block.html'))], blank=True),
         ),
     ]
