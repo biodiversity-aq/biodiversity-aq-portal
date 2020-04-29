@@ -39,7 +39,7 @@ class BaseMenuPage(MenuPage):
             help_text='This is a standard HTML block. Anything written in HTML here will be rendered in a DIV element')),
         ('paragraph', blocks.RichTextBlock(required=False)),
         ('image', ImageChooserBlock(required=False)),
-        ('table', TableBlock(required=False, template='home/blocks/table_block.html'))
+        ('table', TableBlock(required=False, template='home/blocks/table_block.html')),
     ], blank=True)
     show_in_recent = models.BooleanField(
         default=False, null=True, blank=True,

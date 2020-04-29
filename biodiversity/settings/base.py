@@ -227,7 +227,7 @@ WAGTAILADMIN_RICH_TEXT_EDITORS = {
         'OPTIONS': {
             'features': ['h2', 'h3', 'h4', 'h5', 'h6', 'bold', 'italic', 'underline', 'mark', 'link', 'ol', 'ul',
                          'document-link', 'image', 'embed', 'code', 'superscript', 'subscript', 'strikethrough',
-                         'bsblockquote', 'pdf-icon'],
+                         'bsblockquote'],
         }
     },
     'legacy': {

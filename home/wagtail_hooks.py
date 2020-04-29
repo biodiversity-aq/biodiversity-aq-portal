@@ -1,6 +1,15 @@
 import wagtail.admin.rich_text.editors.draftail.features as draftail_features
+from django.utils.html import format_html
 from wagtail.admin.rich_text.converters.html_to_contentstate import InlineStyleElementHandler, BlockElementHandler
 from wagtail.core import hooks
+
+
+@hooks.register('insert_editor_css')
+def editor_css():
+    styles_html = '''
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.8.11/css/mdb.min.css" rel="stylesheet">
+    '''
+    return format_html(styles_html)
 
 
 # ----------------------------------
@@ -12,9 +21,6 @@ inline_features_list = [
      {'mark': InlineStyleElementHandler('mark')}, {'style_map': {'mark': 'mark'}}),
     ('underline', 'UNDERLINE', 'U', None,
      {'underline': InlineStyleElementHandler('underline')}, {'style_map': {'underline': 'underline'}}),
-    ('pdf-icon', 'PDF-ICON', 'pdf', {'color': 'red'},
-     {'i[class=pdf-icon]': InlineStyleElementHandler('pdf-icon')},
-     {'style_map': {'PDF-ICON': {'element': 'i', 'props': {'class': 'far fa-file-pdf'}}}}),
 ]
 
 
