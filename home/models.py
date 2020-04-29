@@ -3,6 +3,7 @@ from django.http import Http404
 from django.shortcuts import redirect, render
 
 from wagtail.admin.edit_handlers import PageChooserPanel, MultiFieldPanel, InlinePanel, FieldPanel, StreamFieldPanel
+from wagtail.contrib.table_block.blocks import TableBlock
 from wagtail.core.models import Page, Orderable
 from wagtail.core import blocks
 from wagtail.core.fields import StreamField, RichTextField
@@ -37,7 +38,8 @@ class BaseMenuPage(MenuPage):
             required=False,
             help_text='This is a standard HTML block. Anything written in HTML here will be rendered in a DIV element')),
         ('paragraph', blocks.RichTextBlock(required=False)),
-        ('image', ImageChooserBlock(required=False))
+        ('image', ImageChooserBlock(required=False)),
+        ('table', TableBlock(required=False, template='home/blocks/table_block.html')),
     ], blank=True)
     show_in_recent = models.BooleanField(
         default=False, null=True, blank=True,
