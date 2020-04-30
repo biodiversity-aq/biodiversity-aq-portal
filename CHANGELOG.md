@@ -4,14 +4,22 @@
 
 ### Added 
 
-- Different size and alignment options when inserting image in StreamField 
+- Different size and alignment options when inserting image in StreamField. 
 [#12](https://git.bebif.be/antabif/biodiversityaq/issues/12) ([ymgan](https://git.bebif.be/ymgan))
+- TableBlock for BaseMenuPage body. 
+[#14](https://git.bebif.be/antabif/biodiversityaq/issues/14) ([ymgan](https://git.bebif.be/ymgan))
+- Colour theme choices in all page models and footer. [#15](https://git.bebif.be/antabif/biodiversityaq/issues/15) 
+([ymgan](https://git.bebif.be/ymgan))
+- Styles for colour theme choices in all page templates and footer template. [#15](https://git.bebif.be/antabif/biodiversityaq/issues/15) 
+([ymgan](https://git.bebif.be/ymgan))
 
 ### Removed
 
-- Unregister right-aligned image in StreamField
+- Unregister right-aligned image in StreamField.
 [#12](https://git.bebif.be/antabif/biodiversityaq/issues/12) ([ymgan](https://git.bebif.be/ymgan))
-
+- pdf-icon feature from Draftail editor. [#8](https://git.bebif.be/antabif/biodiversityaq/issues/8), 
+[#14](https://git.bebif.be/antabif/biodiversityaq/issues/14) ([ymgan](https://git.bebif.be/ymgan))
+- old hard coded footer template that is no longer in used. ([ymgan](https://git.bebif.be/ymgan))
 
 
 ## [0.2.0](https://gitlab.com/ymgan/biodiversity-aq-dev/-/releases/v0.2.0) - 2020-04-23

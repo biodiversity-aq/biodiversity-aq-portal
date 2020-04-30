@@ -7,12 +7,6 @@
             padding-top: 0;
         }
 
-        @media (min-width: 800px) and (max-width: 850px) {
-            .navbar:not(.top-nav-collapse) {
-                background: #0099CC !important;
-            }
-        }
-
         .view, body, html {
             height: 80%
         }
@@ -21,10 +15,13 @@
             background-color: rgba(0, 0, 0, .2)
         }
 
-        .top-nav-collapse {
+    .biodiversity-theme, .top-nav-collapse {
+        {% if page.colour_theme %}
+            background-color: {{ page.colour_theme }} !important;
+        {% else %}
             background-color: #0099CC;
-        }
-
+        {% endif %}
+    }
     </style>
 {% endblock %}
 
