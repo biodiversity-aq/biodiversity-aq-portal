@@ -21,6 +21,17 @@ from modelcluster.contrib.taggit import ClusterTaggableManager
 from taggit.models import TaggedItemBase
 
 
+COLOUR_CHOICES = [
+        ('#0099CC', 'Default blue'),
+        ('#3952a4', 'Dark blue'),
+        ('#003a4e', 'Dark green'),
+        ('#006f71', 'Teal'),
+        ('#ec6633', 'Orange'),
+        ('#d51e47', 'Red'),
+
+    ]
+
+
 class BaseMenuPage(MenuPage):
     """
     A base menu page for all pages in this app.
@@ -29,6 +40,8 @@ class BaseMenuPage(MenuPage):
 
     To be inherited as MenuPage for all MenuPage in this project
     """
+    colour_theme = models.CharField(max_length=200, choices=COLOUR_CHOICES, default='#0099CC', blank=True, null=True,
+                                    help_text='Please select a colour theme for the header and footer.')
     cover = models.ForeignKey('home.CustomImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
     short_description = RichTextField(
         blank=True, null=True, features=['bold', 'italic', 'underline', 'link', 'superscript', 'subscript'],
@@ -48,6 +61,7 @@ class BaseMenuPage(MenuPage):
     )
 
     content_panels = Page.content_panels + [
+        FieldPanel('colour_theme'),
         MultiFieldPanel([
             ImageChooserPanel('cover'),
             FieldPanel('short_description'),
@@ -111,6 +125,13 @@ class DetailIndexPage(Page):
     """
     An index page that returns Pages which are tagged with the tag specified.
     """
+    colour_theme = models.CharField(max_length=200, choices=COLOUR_CHOICES, default='#0099CC', blank=True, null=True,
+                                    help_text='Please select a colour theme for the header and footer.')
+
+    content_panels = Page.content_panels + [
+        FieldPanel('colour_theme'),
+        ]
+
     template = 'home/detail_page_index.html'
 
     def serve(self, request, *args, **kwargs):
