@@ -8,6 +8,10 @@
 [#12](https://git.bebif.be/antabif/biodiversityaq/issues/12) ([ymgan](https://git.bebif.be/ymgan))
 - TableBlock for BaseMenuPage body. 
 [#14](https://git.bebif.be/antabif/biodiversityaq/issues/14) ([ymgan](https://git.bebif.be/ymgan))
+- Colour theme choices in all page models and footer. [#15](https://git.bebif.be/antabif/biodiversityaq/issues/15) 
+([ymgan](https://git.bebif.be/ymgan))
+- Styles for colour theme choices in all page templates and footer template. [#15](https://git.bebif.be/antabif/biodiversityaq/issues/15) 
+([ymgan](https://git.bebif.be/ymgan))
 
 ### Removed
 

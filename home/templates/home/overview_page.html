@@ -2,6 +2,15 @@
 {% load static wagtailcore_tags wagtailimages_tags %}
 
 {% block extra_css %}
+    <style>
+    .biodiversity-theme, .navbar {
+        {% if page.colour_theme %}
+            background-color: {{ page.colour_theme }} !important;
+        {% else %}
+            background-color: #0099CC;
+        {% endif %}
+    }
+    </style>
 {% endblock %}
 
 {% block content %}
