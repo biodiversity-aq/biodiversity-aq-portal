@@ -81,8 +81,10 @@
     <main>
         <!-- Rich text page body -->
         <section class="container mt-4">
-            {{ page.body }}
-            <hr>
+            {% if page.body %}
+                {{ page.body }}
+                <hr>
+            {% endif %}
         </section>
         <!-- /.Rich text page body -->
         <section class="container">
