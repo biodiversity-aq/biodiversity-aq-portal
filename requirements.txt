@@ -28,6 +28,7 @@ django-storages==1.7.2
 django-taggit==1.2.0
 django-treebeard==4.3
 djangorestframework==3.10.3
+djangorestframework-csv==2.1.0
 draftjs-exporter==2.1.6
 et-xmlfile==1.0.1
 flatten-json==0.1.7
