@@ -186,7 +186,7 @@ class EventType(models.Model):
 #fsa = FileSystemStorage(location='/media/project_files')
 class ProjectMetadata(models.Model):
     project_name                    = models.CharField(max_length=255)
-    start_date                      = models.DateField()
+    start_date                      = models.DateField(blank=True,null=True)
     end_date                        = models.DateField(blank=True,null=True)
     EML_URL                         = models.URLField(blank=True,null=True)            ## URL to GBIF generated EML file
     abstract                        = models.TextField(blank=True,null=True)           ## Abstract for the event, if available
