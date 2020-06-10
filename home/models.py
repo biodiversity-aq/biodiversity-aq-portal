@@ -72,6 +72,23 @@ class BaseMenuPage(MenuPage):
 
     settings_panels = [menupage_panel]
 
+    def get_context(self, request, *args, **kwargs):
+        """
+         Add extra variables and return the updated context
+         Page objects does not have the attribute "show_in_recent" and not all descendants of a
+         BaseMenuPage are BaseMenuPage, so page.show_in_recent could break the loop in template
+        """
+        context = super().get_context(request)
+        this_page = context.get('self')
+        descendants = this_page.get_descendants().live()
+        show_in_recent_descendants = []
+        for i, descendant in enumerate(descendants):
+            if hasattr(descendant.specific, "show_in_recent") and i <= 6:  # only show 6 most recent pages
+                if descendant.specific.show_in_recent:
+                    show_in_recent_descendants.append(descendant)
+        context['show_in_recent_descendants'] = show_in_recent_descendants
+        return context
+
     class Meta:
         abstract = True
         ordering = ['-last_published_at']

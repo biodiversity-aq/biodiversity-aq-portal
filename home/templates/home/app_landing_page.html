@@ -141,15 +141,15 @@
             {% if page.get_descendants.live %}
                 <h3 class="text-center">Recent</h3>
                 <div class="row justify-content-center row-cols-1 row-cols-md-3">
-                    {% for child_page in page.get_descendants.live %}
-                        {% if child_page.specific.show_in_recent and forloop.counter0 <= 6 %}
+                    {% for recent_child_page in show_in_recent_descendants %}
+                        {% if recent_child_page and forloop.counter0 <= 6 %}
                             <div class="col mb-4">
                                 <div class="card h-100 hoverable">
                                     <!-- h-100: same height for each card, height 100% -->
                                     <!-- Card image -->
                                     <div class="view overlay">
-                                        <a href="{{ child_page.url }}">
-                                            {% image child_page.specific.cover height-200 as child_cover_img %}
+                                        <a href="{{ recent_child_page.url }}">
+                                            {% image recent_child_page.specific.cover height-200 as child_cover_img %}
                                             <img src="{{ child_cover_img.url }}" alt="{{ child_cover_img.alt }}"
                                                  height="{{ child_cover_img.height }}"
                                                  class="center fix-height-card-cover"/>
@@ -161,20 +161,20 @@
                                         <div>
                                             <!-- Title -->
                                             <h4 class="card-title mb-2">
-                                                <a href="{{ child_page.url }}" style="color: inherit;">
-                                                    {{ child_page.specific.title }}
+                                                <a href="{{ recent_child_page.url }}" style="color: inherit;">
+                                                    {{ recent_child_page.specific.title }}
                                                 </a>
                                             </h4>
                                             <!-- Short description -->
                                             <div class="card-text">
-                                                {{ child_page.specific.short_description|richtext }}
+                                                {{ recent_child_page.specific.short_description|richtext }}
                                             </div>
                                         </div>
                                         <!-- tags -->
                                         <div>
-                                            {% if child_page.specific.tags %}
+                                            {% if recent_child_page.specific.tags %}
                                                 <ul class="list-unstyled list-inline justify-content-between mb-0">
-                                                    {% for tag in child_page.specific.tags.all %}
+                                                    {% for tag in recent_child_page.specific.tags.all %}
                                                         <li class="list-inline-item mr-1">
                                                             <div class="chip mr-0">
                                                                 <a href="{% slugurl 'tags' %}?tag={{ tag }}"
