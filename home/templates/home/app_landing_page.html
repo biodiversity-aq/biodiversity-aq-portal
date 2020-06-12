@@ -148,7 +148,7 @@
                                     <!-- h-100: same height for each card, height 100% -->
                                     <!-- Card image -->
                                     <div class="view overlay">
-                                        <a href="{{ recent_child_page.url }}">
+                                        <a href="{{ recent_child_page.specific.url }}">
                                             {% image recent_child_page.specific.cover height-200 as child_cover_img %}
                                             <img src="{{ child_cover_img.url }}" alt="{{ child_cover_img.alt }}"
                                                  height="{{ child_cover_img.height }}"
