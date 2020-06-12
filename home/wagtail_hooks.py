@@ -18,9 +18,10 @@ def editor_css():
 inline_features_list = [
     # feature name, type, label, style in editor, from database format, to database format
     ('mark', 'MARK', '☆', None,
-     {'mark': InlineStyleElementHandler('mark')}, {'style_map': {'mark': 'mark'}}),
+     {'mark': InlineStyleElementHandler('MARK')}, {'style_map': {'MARK': 'mark'}}),
     ('underline', 'UNDERLINE', 'U', None,
-     {'underline': InlineStyleElementHandler('underline')}, {'style_map': {'underline': 'underline'}}),
+     {'span[style="text-decoration: underline"]': InlineStyleElementHandler('UNDERLINE')},
+     {'style_map': {'UNDERLINE': 'span style="text-decoration: underline"'}}),
 ]
 
 
