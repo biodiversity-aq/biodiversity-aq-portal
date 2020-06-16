@@ -10,16 +10,42 @@ POLA3R
 
 {% block extra_css %}
 {% leaflet_css %}
+    <style>
+        body {
+            padding-top: 0;
+        }
+
+        @media (min-width: 800px) and (max-width: 850px) {
+            .navbar:not(.top-nav-collapse) {
+                background: #0099CC !important;
+            }
+        }
+
+        .view, body, html {
+            height: 80%
+        }
+
+        .navbar {
+            background-color: rgba(0, 0, 0, .2)
+        }
+
+        .biodiversity-theme, .top-nav-collapse {
+            background-color: #0099CC;
+        }
+
+    </style>
 
 {% endblock extra_css %}
+
+{% block scrolling_navbar %}scrolling-navbar{% endblock %}
 
 {% block content %}
 
 <div class="container-fluid" id="polaaar_bkgd"
      style="background-image: url({% static 'imgs/img1.png' %});background-size:cover;background-repeat:no-repeat;padding-bottom:20px;">
     <div class="row" style="border-bottom-width:0px;">
-        <div class="col-12" style="text-align:center">
-            <img style="border-radius:15px" width="25%" class="fadeinclass" src="{% static 'logos/polaaar_logo.png' %}" />
+        <div class="col-12" style="text-align:center; padding-top:30px;">
+            <img style="border-radius:15px;" width="25%" class="fadeinclass" src="{% static 'logos/polaaar_logo.png' %}" />
         </div>
     </div>
 
