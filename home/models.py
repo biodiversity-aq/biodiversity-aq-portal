@@ -82,10 +82,10 @@ class BaseMenuPage(MenuPage):
         this_page = context.get('self')
         descendants = this_page.get_descendants().live()
         show_in_recent_descendants = []
-        for i, descendant in enumerate(descendants):
-            if hasattr(descendant.specific, "show_in_recent") and i <= 6:  # only show 6 most recent pages
-                if descendant.specific.show_in_recent:
-                    show_in_recent_descendants.append(descendant)
+        for descendant in descendants:
+            if hasattr(descendant.specific, "show_in_recent"):
+                if descendant.specific.show_in_recent and len(show_in_recent_descendants) <= 6:
+                    show_in_recent_descendants.append(descendant)  # only show 6 most recent pages
         context['show_in_recent_descendants'] = show_in_recent_descendants
         return context
 

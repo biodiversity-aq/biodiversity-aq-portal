@@ -142,17 +142,19 @@
                 <h3 class="text-center">Recent</h3>
                 <div class="row justify-content-center row-cols-1 row-cols-md-3">
                     {% for recent_child_page in show_in_recent_descendants %}
-                        {% if recent_child_page and forloop.counter0 <= 6 %}
+                        {% if recent_child_page and forloop.counter <= 6 %}
                             <div class="col mb-4">
                                 <div class="card h-100 hoverable">
                                     <!-- h-100: same height for each card, height 100% -->
                                     <!-- Card image -->
                                     <div class="view overlay">
                                         <a href="{{ recent_child_page.specific.url }}">
-                                            {% image recent_child_page.specific.cover height-200 as child_cover_img %}
-                                            <img src="{{ child_cover_img.url }}" alt="{{ child_cover_img.alt }}"
-                                                 height="{{ child_cover_img.height }}"
+                                            {% if recent_child_page.specific.cover %}
+                                                {% image recent_child_page.specific.cover height-200 as child_cover_img %}
+                                                <img src="{{ child_cover_img.url }}" alt="{{ child_cover_img.alt }}"
+                                                     height="{{ child_cover_img.height }}"
                                                  class="center fix-height-card-cover"/>
+                                            {% endif %}
                                             <div class="mask rgba-white-slight"></div>
                                         </a>
                                     </div>
@@ -161,7 +163,7 @@
                                         <div>
                                             <!-- Title -->
                                             <h4 class="card-title mb-2">
-                                                <a href="{{ recent_child_page.url }}" style="color: inherit;">
+                                                <a href="{{ recent_child_page.specific.url }}" style="color: inherit;">
                                                     {{ recent_child_page.specific.title }}
                                                 </a>
                                             </h4>
