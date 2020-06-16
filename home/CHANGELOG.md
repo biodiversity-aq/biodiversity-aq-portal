@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+### Fixed
+
+- Recent live pages not showing up in `AppLandingPage`. 
+[#17](https://git.bebif.be/antabif/biodiversityaq/issues/17) ([ymgan](https://git.bebif.be/ymgan))
+
 ### Added 
 
 - Different size and alignment options when inserting image in StreamField. 
