@@ -1,4 +1,4 @@
-# Changelog
+# Changelog for `home` app
 
 ## [Unreleased]
 
