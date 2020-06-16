@@ -47,13 +47,13 @@ POLA3R search
             <h4>3) Fill in the <span style="color:darkorange">dark orange cells</span> at minimum</h4>
             <h4>4) Create a record for your dataset in <a href="https://ipt.biodiversity.aq/">IPT</a></h4>
             <h4>
-                5) Once completed, <a href="/pola3r/submit_data">Click here</a> to submit your datasheet
+                5) Once completed, <a href="{% url 'polaaar:email_submission' %}">Click here</a> to submit your datasheet
                 <strong>(N.B. Your data sheet will be reviewed before data become available online)</strong>
             </h4>
         </div>
         <div class="col-12 col-md-5 text-center">
 
-            <a role="button" href="/pola3r/submit_data" class="btn btn-biodiversity-teal btn-lg">Submit data</a>
+            <a role="button" href="{% url 'polaaar:email_submission' %}" class="btn btn-biodiversity-teal btn-lg">Submit data</a>
 
         </div>
         <div class="col-12">
@@ -61,7 +61,7 @@ POLA3R search
         </div>
         <div class="col-12 col-md-7" style="text-align:left">
             <h3>Do you have a dataset, but aren't sure where to put it?</h3>
-            <h3><a href="/pola3r/submit_data">Submit your datasheet</a> to the portal and we will review it</h3>
+            <h3><a href="{% url 'polaaar:email_submission' %}">Submit your datasheet</a> to the portal and we will review it</h3>
         </div>
 
                
