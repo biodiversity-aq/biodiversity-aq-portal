@@ -87,6 +87,7 @@ INSTALLED_APPS = [
     'wagtail.contrib.sitemaps',
     'wagtail.contrib.routable_page',
     'wagtailmenus',
+    'django_social_share',  # requires by puput
     'puput',
     'colorful',
     'rest_framework',

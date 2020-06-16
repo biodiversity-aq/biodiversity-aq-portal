@@ -45,7 +45,6 @@
     {% endblock %}
 </head>
 <body>
-    {% include "header.html" %}
     {% block blog_header %}
 
     <div class="about">
@@ -126,19 +125,6 @@
         </div>
     </div>
 
-    {% include "footer.html" %}
-    <!--<div class="footer">
-
-        <div class="footer_bottom">
-            <div class="copy">
-                <p>
-                    Powered by <a href="http://www.djangoproject.com" rel="nofollow">Django</a>,
-                    <a href="http://www.wagtail.io" rel="nofollow">Wagtail</a> and
-                    <a href="http://github.com/APSL/puput" rel="nofollow">Puput</a>
-                </p>
-            </div>
-        </div>
-    </div>-->
     {% block js %}
     <script type="text/javascript" src="{% static 'js/polarrr.js' %}"></script>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
