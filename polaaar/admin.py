@@ -170,7 +170,10 @@ class ProjectFilesAdmin(ModelAdmin):
     def url(self,obj):
         return obj.files.url
     def projectname(self,obj):
-        return obj.project.project_name
+        if obj.project:
+            return obj.project.project_name
+        else:
+            return None
 
 class EventHierarchyAdmin(ModelAdmin):
     model=EventHierarchy

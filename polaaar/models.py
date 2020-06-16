@@ -186,7 +186,7 @@ class EventType(models.Model):
 #fsa = FileSystemStorage(location='/media/project_files')
 class ProjectMetadata(models.Model):
     project_name                    = models.CharField(max_length=255)
-    start_date                      = models.DateField()
+    start_date                      = models.DateField(blank=True,null=True)
     end_date                        = models.DateField(blank=True,null=True)
     EML_URL                         = models.URLField(blank=True,null=True)            ## URL to GBIF generated EML file
     abstract                        = models.TextField(blank=True,null=True)           ## Abstract for the event, if available
@@ -499,11 +499,12 @@ class Environment(models.Model):
 
 ######################################################################################################
 ### Spare file table ####
-fs = FileSystemStorage(location='/media/files')
-class ProjectFiles(models.Model):                                           
-    files                       = models.FileField(storage=fs,blank=True,null=True)
+class ProjectFiles(models.Model):
+    files                       = models.FileField(upload_to='polaaar/',blank=True,null=True)
     project                     = models.ForeignKey(_("ProjectMetadata"),blank=True,null=True,on_delete=models.CASCADE)
 
+    def __str__(self):
+        return self.files.name
 #####################################################################################################
 
     
