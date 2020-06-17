@@ -365,6 +365,6 @@ REST_FRAMEWORK = {
 }
 
 # POLAAAR SETTINGS
-POLAAAR_PROJECT_FILES_DIR = 'polaaar/project_files/'
+POLAAAR_PROJECT_FILES_DIR = 'polaaar/project_files/'  # has to be relative path to MEDIA_ROOT
 
-POLAAAR_MAIL_FILE_DIR = 'polaaar/mail_file/'
+POLAAAR_MAIL_FILE_DIR = 'polaaar/mail_file/'  # has to be relative path to MEDIA_ROOT
