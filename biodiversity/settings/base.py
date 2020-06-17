@@ -363,3 +363,8 @@ REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',),
     'PAGE_SIZE': 10
 }
+
+# POLAAAR SETTINGS
+POLAAAR_PROJECT_FILES_DIR = 'polaaar/project_files/'  # has to be relative path to MEDIA_ROOT
+
+POLAAAR_MAIL_FILE_DIR = 'polaaar/mail_file/'  # has to be relative path to MEDIA_ROOT
