@@ -500,9 +500,8 @@ class Environment(models.Model):
 ######################################################################################################
 ### Spare file table ####
 class ProjectFiles(models.Model):
-    files                       = models.FileField(upload_to='polaaar/',blank=True,null=True)
+    files                       = models.FileField(upload_to=settings.POLAAAR_PROJECT_FILES_DIR,blank=True,null=True)
     project                     = models.ForeignKey(_("ProjectMetadata"),blank=True,null=True,on_delete=models.CASCADE)
-
     def __str__(self):
         return self.files.name
 #####################################################################################################
@@ -513,7 +512,10 @@ class MailFile(models.Model):
     email                       = models.EmailField() 
     subject                     = models.CharField(max_length=1000)
     message                     = models.CharField(max_length=20000)
-    document                    = models.FileField(upload_to='uploads/')
+    # user may not be able to attach a document if the file is too big
+    document                    = models.FileField(upload_to=settings.POLAAAR_MAIL_FILE_DIR, blank=True, null=True)
+    created = models.DateTimeField(auto_now_add=True, blank=True, null=True)  # timestamp when this is first created
+
     def __str__(self):
         return self.email
 
