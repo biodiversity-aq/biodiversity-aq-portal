@@ -235,21 +235,19 @@ def email_submission(request):
         if form.is_valid() and request.recaptcha_is_valid:
             post = form.save(commit=False)
             post.save()
-            subject = request.POST.get('subject')
-            message = request.POST.get('message')
-            document = request.FILES.get('document')
+            subject = form.cleaned_data.get('subject')
+            message = form.cleaned_data.get('message')
+            document = form.cleaned_data.get('document')
             email_from = settings.SENDER_MAIL
             recipient_list = settings.POLAAAR_ADMIN_LIST
             email = EmailMessage(subject, message, email_from, recipient_list)
-            document_name = document.name
-            file = os.path.join(settings.MEDIA_ROOT, settings.POLAAAR_MAIL_FILE_DIR, document_name)
-            email.attach_file(file)
+            if document:
+                file = os.path.join(settings.MEDIA_ROOT, settings.POLAAAR_MAIL_FILE_DIR, document.name)
+                email.attach_file(file)
             email.send()
             submit_success_url = reverse('polaaar:submit_success')
             response = redirect(submit_success_url)
             return response
-        else:
-            form = EmailForm(initial=init)
     return render(request, 'polaaarsubmit/email_submission.html',
                   # site key is needed to be rendered in the template
                   {'form': form, 'recaptcha_site_key': settings.RECAPTCHA_SITE_KEY})
