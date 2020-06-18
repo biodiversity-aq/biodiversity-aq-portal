@@ -6,7 +6,8 @@
 {% endblock title %}
 
 
-{% block body_class %}{% endblock %}
+{% block body_class %}
+{% endblock %}
 
 {% block extra_css %}
     {% leaflet_css %}
@@ -52,6 +53,7 @@
                             <div class="col-12">{{ form.message }}</div>
                             <div class="clear"></div>
                         </div>
+                        <div class="g-recaptcha col-12" data-sitekey="{{ recaptcha_site_key }}"></div>
                         <div class="form-group">
                             <label class="control-label col-sm-2"></label>
                             <div class="col-8"><input class="btn btn-biodiversity-teal btn-lg" type="submit"
@@ -114,11 +116,7 @@
 
     </div>
     {% block extra_js %}
-
-
-
-
-
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     {% endblock extra_js %}
 
 

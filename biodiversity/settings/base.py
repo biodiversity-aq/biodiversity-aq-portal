@@ -349,6 +349,7 @@ EMAIL_USE_TLS = True
 ### Google recaptcha SETTINGS
 RECAPTCHA_PRIVATE_KEY = '!OVERRIDE ME! GOOGLE_SECRET_KEY !OVERRIDE ME!'   # nosec
 
+RECAPTCHA_SITE_KEY = ''
 
 ####################################################################################
 ### REST Framework SETTINGS
