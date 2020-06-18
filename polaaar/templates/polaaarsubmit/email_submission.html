@@ -25,34 +25,17 @@
                     <form method="POST" class="post-form form-horizontal" enctype="multipart/form-data">
                         {% csrf_token %}
                         <h3 style="margin-bottom: 20px;color:#a3b745 ">Submit data to POLA<sub>3</sub>R</h3>
-                        <div class="form-group">
-                            {{ form.email.errors }}
-                            <label class="control-label col-md-12" for="{{ form.email.id_for_label }}">Your
-                                email</label>
-                            <div class="col-md-12">{{ form.email }}</div>
-                            <div class="clear"></div>
-                        </div>
-                        <div class="form-group">
-                            {{ form.subject.errors }}
-                            <label class="control-label col-12" for="{{ form.subject.id_for_label }}">Data set
-                                name</label>
-                            <div class="col-12">{{ form.subject }}</div>
-                            <div class="clear"></div>
-                        </div>
-                        <div class="form-group">
-                            {{ form.document.errors }}
-                            <label class="control-label col-12" for="{{ form.document.id_for_label }}">Select data
-                                sheet</label>
-                            <div class="col-12">{{ form.document }}</div>
-                            <div class="clear"></div>
-                        </div>
-                        <div class="form-group">
-                            {{ form.message.errors }}
-                            <label class="control-label col-12" for="{{ form.message.id_for_label }}">Additional
-                                information</label>
-                            <div class="col-12">{{ form.message }}</div>
-                            <div class="clear"></div>
-                        </div>
+                        {% for field in form %}
+                            <div class="form-group">
+                                {{ field.errors }}
+                                <label class="control-label col-md-12" for="{{ field.id_for_label }}">
+                                    {{ field.label }}
+                                </label>
+                                <div class="col-md-12">{{ field }}</div>
+                                <div class="clear"></div>
+                            </div>
+                        {%  endfor %}
+
                         <div class="g-recaptcha col-12" data-sitekey="{{ recaptcha_site_key }}"></div>
                         <div class="form-group">
                             <label class="control-label col-sm-2"></label>
