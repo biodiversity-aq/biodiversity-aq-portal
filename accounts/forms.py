@@ -2,6 +2,7 @@ from __future__ import unicode_literals
 
 from django.utils.translation import ugettext_lazy as _
 from django import forms
+from django.conf import settings
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from .models import UserProfile
 from django.utils.safestring import mark_safe
@@ -133,7 +134,7 @@ class CustomUserCreationForm(UserCreationForm):
                 Column('home_country',css_class='form-group col-md-6'),                       
                 ),
             HTML('<script src="https://www.google.com/recaptcha/api.js"></script>'),
-            HTML('<div class="g-recaptcha" data-sitekey="6LcJP8MUAAAAAO5XOSWJD8RHE5w91cOIferaWhge"></div>'),
+            HTML('<div class="g-recaptcha" data-sitekey="{}"></div>'.format(settings.RECAPTCHA_SITE_KEY)),
             ButtonHolder(
                 Submit("submit", "Register",css_class="btn btn-deep-orange btn-lg")
             )                                                       

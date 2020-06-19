@@ -349,6 +349,7 @@ EMAIL_USE_TLS = True
 ### Google recaptcha SETTINGS
 RECAPTCHA_PRIVATE_KEY = '!OVERRIDE ME! GOOGLE_SECRET_KEY !OVERRIDE ME!'   # nosec
 
+RECAPTCHA_SITE_KEY = ''
 
 ####################################################################################
 ### REST Framework SETTINGS
@@ -363,3 +364,10 @@ REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',),
     'PAGE_SIZE': 10
 }
+
+# POLAAAR SETTINGS
+POLAAAR_PROJECT_FILES_DIR = 'polaaar/project_files/'  # has to be relative path to MEDIA_ROOT
+
+POLAAAR_MAIL_FILE_DIR = 'polaaar/mail_file/'  # has to be relative path to MEDIA_ROOT
+
+POLAAAR_ADMIN_LIST = ['admin@pola3r.aq']  # serves as the recipient list for data submission

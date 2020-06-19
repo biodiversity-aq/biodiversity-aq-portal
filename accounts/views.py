@@ -13,39 +13,21 @@ from django.urls import reverse
 from django.shortcuts import redirect, render, get_object_or_404
 from django.utils.translation import ugettext as _
 
+from biodiversity.decorators import verify_recaptcha
 from .models import UserProfile
 from .email import *
 from .forms import CustomUserCreationForm
 
 
+@verify_recaptcha
 def register(request):
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
-        if form.is_valid():
-            
-            
-            recaptcha_response = request.POST.get('g-recaptcha-response')
-            url = 'https://www.google.com/recaptcha/api/siteverify'
-            values = {             
-                'secret': settings.RECAPTCHA_PRIVATE_KEY,
-                'response': recaptcha_response
-            }
-            data = urllib.parse.urlencode(values).encode()
-            req =  urllib.request.Request(url, data=data)
-            response = urllib.request.urlopen(req)
-            result = json.loads(response.read().decode())
-#             ''' End reCAPTCHA validation '''
-                                                                                                     
-            #result=True
-            if result['success']:
-            #if result==True:
-                user = form.save()
-                send_activation_email(request, user)
-                send_verification_email(request)
-                                          
-                return redirect(reverse('accounts:registered'))
-
-            return redirect('login')
+        if form.is_valid() and request.recaptcha_is_valid:
+            user = form.save()
+            send_activation_email(request, user)
+            send_verification_email(request)
+            return redirect(reverse('accounts:registered'))
     else:
         form = CustomUserCreationForm()
     return render(request, 'registration/register.html', {'form': form})
