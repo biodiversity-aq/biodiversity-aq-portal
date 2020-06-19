@@ -17,3 +17,19 @@ class EmailForm(forms.ModelForm):
     class Meta:
         model = MailFile
         fields = ('email', 'subject', 'message', 'document',)
+
+    def clean_document(self):
+        """
+        Check content type header of the file
+        """
+        cleaned_data = super().clean()
+        data = cleaned_data.get('document')
+        allowed_content_types = [
+            'text/plain', 'text/csv', 'application/zip', 'application/vnd.ms-excel', 'text/tab-separated-values',
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/zip']
+        if data.content_type not in allowed_content_types:
+            raise forms.ValidationError('Content type not allowed: %(value)s', code='invalid',
+                                        params={'value': data.content_type})
+        return data
+
+
