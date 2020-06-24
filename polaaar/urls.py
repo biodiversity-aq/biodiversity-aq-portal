@@ -45,7 +45,7 @@ urlpatterns = [
     path('export_raw_data/',views.GetProjectFiles,name='GetProjectFiles'),
 
     #### REST API URLS    
-
+    url(r'^api_reference/',views.api_reference,name='api_reference'),
     path('',include(router.urls)),
     path('api-auth/',include('rest_framework.urls',namespace='rest_framework'))
  

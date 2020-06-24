@@ -2315,4 +2315,6 @@ def export_events(request):
         output.close()
         return (response)
 
-###########################################################################################################################################################
+
+def api_reference(request):
+    return render(request, 'rest_framework/api_reference.html')

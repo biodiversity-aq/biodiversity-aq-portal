@@ -183,14 +183,14 @@ POLA3R search
                     <li>Data can be downloaded in EXCEL (<i class="fas fa-file-excel pl-1"></i>) or JSON (<i class="fas fa-file-code pl-1"></i>) formats.</li>
                     <li>The original project file (<i class="fas fa-file-alt pl-1"></i>) can also be downloaded as an xlsx file.</li>
                     <li>
-                        The <a href="/polaaar/spatialsearch">spatial searching</a> feature is available as well and allows users to draw polygons on the map to find projects
+                        The <a href="{% url 'polaaar:spatialsearch' %}">spatial searching</a> feature is available as well and allows users to draw polygons on the map to find projects
                         and associated metadata.
                     </li>
                     <li>NOT all data are visible on the data table to help simplify searching. To view all available columns download the spreadsheets or view the JSON data</li>
                 </ul>
                 <h4>
                     You can also search using our API which will allow access to all data in JSON format.<br />
-                    <a href="/api_reference">Click here</a> to check out the API reference
+                    <a href="{% url 'polaaar:api_reference' %}">Click here</a> to check out the API reference
                 </h4>
             </div>
             <div class="modal-footer">
