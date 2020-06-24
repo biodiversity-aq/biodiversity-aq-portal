@@ -182,11 +182,11 @@ def GetProjectFiles(request):
         pf = ProjectFiles.objects.filter(project__id=idval)
         filenames = [x.files.path for x in pf]
         pfnm = ProjectMetadata.objects.filter(id=idval).values_list('project_name')[0][0]
+        pfnm = '-'.join(pfnm.split(' '))  # remove spaces in file name
 
         # Folder name in ZIP archive which contains the above files
         # E.g [thearchive.zip]/somefiles/file2.txt
-        # FIXME: Set this to something better
-        zip_subdir = "%s_raw_files" % pfnm
+        zip_subdir = "%s_raw-files" % pfnm
         zip_filename = "%s.zip" % zip_subdir
 
         # Open StringIO to grab in-memory ZIP contents
