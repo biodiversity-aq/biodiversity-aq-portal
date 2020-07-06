@@ -42,7 +42,7 @@ urlpatterns = [
     url(r'^export_events/',views.export_events,name='export_events'),
 
     ###  View to export raw data files
-    path('export_raw_data/',views.GetProjectFiles,name='GetProjectFiles'),
+    path('export_raw_data/<int:pk>',views.GetProjectFiles,name='GetProjectFiles'),
 
     #### REST API URLS    
     url(r'^api_reference/',views.api_reference,name='api_reference'),

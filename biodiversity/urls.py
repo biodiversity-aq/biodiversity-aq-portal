@@ -16,7 +16,6 @@ from django.contrib.auth import views as auth_views
 import accounts
 import data.urls
 import polaaar.urls
-from . import views
 
 urlpatterns = [
     re_path(r'^django-admin/', admin.site.urls),

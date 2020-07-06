@@ -1,5 +1,7 @@
+{% extends 'polaaarsearch/base.html' %}
 
 
+{% block content %}
 <div class="row" style="border-width:0px">
     
     <div class="col-12">
@@ -24,7 +26,9 @@
     </div>
 
 </div>
+{% endblock %}
 
+{% block script %}
 <script type="text/javascript">
 
         $(document).ready(function () {
@@ -55,7 +59,5 @@
     })
 
     }
-
-
-
 </script>
+{% endblock %}

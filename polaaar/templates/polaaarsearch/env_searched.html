@@ -1,6 +1,7 @@
+{% extends 'polaaarsearch/base.html' %}
 {% load polaaar_tags %}
 
-
+{% block content %}
 <div class="row">
   
     {% if test %}
@@ -72,17 +73,17 @@
     </div>
 
     <div class="col-3">
-        <button class="btn btn-biodiversity-teal btn-lg" style="width:100%" onclick="getPOLA3Rdata(0,'export_environment','EXCEL')">Download Excel <i class="fas fa-file-excel pl-1"></i></button>
+        <button class="btn btn-biodiversity-teal btn-lg" style="width:100%" onclick="getPOLA3Rdata(0,'{% url 'polaaar:export_environment' %}','EXCEL')">Download Excel <i class="fas fa-file-excel pl-1"></i></button>
     </div>
     <div class="col-3">
-        <button class="btn btn-biodiversity-teal btn-lg" onclick="getPOLA3Rdata(0,'environmental_variables','JSON')" style="width:100%">Download JSON <i class="fas fa-file-code pl-1"></i></button>
+        <button class="btn btn-biodiversity-teal btn-lg" onclick="getPOLA3Rdata(0,'{% url 'polaaar:environmentalvariables-list' %}','JSON')" style="width:100%">Download JSON <i class="fas fa-file-code pl-1"></i></button>
     </div>
 </div>
+{% endblock %}
 
 
 
-
-
+{% block script %}
 <script>
 
     $.fn.dataTable.ext.search.push(
@@ -117,3 +118,4 @@
     });
 
 </script>
+{% endblock %}

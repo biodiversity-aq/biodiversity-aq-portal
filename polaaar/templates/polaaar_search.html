@@ -61,7 +61,7 @@ POLA3R search
             </div>
             {% if viewprojs %}
             <div class="col-2">
-                <a role="button" class="btn btn-biodiversity-lightblue" href="/pola3r/search/" style="width:100%">
+                <a role="button" class="btn btn-biodiversity-lightblue" href="{% url 'polaaar:polaaar_search' %}" style="width:100%">
                     View all projects
                 </a>
             </div>
@@ -125,9 +125,9 @@ POLA3R search
                                 {% endif %}
                             </td>
                             <td style="font-size:25pt;color:black">
-                                <a href="/pola3r/export_projects/?id={{i.id}}"><i class="fas fa-file-excel pl-1"></i></a>
-                                <a href="/pola3r/project_metadata/{{i.pk}}"><i class="fas fa-file-code pl-1"></i></a>
-                                <a href="/pola3r/export_raw_data/?id={{i.id}}"><i class="fas fa-file-alt pl-1"></i></a>
+                                <a href="{% url 'polaaar:export_projects'%}?id={{i.id}}"><i class="fas fa-file-excel pl-1"></i></a>
+                                <a href="{% url 'polaaar:projectmetadata-detail' i.id %}"><i class="fas fa-file-code pl-1"></i></a>
+                                <a href="{% url 'polaaar:GetProjectFiles' i.id %}"><i class="fas fa-file-alt pl-1"></i></a>
                             </td>
                         </tr>
 
@@ -145,10 +145,10 @@ POLA3R search
                 <button class="btn btn-biodiversity-blue btn-lg" style="width:100%" onclick="map_refresh()">{{ buttondisplay }}</button>
             </div>
             <div class="col-3">
-                <button class="btn btn-biodiversity-teal btn-lg" style="width:100%" onclick="getPOLA3Rdata(1,'export_projects','EXCEL')">Download EXCEL <i class="fas fa-file-excel pl-1"></i></button>
+                <button class="btn btn-biodiversity-teal btn-lg" style="width:100%" onclick="getPOLA3Rdata(1, '{% url 'polaaar:export_projects' %}','EXCEL')">Download EXCEL <i class="fas fa-file-excel pl-1"></i></button>
             </div>
             <div class="col-3">
-                <button class="btn btn-biodiversity-teal btn-lg" onclick="getPOLA3Rdata(1,'project_metadata','JSON')" style="width:100%">Download JSON <i class="fas fa-file-code pl-1"></i></button>
+                <button class="btn btn-biodiversity-teal btn-lg" onclick="getPOLA3Rdata(1,'{% url 'polaaar:projectmetadata-list' %}','JSON')" style="width:100%">Download JSON <i class="fas fa-file-code pl-1"></i></button>
             </div>
         </div>
 

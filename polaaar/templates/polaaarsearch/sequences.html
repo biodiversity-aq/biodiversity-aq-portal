@@ -1,3 +1,6 @@
+{% extends 'polaaarsearch/base.html' %}
+
+{% block content %}
 <div class="row" style="border-width:0px;">
     <div class="col-12">
 
@@ -31,24 +34,19 @@
     </div>
 
     <div class="col-3">
-        <button class="btn btn-biodiversity-teal btn-lg" style="width:100%" onclick="getPOLA3Rdata(0,'export_sequences','EXCEL')">Download EXCEL <i class="fas fa-file-excel pl-1"></i></button>        
+        <button class="btn btn-biodiversity-teal btn-lg" style="width:100%" onclick="getPOLA3Rdata(0, '{% url 'polaaar:export_sequences' %}','EXCEL')">Download EXCEL <i class="fas fa-file-excel pl-1"></i></button>
     </div>
     <div class="col-3">
-        <button class="btn btn-biodiversity-teal btn-lg" onclick="getPOLA3Rdata(0,'sequences','JSON')" style="width:100%">Download JSON <i class="fas fa-file-code pl-1"></i></button>
+        <button class="btn btn-biodiversity-teal btn-lg" onclick="getPOLA3Rdata(0,'{% url 'polaaar:sequences-list' %}','JSON')" style="width:100%">Download JSON <i class="fas fa-file-code pl-1"></i></button>
     </div>
-
 </div>
+{% endblock %}
 
-
-
-
+{% block script %}
 <script>
     $(document).ready(function () {
         var Mytable = $('#myTable').DataTable();
         Mytable.column(0).visible(false)
     });
-
-
-    
-
 </script>
+{% endblock %}

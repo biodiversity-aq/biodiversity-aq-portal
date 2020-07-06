@@ -173,15 +173,13 @@ def spatial_search_table(request):
 #########################################################
 ### Download project files
 
-def GetProjectFiles(request):
+def GetProjectFiles(request, pk):
     # Files (local path) to put in the .zip
     # FIXME: Change this (get paths from DB etc)
     if request.method == "GET":
-        idval = request.GET.get('id')
-
-        pf = ProjectFiles.objects.filter(project__id=idval)
+        pf = ProjectFiles.objects.filter(project__id=pk)
         filenames = [x.files.path for x in pf]
-        pfnm = ProjectMetadata.objects.filter(id=idval).values_list('project_name')[0][0]
+        pfnm = ProjectMetadata.objects.filter(id=pk).values_list('project_name')[0][0]
         pfnm = '-'.join(pfnm.split(' '))  # remove spaces in file name
 
         # Folder name in ZIP archive which contains the above files
