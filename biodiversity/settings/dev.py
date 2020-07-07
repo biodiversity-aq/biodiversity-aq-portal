@@ -1,5 +1,4 @@
 from .base import *
-from .secrets import *
 
 # SECURITY WARNING: don't run with debug turned on in production!
 
@@ -22,6 +21,5 @@ try:
 except ImportError:
     pass
 
-DATABASES = LOCAL_DATABASE
 
 
