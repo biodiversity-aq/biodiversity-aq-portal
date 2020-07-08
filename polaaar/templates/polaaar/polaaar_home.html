@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "polaaar/base.html" %}
 {% load static leaflet_tags geojson_tags %}
 
 {% block title %}
@@ -6,10 +6,7 @@ POLA3R
 {% endblock title %}
 
 
-{% block body_class %}{% endblock %}
-
-{% block extra_css %}
-{% leaflet_css %}
+{% block polaaar_css %}
     <style>
         body {
             padding-top: 0;
@@ -32,15 +29,14 @@ POLA3R
         .biodiversity-theme, .top-nav-collapse {
             background-color: #0099CC;
         }
-
     </style>
+{% endblock polaaar_css %}
 
-{% endblock extra_css %}
 
 {% block scrolling_navbar %}scrolling-navbar{% endblock %}
 
-{% block content %}
 
+{% block content %}
 <div class="container-fluid" id="polaaar_bkgd"
      style="background-image: url({% static 'imgs/img1.png' %});background-size:cover;background-repeat:no-repeat;padding-bottom:20px;">
     <div class="row" style="border-bottom-width:0px;">
@@ -106,9 +102,9 @@ POLA3R
 
 
 </div>
+{% endblock content %}
 
-{% block extra_js %}
-
+{% block polaaar_js %}
 <style>
 
     .leaflet-container { /* all maps */
@@ -166,7 +162,6 @@ POLA3R
 
 </script>
 
-{% endblock extra_js %}
+{% endblock polaaar_js %}
 
 
-{% endblock content %}

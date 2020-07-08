@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "polaaar/base.html" %}
 {% load static leaflet_tags geojson_tags polaaar_tags %}
 
 {% block title %}
@@ -8,9 +8,9 @@ POLA3R search
 
 {% block body_class %}{% endblock %}
 
-{% block extra_css %}
+{% block polaaar_css %}
 {% leaflet_css %}
-{% endblock extra_css %}
+{% endblock %}
 
 {% block content %}
 <div class="container-fluid" style="background-image: url({% static 'imgs/BB_backgrnd.png' %});background-size: cover;background-repeat: no-repeat">
@@ -247,9 +247,10 @@ POLA3R search
         </div>
     </div>
 {% endfor %}
+{% endblock %}
 
 
-{% block extra_js %}
+{% block polaaar_js %}
 
 
 <script>
@@ -264,7 +265,7 @@ POLA3R search
         window.location = "/pola3r/spatialsearch"
     };
     function projfunc() {
-        window.location = "/pola3r/search"
+        window.location = "../../../search"
     };
 
 
@@ -469,12 +470,11 @@ POLA3R search
 
 </script>
 
-<script type="text/javascript" src="{% static 'js/polarrr.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/polaaar.js' %}"></script>
 
 
 
-{% endblock extra_js %}
+{% endblock %}
 
 
-{% endblock content %}
 

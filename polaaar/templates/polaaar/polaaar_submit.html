@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "polaaar/base.html" %}
 {% load static leaflet_tags %}
 
 {% block title %}
@@ -8,13 +8,8 @@ POLA3R search
 
 {% block body_class %}{% endblock %}
 
-{% block extra_css %}
-{% leaflet_css %}
-
-{% endblock extra_css %}
 
 {% block content %}
-
         {% if user.is_authenticated %}
 <div class="container-fluid">
     <div class="row justify-content-center" style="padding-top:20px;padding-bottom:160px; border-width:0px;">
@@ -79,16 +74,6 @@ POLA3R search
     {% endif %}
 
 </div>
-
-
-{% block extra_js %}
-
-
-
-
-
-{% endblock extra_js %}
-
 
 
 {% endblock content %}

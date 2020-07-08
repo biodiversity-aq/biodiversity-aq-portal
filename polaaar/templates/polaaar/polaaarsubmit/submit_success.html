@@ -1,37 +1,10 @@
-{% extends "base.html" %}
-{% load static leaflet_tags %}
+{% extends "polaaar/base.html" %}
+{% load static %}
 
 {% block title %}
 POLA3R search
 {% endblock title %}
 
-
-{% block body_class %}{% endblock %}
-
-{% block extra_css %}
-{% leaflet_css %}
-<style>
-    body {
-        padding-top: 60px;
-    }
-
-    @media (min-width: 800px) and (max-width: 850px) {
-        .navbar:not(.top-nav-collapse) {
-            background: #0099CC !important;
-        }
-    }
-
-    .view, body, html {
-        height: 80%
-    }
-
-    .biodiversity-theme, .top-nav-collapse {
-        background-color: #0099CC;
-    }
-</style>
-{% endblock extra_css %}
-
-{% block scrolling_navbar %}scrolling-navbar{% endblock %}
 
 {% block content %}
 
@@ -56,16 +29,5 @@ POLA3R search
     </div>
 
 </div>
-
-
-{% block extra_js %}
-
-
-
-
-
-{% endblock extra_js %}
-
-
 
 {% endblock content %}

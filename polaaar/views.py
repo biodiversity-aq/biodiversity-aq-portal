@@ -21,7 +21,7 @@ import os
 
 def home(request):
     qs_results = Event.objects.annotate(geom=AsGeoJSON(Centroid('footprintWKT')))
-    return render(request, 'polaaar_home.html', {'qs_results': qs_results})
+    return render(request, 'polaaar/polaaar_home.html', {'qs_results': qs_results})
 
 
 #########################################################
@@ -81,13 +81,13 @@ def polaaar_search(request):
                 Q(event_hierarchy__project_metadata__is_public=True))
         buttondisplay = "Refresh map"
         viewprojs = False
-    return render(request, 'polaaar_search.html',
+    return render(request, 'polaaar/polaaar_search.html',
                   {'qs_results': qs_results, 'qs': qs, 'buttondisplay': buttondisplay, 'viewprojs': viewprojs})
 
 
 def env_search(request):
     qs = Variable.objects.all()
-    return render(request, 'polaaarsearch/environment.html', {'qs': qs})
+    return render(request, 'polaaar/polaaarsearch/environment.html', {'qs': qs})
 
 
 def env_searched(request):
@@ -120,7 +120,7 @@ def env_searched(request):
         except:
             x = False
 
-        return render(request, 'polaaarsearch/env_searched.html', {'qsenv': qsenv, 'test': x})  # ,'vartype':vartype
+        return render(request, 'polaaar/polaaarsearch/env_searched.html', {'qsenv': qsenv, 'test': x})  # ,'vartype':vartype
 
 
 def seq_search(request):
@@ -134,7 +134,7 @@ def seq_search(request):
     else:
         qs = Sequences.objects.filter(
             Q(event__event_hierarchy__project_metadata__is_public=True)).select_related()
-    return render(request, 'polaaarsearch/sequences.html', {'qs': qs})
+    return render(request, 'polaaar/polaaarsearch/sequences.html', {'qs': qs})
 
 
 def spatial_searching(request):
@@ -148,7 +148,7 @@ def spatial_searching(request):
     else:
         qs_results = Event.objects.annotate(geom=AsGeoJSON(Centroid('footprintWKT'))).filter(
             Q(event_hierarchy__project_metadata__is_public=True))
-    return render(request, 'polaaarsearch/spatial_search.html', {'qs_results': qs_results})
+    return render(request, 'polaaar/polaaarsearch/spatial_search.html', {'qs_results': qs_results})
 
 
 def spatial_search_table(request):
@@ -167,7 +167,7 @@ def spatial_search_table(request):
             qs_results = Event.objects.annotate(geom=AsGeoJSON(Centroid('footprintWKT'))).filter(
                 Q(event_hierarchy__project_metadata__is_public=True)).filter(pk__in=IDS)
 
-    return render(request, 'polaaarsearch/spatial_search_table.html', {'qs_results': qs_results})
+    return render(request, 'polaaar/polaaarsearch/spatial_search_table.html', {'qs_results': qs_results})
 
 
 #########################################################
@@ -215,7 +215,7 @@ def GetProjectFiles(request, pk):
 #########################################################
 ### Submit views
 def polaaar_submit(request):
-    return render(request, 'polaaar_submit.html')
+    return render(request, 'polaaar/polaaar_submit.html')
 
 
 #######################################################
@@ -246,13 +246,13 @@ def email_submission(request):
             submit_success_url = reverse('polaaar:submit_success')
             response = redirect(submit_success_url)
             return response
-    return render(request, 'polaaarsubmit/email_submission.html',
+    return render(request, 'polaaar/polaaarsubmit/email_submission.html',
                   # site key is needed to be rendered in the template
                   {'form': form, 'recaptcha_site_key': settings.RECAPTCHA_SITE_KEY})
 
 
 def submit_success(request):
-    return render(request, 'polaaarsubmit/submit_success.html')
+    return render(request, 'polaaar/polaaarsubmit/submit_success.html')
 
 
 ###################################################################################################################

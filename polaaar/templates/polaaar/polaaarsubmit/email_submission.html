@@ -1,5 +1,5 @@
-{% extends "base.html" %}
-{% load static leaflet_tags %}
+{% extends "polaaar/base.html" %}
+{% load static %}
 
 {% block title %}
     POLA3R
@@ -9,10 +9,6 @@
 {% block body_class %}
 {% endblock %}
 
-{% block extra_css %}
-    {% leaflet_css %}
-
-{% endblock extra_css %}
 
 {% block content %}
     <div class="container" style="padding-top:60px;">
@@ -98,12 +94,8 @@
         {% endif %}
 
     </div>
-    {% block extra_js %}
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-    {% endblock extra_js %}
-
-
-
 {% endblock content %}
 
-
+{% block polaaar_js %}
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+{% endblock %}
