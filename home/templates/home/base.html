@@ -1,14 +1,17 @@
 {% extends "base.html" %}
-{% load static leaflet_tags menu_tags %}
+{% load static menu_tags %}
 
 
 {% block extra_css %}
-{% leaflet_css %}
 {% endblock extra_css %}
 
 {% block left_menu %}
-    {# use left_expanded_menu menu template to keep the menus expanded #}
-    {% main_menu max_levels=3 template="menus/left_expanded_menu/level_1.html" %}
+    {% if page.application == 'home' %}
+        {# use left_expanded_menu menu template to keep the menus expanded #}
+        {% main_menu max_levels=3 template="menus/left_expanded_menu/level_1.html" %}
+    {% else %}
+        {% flat_menu page.application max_levels=3 template="menus/left_expanded_menu/level_1.html" %}
+    {% endif %}
 {% endblock %}
 
 {% block content %}
