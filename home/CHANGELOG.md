@@ -17,6 +17,9 @@
 ([ymgan](https://git.bebif.be/ymgan))
 - Styles for colour theme choices in all page templates and footer template. [#15](https://git.bebif.be/antabif/biodiversityaq/issues/15) 
 ([ymgan](https://git.bebif.be/ymgan))
+- App choices in all page models. [#37](https://git.bebif.be/antabif/biodiversityaq/-/issues/37) 
+([ymgan](https://git.bebif.be/ymgan))
+
 
 ### Removed
 
