@@ -483,7 +483,7 @@ class Environment(models.Model):
     env_units                   = models.ForeignKey(_("units"),blank=True,null=True,on_delete=models.DO_NOTHING)            
     ## On the front end, if env_variable.var_type is 'Text', then users input value for env_text_value
     ## if env_variable.var_type is 'Numeric', then users input value for env_numeric_value
-    env_numeric_value           = models.DecimalField(decimal_places=5,max_digits=15,blank=True,null=True)
+    env_numeric_value           = models.DecimalField(decimal_places=5,max_digits=25,blank=True,null=True)
     env_text_value              = models.CharField(max_length=100,blank=True,null=True)
 
     event                       = models.ForeignKey(_("Event"),related_name='environment',blank=True,null=True,on_delete=models.DO_NOTHING)
