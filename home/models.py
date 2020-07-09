@@ -28,8 +28,12 @@ COLOUR_CHOICES = [
         ('#006f71', 'Teal'),
         ('#ec6633', 'Orange'),
         ('#d51e47', 'Red'),
-
     ]
+
+APP_CHOICES = [
+    ('home', 'General pages for biodiversity.aq'),
+    ('polaaar', 'POLA3R'),
+]
 
 
 class BaseMenuPage(MenuPage):
@@ -40,6 +44,8 @@ class BaseMenuPage(MenuPage):
 
     To be inherited as MenuPage for all MenuPage in this project
     """
+    application = models.CharField(max_length=200, choices=APP_CHOICES, default='home', blank=False, null=False,
+                                   help_text='The application which this page should belongs to.')
     colour_theme = models.CharField(max_length=200, choices=COLOUR_CHOICES, default='#0099CC', blank=True, null=True,
                                     help_text='Please select a colour theme for the header and footer.')
     cover = models.ForeignKey('home.CustomImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
@@ -61,6 +67,7 @@ class BaseMenuPage(MenuPage):
     )
 
     content_panels = Page.content_panels + [
+        FieldPanel('application'),
         FieldPanel('colour_theme'),
         MultiFieldPanel([
             ImageChooserPanel('cover'),
@@ -142,10 +149,13 @@ class DetailIndexPage(Page):
     """
     An index page that returns Pages which are tagged with the tag specified.
     """
+    application = models.CharField(max_length=200, choices=APP_CHOICES, default='home', blank=False, null=False,
+                                   help_text='The application which this page should belongs to.')
     colour_theme = models.CharField(max_length=200, choices=COLOUR_CHOICES, default='#0099CC', blank=True, null=True,
                                     help_text='Please select a colour theme for the header and footer.')
 
     content_panels = Page.content_panels + [
+        FieldPanel('application'),
         FieldPanel('colour_theme'),
         ]
 
