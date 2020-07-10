@@ -91,8 +91,8 @@ class BaseMenuPage(MenuPage):
         show_in_recent_descendants = []
         for descendant in descendants:
             if hasattr(descendant.specific, "show_in_recent"):
-                if descendant.specific.show_in_recent and len(show_in_recent_descendants) <= 6:
-                    show_in_recent_descendants.append(descendant)  # only show 6 most recent pages
+                if descendant.specific.show_in_recent and len(show_in_recent_descendants) <= 8:
+                    show_in_recent_descendants.append(descendant)  # only show 8 most recent pages
         context['show_in_recent_descendants'] = show_in_recent_descendants
         return context
 
