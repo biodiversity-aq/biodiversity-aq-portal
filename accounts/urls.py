@@ -8,7 +8,7 @@ app_name = "accounts"
 urlpatterns = [
     path('registered/',views.registered,name='registered'),
     path('authenticated/', views.authenticated,name='authenticated'),
-    path('register/', views.register, name='register'),
+    # path('register/', views.register, name='register'),
 
     url(r'^activation/(?P<pk>[0-9]+)/(?P<token>[0-9A-Za-z_\-\.]+)/$',
         views.registration_activation,
