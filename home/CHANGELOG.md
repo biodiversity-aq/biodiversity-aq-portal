@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [1.0.0](https://git.bebif.be/antabif/biodiversityaq/-/tags/v1.0.0)
+
 ### Fixed
 
 - Recent live pages not showing up in `AppLandingPage`. 
