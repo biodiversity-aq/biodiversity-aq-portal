@@ -58,7 +58,7 @@
 {# HEADER MENU #}
 <nav class="navbar navbar-expand-lg fixed-top {% block scrolling_navbar %}{% endblock %}">
     <span>
-        <a class="navbar-brand" href="{% pageurl request.site.root_page %}">
+        <a class="navbar-brand" href="{% wagtail_site as current_site %}">
             <img src="{% static 'logos/logo-biodiversityaq-white.png' %}" alt="biodiversity.aq logo" height="40">
         </a>
     </span>
