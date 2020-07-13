@@ -1,4 +1,5 @@
 ﻿{% load static wagtailuserbar wagtailcore_tags menu_tags home_tags %}
+{% wagtail_site as current_site %}
 
 <!DOCTYPE html>
 <html class="no-js" lang="en">
@@ -58,7 +59,7 @@
 {# HEADER MENU #}
 <nav class="navbar navbar-expand-lg fixed-top {% block scrolling_navbar %}{% endblock %}">
     <span>
-        <a class="navbar-brand" href="{% wagtail_site as current_site %}">
+        <a class="navbar-brand" href="{{ current_site.root_page.url }}">
             <img src="{% static 'logos/logo-biodiversityaq-white.png' %}" alt="biodiversity.aq logo" height="40">
         </a>
     </span>
