@@ -2,7 +2,7 @@
 
 ## [Unreleased]
 
-## [1.0.0](https://git.bebif.be/antabif/biodiversityaq/-/tags/v1.0.0)
+## [1.0.0](https://git.bebif.be/antabif/biodiversityaq/-/tags/v1.0.0) - 2020-07-13
 
 ### Fixed
 
