@@ -50,7 +50,7 @@ odfpy==1.4.0
 olefile==0.46
 openpyxl==2.6.3
 pandas==1.0.3
-Pillow==7.0.0
+Pillow==7.2.0
 psycopg2==2.8.3
 puput==1.0.6
 Pygments==2.6.1
@@ -68,7 +68,7 @@ tablib==0.13.0
 unicodecsv==0.14.1
 Unidecode==1.1.1
 urllib3==1.25.9
-wagtail==2.9
+wagtail==2.9.1
 wagtailmenus==3.0.2
 webencodings==0.5.1
 Willow==1.3
