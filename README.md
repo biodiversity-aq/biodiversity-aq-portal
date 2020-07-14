@@ -77,7 +77,26 @@ In your terminal, run:
 python manage.py runserver
 ```
 
-Open a browser and go to [http://localhost:8000](http://localhost:8000) to view the application.
+#### Create your first page via the content management system (CMS)
+
+Open a browser and go to [http://localhost:8000/admin](http://localhost:8000/admin) and login with your username and password above.
+
+Go to [http://localhost:8000/admin/pages/](http://localhost:8000/admin/pages/) and create a page using a template of your choice.
+This page can be a root page for all subsequent descendant pages. `Publish` the page.
+
+#### Set up a Site
+
+A Site needs to be setup with a `root page` before it can be viewed. Go to [Settings > Sites > Add a site](http://localhost:8000/admin/sites/new/).
+
+```text
+Hostname: localhost
+Port: 80
+Site name: My site name
+Root page: [select the root page you just created]
+Is default site: [checked]
+```
+
+`Save` the Site. The Site should be now visible at [http://localhost:8000/](http://localhost:8000/).
 
 ## Contributors
 
