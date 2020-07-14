@@ -84,7 +84,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'import_export',
 
-    # 'wagtail.contrib.sitemaps',
+    'wagtail.contrib.sitemaps',
     'wagtail.contrib.routable_page',
     'wagtailmenus',
     'django_social_share',  # requires by puput
