@@ -9,6 +9,8 @@ from wagtail.documents import urls as wagtaildocs_urls
 
 from puput import urls as puput_urls
 
+from .views import haproxy_view
+
 from search import views as search_views
 
 from django.contrib.auth import views as auth_views
@@ -18,6 +20,7 @@ import data.urls
 import polaaar.urls
 
 urlpatterns = [
+    path('haproxy/', haproxy_view),
     re_path(r'^django-admin/', admin.site.urls),
 
 
