@@ -2,6 +2,18 @@
 
 ## [Unreleased]
 
+## [1.1.0](https://git.bebif.be/antabif/biodiversityaq/-/tags/v1.1.0) - 2020-08-10
+
+### Added
+
+- A RepoPage model and its template to embed html page. `git_repo` directory to place the repo (under static directory)
+[#47](https://git.bebif.be/antabif/biodiversityaq/issues/17) ([ymgan](https://git.bebif.be/ymgan))
+
+### Changed
+
+- upgrade Wagtail to 2.9.3 ([ymgan](https://git.bebif.be/ymgan))
+
+
 ## [1.0.0](https://git.bebif.be/antabif/biodiversityaq/-/tags/v1.0.0) - 2020-07-13
 
 ### Fixed
