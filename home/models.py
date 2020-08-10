@@ -145,6 +145,43 @@ class DetailPage(BaseMenuPage):
     template = 'home/detail_page.html'
 
 
+class RepoPage(MenuPage):
+    """
+    Embed a repository html page
+    """
+    application = models.CharField(max_length=200, choices=APP_CHOICES, default='home', blank=False, null=False,
+                                   help_text='The application which this page should belongs to.')
+    colour_theme = models.CharField(max_length=200, choices=COLOUR_CHOICES, default='#0099CC', blank=True, null=True,
+                                    help_text='Please select a colour theme for the header and footer.')
+    cover = models.ForeignKey('home.CustomImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
+    short_description = RichTextField(
+        blank=True, null=True, features=['bold', 'italic', 'underline', 'link', 'superscript', 'subscript'],
+        help_text='A one line description of the page to help user discover this page.')
+    html_page_path = models.CharField(
+        max_length=500, default='', blank=False, null=False,
+        help_text='relative path from the static directory to the html file to be loaded')
+    show_in_recent = models.BooleanField(
+        default=False, null=True, blank=True,
+        help_text='If true, this page will appear in the "Recent" section of its parent if it is an AppLandingPage '
+                  'order by last published date'
+    )
+
+    content_panels = Page.content_panels + [
+        FieldPanel('application'),
+        FieldPanel('colour_theme'),
+        MultiFieldPanel([
+            ImageChooserPanel('cover'),
+            FieldPanel('short_description'),
+        ]),
+        FieldPanel('show_in_recent'),
+        FieldPanel('html_page_path'),
+    ]
+
+    settings_panels = [menupage_panel]
+
+    template = 'home/repo_page.html'
+
+
 class DetailIndexPage(Page):
     """
     An index page that returns Pages which are tagged with the tag specified.
