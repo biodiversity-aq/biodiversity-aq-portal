@@ -1,15 +1,10 @@
 {
   "ExpandedNodes": [
     "",
+    "\\biodiversity",
     "\\biodiversity\\settings",
-    "\\biodiversity\\static\\logos",
-    "\\biodiversity\\static\\rest_framework\\css",
-    "\\biodiversity\\templates\\rest_framework",
-    "\\biodiversity\\templates\\rest_framework\\css",
-    "\\polaaar",
-    "\\polaaar\\templates",
-    "\\polaaar\\templates\\polaaarsearch"
+    "\\polaaar"
   ],
-  "SelectedNode": "\\polaaar\\views.py",
+  "SelectedNode": "\\polaaar\\urls.py",
   "PreviewInSolutionExplorer": false
 }
