@@ -41,7 +41,7 @@ POLA3R
      style="background-image: url({% static 'imgs/img1.png' %});background-size:cover;background-repeat:no-repeat;padding-bottom:20px;">
     <div class="row" style="border-bottom-width:0px;">
         <div class="col-12" style="text-align:center; padding-top:30px;">
-            <img style="border-radius:15px;" width="25%" class="fadeinclass" src="{% static 'logos/polaaar_logo.png' %}" />
+            <img style="border-radius:15px;" width="9%" class="fadeinclass" src="{% static 'logos/pola3r_logo.png' %}" />
         </div>
     </div>
 
@@ -71,9 +71,9 @@ POLA3R
                 <a role="button" href="{% url 'login' %}?next={{request.path}}" class="btn btn-biodiversity-teal btn-lg" style="width:100%">
                     Login <i class="fas fa-user pl-1"></i>
                 </a>
-{#                <a role="button" href="{% url 'accounts:register' %}" class="btn btn-biodiversity-teal btn-lg" style="width:100%">#}
-{#                    Register <i class="fas fa-user-plus pl-1"></i>#}
-{#                </a>#}
+                <a role="button" href="{% url 'accounts:register' %}" class="btn btn-biodiversity-teal btn-lg" style="width:100%">
+                    Register <i class="fas fa-user-plus pl-1"></i>
+                </a>
             </div>
             {% endif %}
         </div>

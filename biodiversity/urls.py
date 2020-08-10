@@ -20,6 +20,7 @@ import data.urls
 import polaaar.urls
 
 urlpatterns = [
+    path('haproxy/', haproxy_view),
     re_path(r'^django-admin/', admin.site.urls),
     path('haproxy/', haproxy_view),
 
@@ -29,7 +30,7 @@ urlpatterns = [
     url(r'^accounts/', include('django.contrib.auth.urls'), name='accounts'),
    
     path('data/', include('data.urls')),
-    # re_path(r'pola3r/', include('polaaar.urls')),
+    re_path(r'pola3r/', include('polaaar.urls')),
     # re_path(r'users/',include('users.urls')),
 
     url(r'',include(puput_urls)),

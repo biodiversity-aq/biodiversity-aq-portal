@@ -111,7 +111,6 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'djconfig.middleware.DjConfigMiddleware',
 
-    'wagtail.core.middleware.SiteMiddleware',
     'wagtail.contrib.redirects.middleware.RedirectMiddleware',
 ]
 
