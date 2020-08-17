@@ -1,6 +1,0 @@
-[submodule "home/static/home/git_repo/ropensci"]
-	path = home/static/home/git_repo/ropensci
-	url = https://github.com/SCAR/ropensci
-[submodule "home/static/home/git_repo/DietAndEnergetics"]
-	path = home/static/home/git_repo/DietAndEnergetics
-	url = https://github.com/SCAR/DietAndEnergetics
