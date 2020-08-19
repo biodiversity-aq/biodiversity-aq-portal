@@ -42,7 +42,8 @@
         }
         //var vals = X.split(' ')
         
-        var URL = 'pola3r/data/var/?var='.concat(vars)//.concat('&vartype=').concat(vals[1]);
+        var URL = window.location.origin +'/pola3r/data/var/?var='.concat(vars)//.concat('&vartype=').concat(vals[1]);
+        alert(URL)
 
         $.ajax({
         url: URL,

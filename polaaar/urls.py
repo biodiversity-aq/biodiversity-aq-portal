@@ -26,6 +26,10 @@ urlpatterns = [
     path('search/',views.polaaar_search,name='polaaar_search'),
     path('submit/',views.polaaar_submit,name='polaaar_submit_data'),
 
+    path('environment/',views.EnvironmentViewSet,name='environment'),
+
+
+
     path('envsearch/',views.env_search,name='env_search'),
     url(r'var/',views.env_searched,name='env_searched'),    
     path('seqsearch/',views.seq_search,name='seq_search'),
