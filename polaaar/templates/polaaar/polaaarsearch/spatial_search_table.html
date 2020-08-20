@@ -17,7 +17,7 @@
 				{% for i in qs_results %}
 				<tr>
 					<td style="display:none">{{i.id}}</td>
-					<td><a href="/pola3r/search/?pid={{ i.event_hierarchy.project_metadata.id }}">{{i.event_hierarchy.project_metadata.project_name}}</a></td>
+					<td><a href="{% url 'polaaar:polaaar_search'%}?pid={{ i.event_hierarchy.project_metadata.id }}">{{i.event_hierarchy.project_metadata.project_name}}</a></td>
 					<td>{{i.event_hierarchy.event_hierarchy_name}}</td>
 					<td>{{i.sample_name}}</td>
 					<td>{{i.Longitude}}/{{i.Latitude}}</td>

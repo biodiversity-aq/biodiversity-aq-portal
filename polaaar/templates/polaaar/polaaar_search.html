@@ -256,16 +256,20 @@ POLA3R search
 <script>
 
     function envfunc() {
-		$("#searchcontent").load('../../pola3r/envsearch') 
+        URL = window.location.origin + '/pola3r/envsearch'
+		$("#searchcontent").load(URL) 
     };
     function seqfunc() {
-        $("#searchcontent").load('../seqsearch')
+        URL = window.location.origin + '/pola3r/seqsearch'
+        $("#searchcontent").load(URL)
     };
     function spafunc() {
-        window.location = "/pola3r/spatialsearch"
+        URL = window.location.origin + "/pola3r/spatialsearch"
+        window.location = URL
     };
     function projfunc() {
-        window.location = "../../../search"
+        URL = window.location.origin + '/pola3r/search'
+        window.location = URL
     };
 
 
