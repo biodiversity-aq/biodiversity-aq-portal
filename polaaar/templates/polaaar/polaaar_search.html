@@ -18,10 +18,10 @@ POLA3R search
         <div class="col-12">
             <h1 style="background-color:white">How would you like to search?</h1>
             <div class="btn-group btn-group-toggle" data-toggle="buttons" style="width:100%">
-                <label class="btn btn-biodiversity-darkblue form-check-label" onclick="projfunc('{% url "polaaar:polaaar_search" %}')">
+                <label class="btn btn-biodiversity-darkblue form-check-label" onclick="projfunc()">
                     <input class="form-check-input" type="radio" name="options" value="sequence" autocomplete="off"> Project
                 </label>
-                <label class="btn btn-biodiversity-darkblue form-check-label" onclick="envfunc('{% url "polaaar:env_search" %}')">
+                <label class="btn btn-biodiversity-darkblue form-check-label" onclick="envfunc()">
                     <input class="form-check-input" type="radio" name="options" value="environment" autocomplete="off">Environmental
                 </label>
 
@@ -255,20 +255,20 @@ POLA3R search
 
 <script>
 
-    function envfunc(URL) {
-        {#URL = window.location.origin + '/pola3r/envsearch'#}
-		$("#searchcontent").load(URL) 
+    function envfunc() {
+        URL = "{% url 'polaaar:env_search' %}" 
+		$("#searchcontent").load(URL)
     };
     function seqfunc() {
-        URL = window.location.origin + '/pola3r/seqsearch'
+        URL = "{% url 'polaaar:seq_search' %}"
         $("#searchcontent").load(URL)
     };
     function spafunc() {
-        URL = window.location.origin + "/pola3r/spatialsearch"
+        URL = "{% url 'polaaar:spatialsearch' %}"
         window.location = URL
     };
-    function projfunc(URL) {
-        {#URL = window.location.origin + '/pola3r/search'#}
+    function projfunc() {
+        URL = "{% url 'polaaar:polaaar_search' %}"
         window.location = URL
     };
 
