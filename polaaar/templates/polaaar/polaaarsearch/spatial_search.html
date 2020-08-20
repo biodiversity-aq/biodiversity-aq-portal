@@ -211,27 +211,25 @@ POLA3R data
 
     
 	function showTable() {
-        URL = window.location.origin + '/pola3r/spatial_search_table/?id='.concat(window.IDvals)
-       
+        URL = '{% url 'polaaar:spatial_search_table' %}?id='.concat(window.IDvals)
+    
 		$("#spatialsearched").load(URL)
 		setTimeout(function () {
             document.getElementById('spatialsearched').scrollIntoView();
-		},500)
-        
+		},500)        
     };
 
-    function searchEvents(FORMAT) {
 
+    function searchEvents(FORMAT) {
         if (FORMAT == 'JSON') {
-            srcURL = window.location.origin + '/pola3r/events/?id__in='.concat(window.IDvals)
+            srcURL = "{% url 'polaaar:events-list' %}?id__in=".concat(window.IDvals)
             window.open(srcURL)
         } else if (FORMAT == 'EXCEL') {
-            srcURL = window.location.origin + '/pola3r/export_events/?id='.concat(window.IDvals)
+            srcURL = '{% url 'polaaar:export_events' %}?id='.concat(window.IDvals)
             window.open(srcURL,'_parent')
         }
-
-
     }
+
 
 
 </script>

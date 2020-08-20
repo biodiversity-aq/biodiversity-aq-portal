@@ -198,10 +198,10 @@ class EventAdmin(ModelAdmin):
     menu_order=103
     add_to_settings_menu=False
     exclude_from_explorer=False
-    search_fields=('sample_name','parent_event__sample_name',
-                   'parent_event_parent_event__sample_name')
-    list_filter=('metadata_exists','occurrence_exists','environment_exists',)
-    list_display=('Event_Hierarchy','sample_name','collection_year','collection_month','collection_day')
+    #search_fields=('sample_name','parent_event__sample_name',
+    #               'parent_event_parent_event__sample_name')
+    #list_filter=('metadata_exists','occurrence_exists','environment_exists',)
+    #list_display=('Event_Hierarchy','sample_name','collection_year','collection_month','collection_day')
 
     def Event_Hierarchy(self,obj):
         return obj.event_hierarchy.event_hierarchy_name

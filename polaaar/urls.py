@@ -26,8 +26,9 @@ urlpatterns = [
     path('search/',views.polaaar_search,name='polaaar_search'),
     path('submit/',views.polaaar_submit,name='polaaar_submit_data'),
 
-    path('environment/',views.EnvironmentViewSet,name='environment'),
-
+    ### Path controls for API routers
+    #path('environment/',views.EnvironmentViewSet,name='environment'),
+    #path('events/',views.EventViewSet,name='events'),
 
 
     path('envsearch/',views.env_search,name='env_search'),

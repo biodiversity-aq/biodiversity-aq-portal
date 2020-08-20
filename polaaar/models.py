@@ -185,7 +185,7 @@ class EventType(models.Model):
 
 #fsa = FileSystemStorage(location='/media/project_files')
 class ProjectMetadata(models.Model):
-    project_name                    = models.CharField(max_length=255)
+    project_name                    = models.CharField(max_length=255,blank=True,null=True)
     start_date                      = models.DateField(blank=True,null=True)
     end_date                        = models.DateField(blank=True,null=True)
     EML_URL                         = models.URLField(blank=True,null=True)            ## URL to GBIF generated EML file
@@ -218,7 +218,7 @@ class ProjectMetadata(models.Model):
 ## Change to EventHierarchy
 
 class EventHierarchy(models.Model):
-    event_hierarchy_name            = models.CharField(max_length=255)                        ## User's project name or cruise name, etc...
+    event_hierarchy_name            = models.CharField(max_length=255,blank=True,null=True)                        ## User's project name or cruise name, etc...
     event_type                      = models.ForeignKey(_("EventType"),related_name='eventtype',
                                                             on_delete=models.DO_NOTHING)        ## Drawn from the Event_type table
        
@@ -268,7 +268,7 @@ class Event(models.Model):
     Longitude           = models.DecimalField(decimal_places=5,max_digits=10,blank=True,null=True)
 
     eventRemarks        = models.TextField(blank=True,null=True)
-    sample_name         = models.CharField(max_length=255,unique=True)   ### Unique value      ## User provided id for sample
+    sample_name         = models.CharField(max_length=255,blank=True,null=True)#,unique=True)   ### Unique value      ## User provided id for sample
            
     collection_year     = models.IntegerField(blank=True,null=True)
     collection_month     = models.IntegerField(blank=True,null=True,choices=MONTHS)
@@ -343,7 +343,7 @@ class Occurrence(models.Model):
 ### in order for the sample to be linked to the Metadata
 
 class SampleMetadata(models.Model):  
-    metadata_tag            = models.CharField(max_length=255,blank=True,null=True)
+    metadata_tag            = models.CharField(max_length=255,blank=True,null=True,default='')
     md_created_on           = models.DateField()
     metadata_creator        = models.ForeignKey(
                                 settings.AUTH_USER_MODEL,
@@ -394,7 +394,7 @@ class SampleMetadata(models.Model):
 
 
 class Sequences(models.Model):
-    sequence_name               = models.CharField(max_length=255)    
+    sequence_name               = models.CharField(max_length=255,blank=True,null=True)    
     MID                         = models.CharField(max_length=255,blank=True,null=True)
     subspecf_gen_lin            = models.CharField(max_length=50,blank=True,null=True)
     target_gene                 = models.CharField(max_length=50,blank=True,null=True)
