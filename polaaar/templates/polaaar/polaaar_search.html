@@ -256,7 +256,7 @@ POLA3R search
 <script>
 
     function envfunc() {
-        URL = window.location.origin + '/pola3r/envsearch'
+        URL = {% url 'polaaar:env_search' %}
 		$("#searchcontent").load(URL) 
     };
     function seqfunc() {
