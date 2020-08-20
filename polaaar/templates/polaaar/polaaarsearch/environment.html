@@ -42,8 +42,8 @@
         }
         //var vals = X.split(' ')
         
-        var URL = window.location.origin +'/pola3r/data/var/?var='.concat(vars)//.concat('&vartype=').concat(vals[1]);
-        alert(URL)
+        var URL = "{% url 'polaaar:home' %}" +'/data/var/?var='.concat(vars)//.concat('&vartype=').concat(vals[1]);
+        
 
         $.ajax({
         url: URL,
