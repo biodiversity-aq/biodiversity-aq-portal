@@ -5,7 +5,6 @@
 				<tr>
 					<th style="display:none">id</th>
 					<th>Project name</th>
-					<th>Event hierarchy</th>
 					<th>Event name</th>
 					<th>Location (Lat/Lon)</th>
 					<th>Collection date</th>
@@ -18,7 +17,6 @@
 				<tr>
 					<td style="display:none">{{i.id}}</td>
 					<td><a href="{% url 'polaaar:polaaar_search'%}?pid={{ i.event_hierarchy.project_metadata.id }}">{{i.event_hierarchy.project_metadata.project_name}}</a></td>
-					<td>{{i.event_hierarchy.event_hierarchy_name}}</td>
 					<td>{{i.sample_name}}</td>
 					<td>{{i.Longitude}}/{{i.Latitude}}</td>
 					<td>{{i.collection_year|default_if_none:"NA"}}-{{i.collection_month|default_if_none:"NA"}}-{{i.collection_day|default_if_none:"NA"}}</td>
