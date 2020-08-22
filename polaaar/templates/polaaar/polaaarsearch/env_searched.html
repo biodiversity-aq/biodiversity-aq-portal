@@ -22,11 +22,9 @@
             <thead>
                 <tr>
                     <th style="display:none">id</th>
-                    <th>Project name</th>
-                    <th>Event hierarchy</th>
+                    <th>Project name</th>                    
                     <th>Event name</th>
                     <th>Location (Lat/Lon)</th>
-
                     <th>Value</th>
                     <th>Units</th>
                     <th>Collection date</th>
@@ -39,7 +37,6 @@
                 <tr>
                     <td style="display:none">{{i.id}}</td>
                     <td><a href= "{% url 'polaaar:polaaar_search'%}?pid={{ i.event.event_hierarchy.project_metadata.id }}">{{i.event.event_hierarchy.project_metadata.project_name}}</a></td>
-                    <td>{{i.event.event_hierarchy.event_hierarchy_name}}</td>
                     <td>{{i.event.sample_name}}</td>
                     <td>{{i.event.Longitude}}/{{i.event.Latitude}}</td>
                     {% if i.env_variable.var_type == "NUM" %}

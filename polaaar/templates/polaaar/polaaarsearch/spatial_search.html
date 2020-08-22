@@ -31,7 +31,7 @@ POLA3R data
             <div class="row">
                 <div class="col-12" style="padding-bottom:40px">
                     <a role="button" href="{% url 'polaaar:polaaar_search' %}" class="btn btn-mdb btn-lg waves-effect" style="width:100%;">
-                        Return to text search <i class="fas fa-arrow-left pl-1"></i>
+                        Return to search <i class="fas fa-arrow-left pl-1"></i>
                     </a>
                 </div>
                 <div class="col-12">
@@ -213,7 +213,7 @@ POLA3R data
 	function showTable() {
 
         if (window.IDvals == ''){
-            alert('No results found')
+            $("#spatialsearched").html("<h1 style='text-align:center'>No results found in query</h1>")
         }else {
             URL = '{% url 'polaaar:spatial_search_table' %}?id='.concat(window.IDvals)
     
