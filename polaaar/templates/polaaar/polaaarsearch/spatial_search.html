@@ -211,12 +211,18 @@ POLA3R data
 
     
 	function showTable() {
-        URL = '{% url 'polaaar:spatial_search_table' %}?id='.concat(window.IDvals)
+
+        if (window.IDvals == ''){
+            alert('No results found')
+        }else {
+            URL = '{% url 'polaaar:spatial_search_table' %}?id='.concat(window.IDvals)
     
-		$("#spatialsearched").load(URL)
-		setTimeout(function () {
-            document.getElementById('spatialsearched').scrollIntoView();
-		},500)        
+		    $("#spatialsearched").load(URL)
+		    setTimeout(function () {
+                document.getElementById('spatialsearched').scrollIntoView();
+		    },500)
+        }
+                    
     };
 
 
