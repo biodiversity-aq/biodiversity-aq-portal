@@ -6,11 +6,11 @@
 
 {% block branding %}
 
-<a class="navbar-brand" style="padding-bottom:90px;display:inline-block" href="/">
+<a class="navbar-brand" style="padding-bottom:90px;display:inline-block" href="{% url 'polaaar:home' %}">
     <img src="{% static 'logos/logo-biodiversityaq-white.png' %}"
          alt="biodiversity.aq logo" height="60px">
 </a>
-<h2><a style="color:#fff" href="/api_reference/">API reference</a></h2>
+<h2><a style="color:#fff" href="{% url 'polaaar:api_reference' %}">API reference</a></h2>
 
 {% endblock %}
 
