@@ -52,7 +52,9 @@
 <script type="text/javascript" src="{% static 'js/polaaar.js' %}"></script>
 <script>
     $(document).ready(function () {
-        var Mytable = $('#myTable').DataTable();
+        var Mytable = $('#myTable').DataTable({
+			responsive: true
+		});
         Mytable.column(0).visible(false)
     });
 </script>

@@ -111,7 +111,9 @@
     );
 
     $(document).ready(function () {
-        var table = $('#myTable').DataTable();
+        var table = $('#myTable').DataTable({
+			responsive: true
+		});
 
         table.column(0).visible(false)
 
