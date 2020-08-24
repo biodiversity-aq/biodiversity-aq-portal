@@ -185,7 +185,7 @@ class EventType(models.Model):
 
 #fsa = FileSystemStorage(location='/media/project_files')
 class ProjectMetadata(models.Model):
-    gbif_dataset_key = models.CharField(max_length=40, blank=True, null=True, help_text='UUID of a dataset on GBIF')
+    doi = models.CharField(max_length=255, blank=True, null=True, help_text='DOI of a dataset')
     project_name                    = models.CharField(max_length=255,blank=True,null=True)
     start_date                      = models.DateField(blank=True,null=True)
     end_date                        = models.DateField(blank=True,null=True)
