@@ -24,6 +24,9 @@ def home(request):
     return render(request, 'polaaar/polaaar_home.html', {'qs_results': qs_results})
 
 
+def api_reference(request):
+    return render(request, 'polaaar/api_reference.html')
+
 #########################################################
 ### DJANGO Search views
 ##########  
@@ -2314,5 +2317,3 @@ def export_events(request):
         return (response)
 
 
-def api_reference(request):
-    return render(request, 'rest_framework/api_reference.html')

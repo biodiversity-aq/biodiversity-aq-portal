@@ -30,6 +30,7 @@ urlpatterns = [
     #path('environment/',views.EnvironmentViewSet,name='environment'),
     #path('events/',views.EventViewSet,name='events'),
 
+    path('api_reference/',views.api_reference,name='api_reference'),
 
     path('envsearch/',views.env_search,name='env_search'),
     url(r'var/',views.env_searched,name='env_searched'),    

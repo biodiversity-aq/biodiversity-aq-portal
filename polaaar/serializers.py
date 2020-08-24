@@ -221,12 +221,18 @@ class EventSerializer(serializers.ModelSerializer):
 class EventHierarchySerializer(serializers.ModelSerializer):	
 	#project_metadata = ProjectMetadataSerializer(many=False,read_only=True)
 	event = EventSerializer(many=True,read_only=True)
+	#event = serializers.HyperlinkedRelatedField(
+    #    many=True,
+    #    read_only=True,
+    #    view_name='event-detail'
+    #)
 	event_type = serializers.StringRelatedField(many=False)
 	parent_event = serializers.StringRelatedField(many=False)
 	event_creator = serializers.StringRelatedField(many=False)
 	class Meta:
 		model = EventHierarchy
-		fields = [		
+		fields = [
+		'url',
 		'event_hierarchy_name',
 		'event_type',
 		'description',
@@ -237,10 +243,17 @@ class EventHierarchySerializer(serializers.ModelSerializer):
 		'event']
 
 
+
+
 class ProjectMetadataSerializer(serializers.ModelSerializer):
 	
 	associated_references = ReferenceSerializer(many=True,read_only=True)
-	event_hierarchy = EventHierarchySerializer(many=True,read_only=True)
+	#event_hierarchy = EventHierarchySerializer(many=True,read_only=True)
+	event_hierarchy = serializers.HyperlinkedRelatedField(
+        many=True,
+        read_only=True,
+        view_name='eventhierarchy-detail'
+    )
 	project_creator = serializers.StringRelatedField(many=False)
 	class Meta:
 		model = ProjectMetadata
