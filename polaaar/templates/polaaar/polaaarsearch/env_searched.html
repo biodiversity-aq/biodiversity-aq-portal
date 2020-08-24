@@ -21,7 +21,7 @@
         <table id="myTable" class="display nowrap" style="width:100%">
             <thead>
                 <tr>
-                    <th style="display:none">id</th>
+                    <th>Event ID</th>
                     <th>Project name</th>                    
                     <th>Event name</th>
                     <th>Location (Lat/Lon)</th>
@@ -35,7 +35,7 @@
             <tbody>
                 {% for i in qsenv %}
                 <tr>
-                    <td style="display:none">{{i.id}}</td>
+                    <td>{{i.id}}</td>
                     <td><a href= "{% url 'polaaar:polaaar_search'%}?pid={{ i.event.event_hierarchy.project_metadata.id }}">{{i.event.event_hierarchy.project_metadata.project_name}}</a></td>
                     <td>{{i.event.sample_name}}</td>
                     <td>{{i.event.Longitude}}/{{i.event.Latitude}}</td>
@@ -81,10 +81,10 @@
 <script type="text/javascript"
         src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.8.11/js/mdb.min.js"></script>
-<script type="text/javascript" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
-<script type="text/javascript" src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.21/r-2.2.5/datatables.min.js"></script>
 <script src='https://unpkg.com/@turf/turf/turf.min.js'></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/js/bootstrap-select.min.js"></script>
+
 <script>
 
     $.fn.dataTable.ext.search.push(
@@ -111,8 +111,6 @@
         var table = $('#myTable').DataTable({
 			responsive: true
 		});
-
-        table.column(0).visible(false)
 
         $('#min, #max').keyup(function () {
             table.draw();
