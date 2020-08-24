@@ -185,7 +185,7 @@ class EventType(models.Model):
 
 #fsa = FileSystemStorage(location='/media/project_files')
 class ProjectMetadata(models.Model):
-    doi = models.CharField(max_length=255, blank=True, null=True, help_text='DOI of a dataset')
+    resource_url = models.TextField(blank=True, null=True, help_text='Resource link of this dataset, preferrably points to EML resource page.')
     project_name                    = models.CharField(max_length=255,blank=True,null=True)
     start_date                      = models.DateField(blank=True,null=True)
     end_date                        = models.DateField(blank=True,null=True)
