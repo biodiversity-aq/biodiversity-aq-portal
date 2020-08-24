@@ -104,8 +104,8 @@ POLA3R search
                                 </a>
                             </td>
                             <td>  {{i.project_creator.full_name}}</td>
-                            <td>{{i.start_date}}</td>
-                            <td>{{i.end_date}}</td>
+                            <td>{{i.start_date|default_if_none:"NA"}}</td>
+                            <td>{{i.end_date|default_if_none:"NA"}}</td>
                             <td style="text-align:center;font-size:16pt">
                                 {% if i|getTrueOccurrence == "True" %}
                                 <i style="color:green;" class="fas fa-check-circle pl-1"></i>
