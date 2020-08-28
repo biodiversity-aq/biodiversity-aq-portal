@@ -99,7 +99,7 @@ POLA3R search
                             </td>
                             <td>{{i.id}}</td>
                             <td>
-                                <a href="{{ i.resource_url }}" target="_blank" rel="noopener noreferrer">
+                                <a href="{{ i.resource_url|default_if_none:"#" }}" target="_blank" rel="noopener noreferrer">
                                     {{i.project_name}}
                                 </a>
                             </td>
