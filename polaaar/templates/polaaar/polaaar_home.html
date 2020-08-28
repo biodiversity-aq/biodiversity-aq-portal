@@ -57,11 +57,9 @@ POLA3R
                 <a role="button" href="{% url 'polaaar:polaaar_search' %}" class="btn btn-biodiversity-lightblue btn-lg waves-effect" style="width:100%">
                 Search the database <i class="fas fa-search pl-1"></i>
                 </a>
-            {% if user.is_authenticated %}
                 <a role="button" href="{% url 'polaaar:polaaar_submit_data' %}" class="btn btn-biodiversity-lightblue btn-lg" style="width:100%">
-                    Submit a dataset <i class="fas fa-cloud-upload-alt pl-1"></i>
+                    How to submit a dataset <i class="fas fa-cloud-upload-alt pl-1"></i>
                 </a>
-            {% endif %}    
             </div>
             
             {% if user.is_authenticated %}

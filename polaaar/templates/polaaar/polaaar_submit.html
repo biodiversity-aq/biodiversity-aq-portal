@@ -10,7 +10,6 @@ POLA3R search
 
 
 {% block content %}
-        {% if user.is_authenticated %}
 <div class="container-fluid">
     <div class="row justify-content-center" style="padding-top:20px;padding-bottom:160px; border-width:0px;">
 
@@ -42,7 +41,7 @@ POLA3R search
             <h4>3) Fill in the <span style="color:darkorange">dark orange cells</span> at minimum</h4>
             <h4>4) Create a record for your dataset in <a href="https://ipt.biodiversity.aq/">IPT</a></h4>
             <h4>
-                5) Once completed, <a href="{% url 'polaaar:email_submission' %}">Click here</a> to submit your datasheet
+                5) Once completed, <a href="{% url 'polaaar:email_submission' %}">click here</a> to submit your datasheet
                 <strong>(N.B. Your data sheet will be reviewed before data become available online)</strong>
             </h4>
         </div>
@@ -66,14 +65,7 @@ POLA3R search
 
 
 
-{% else %}
-<div class="row" style="padding-top:20px; border-width:0px;">
-    <div class="col-12">
-        <h1> Sorry, you must be <a href="{% url 'login' %}?next={{request.path}}">Logged In</a> to view this page</h1>
-    </div>
-    {% endif %}
 
-</div>
 
 
 {% endblock content %}
