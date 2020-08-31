@@ -272,6 +272,20 @@ class MetadataAdmin(ModelAdmin):
         return obj.metadata_creator.first_name+' '+obj.metadata_creator.first_name
 
 
+class MailFileAdmin(ModelAdmin):
+    model = MailFile
+    menu_label='Mail files'
+    menu_icon='mail'
+    menu_order=102
+    add_to_settings_menu=False
+    exclude_from_explorer=False
+    list_display = ('subject','document')
+
+    def document(self, obj):
+        return obj.files.url
+
+    def subject(self, obj):
+        return obj.subject or ''
 
 
 class pola3rAdmin(ModelAdminGroup):
@@ -280,7 +294,7 @@ class pola3rAdmin(ModelAdminGroup):
     menu_order = 300
     items = (MetadataAdmin,OccurrencesAdmin,SequencesAdmin,EventAdmin,EventTypeAdmin,EventHierarchyAdmin,
             ProjectMetadataAdmin,MIxSAdmin,EnvironmentalSample,SamplingVariable,SamplingUnitsAdmin,SamplingMethodAdmin,
-            ReferencesAdmin,TaxaAdmin,GeogAdmin,ProjectFilesAdmin)
+            ReferencesAdmin,TaxaAdmin,GeogAdmin,ProjectFilesAdmin, MailFileAdmin)
 
 
 
