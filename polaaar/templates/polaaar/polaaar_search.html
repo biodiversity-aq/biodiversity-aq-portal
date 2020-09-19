@@ -10,26 +10,61 @@ POLA3R search
 
 {% block polaaar_css %}
 {% leaflet_css %}
+<style>
+    .searchimgblk {
+        position:relative;
+    }
+    .searchimgblk::before {
+        content:"";
+        background-image: url({% static "imgs/BB_backgrnd.png" %});
+        background-size: cover;
+        background-repeat: no-repeat;
+        position: absolute;
+        top: 0px;
+        right: 0px;
+        bottom: 0px;
+        left: 0px;
+        opacity: 0.3;
+    }
+</style>
+
+
 {% endblock %}
 
 {% block content %}
-<div class="container-fluid" style="background-image: url({% static 'imgs/BB_backgrnd.png' %});background-size: cover;background-repeat: no-repeat">
+<div class="container-fluid searchimgblk" >
     <div class="row" style="padding-top:20px;padding-bottom:60px; border-width:0px;">
         <div class="col-12">
-            <h1 style="background-color:white">How would you like to search?</h1>
+            <h1>Search POLA<sub>3</sub>R by:</h1>
             <div class="btn-group btn-group-toggle" data-toggle="buttons" style="width:100%">
                 <label class="btn btn-biodiversity-darkblue form-check-label" onclick="projfunc()">
-                    <input class="form-check-input" type="radio" name="options" value="sequence" autocomplete="off"> Project
+                    <input class="form-check-input" type="radio" name="options" value="sequence" autocomplete="off">
+                    <span class="d-none d-lg-block">Project</span>
+                    <span class="d-block d-lg-none">
+                        <i class="fas fa-folder-open pl-1"></i>
+                    </span>                    
                 </label>
                 <label class="btn btn-biodiversity-darkblue form-check-label" onclick="envfunc()">
-                    <input class="form-check-input" type="radio" name="options" value="environment" autocomplete="off">Environmental
+                    <input class="form-check-input" type="radio" name="options" value="environment" autocomplete="off">
+                    <span class="d-none d-lg-block">Environmental</span>
+                    <span class="d-block d-lg-none">
+                        <i class="fab fa-envira pl-1"></i>
+                    </span>
                 </label>
 
                 <label class="btn btn-biodiversity-darkblue form-check-label" onclick="seqfunc()">
-                    <input class="form-check-input" type="radio" name="options" value="sequence" autocomplete="off"> Omics search
+                    <input class="form-check-input" type="radio" name="options" value="sequence" autocomplete="off">
+                    <span class="d-none d-lg-block">Omics search</span>
+                    <span class="d-block d-lg-none">
+                        <i class="fas fa-dna pl-1"></i>
+                    </span>
                 </label>
                 <label class="btn btn-biodiversity-darkblue form-check-label" onclick="spafunc()">
-                    <input class="form-check-input" type="radio" name="options" value="spatial" autocomplete="off"> Spatial search
+                    <input class="form-check-input" type="radio" name="options" value="spatial" autocomplete="off">
+                    <span class="d-none d-lg-block">Spatial</span>
+                    <span class="d-block d-lg-none">
+                        <i class="fas fa-map pl-1"></i>
+                    </span>
                 </label>
             </div>
 
@@ -44,19 +79,29 @@ POLA3R search
 
 
         <div class="row" style="border-width:0px;">
-            <div class="col-2">
+            <div class="col-4 col-lg-2">
                 <button type="button" class="btn btn-biodiversity-lightblue" data-toggle="modal" data-target="#exampleModal" style="width:100%">
-                    Instructions
+                    <span class="d-none d-lg-block">Instructions</span>                                        
+                    <span class="d-block d-sm-block d-lg-none">
+                        <i class="fas fa-question pl-1"></i>
+                    </span>
                 </button>
             </div>
-            <div class="col-2">
+            <div class="col-4 col-lg-2">
                 <button type="button" class="btn btn-biodiversity-lightblue" data-toggle="modal" data-target="#exampleModal2" style="width:100%">
-                    Database schema
+                    <span class="d-none d-lg-block">Database Schema</span>
+                    <span class="d-none d-md-block d-lg-none">Schema</span>
+                    <span class="d-block d-sm-block d-md-none">
+                        <i class="fas fa-database pl-1"></i>
+                    </span>
                 </button>
             </div>
-            <div class="col-2">
+            <div class="col-4 col-lg-2">
                 <a role="button" class="btn btn-biodiversity-lightblue" href="{% static 'files/POLA3R_read_merge_XLSX.R' %}" style="width:100%">
-                    Sample R script
+                    <span class="d-none d-lg-block">Sample R script</span>
+                    <span class="d-block d-sm-block d-lg-none">
+                        <i class="fas fa-file-code pl-1"></i>
+                    </span>                   
                 </a>
             </div>
             {% if viewprojs %}
@@ -73,36 +118,31 @@ POLA3R search
 
 
 
-                <table id="myTable" class="display nowrap" style="width:100%">
+                <table id="myTable" class="display nowrap" style="width:100%;">
                     <thead>
                         <tr>
-                            <th style="display:none">coordinates</th>
-                            <th>Id</th>
                             <th>Project name</th>
-                            <th>Contact</th> 
+                            <th>Id</th>
+                            <th>Contact</th>
                             <th>Start date</th>
                             <th>End date</th>
                             <th>Occurrences</th>
                             <th>Sequences</th>
                             <th>Download</th>
+                            <th style="display:none">coordinates</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for i in qs %}
                         <tr>
-                            <td style="display:none!important">
-                                {% for xx in i.event_hierarchy.all %}
-                                {% for xy in xx.event.all %}
-                                [{{xy.Longitude}},{{xy.Latitude}}]
-                                {% endfor %}
-                                {% endfor %}
+                            <td>
+                                <div style="word-wrap: break-word">
+                                    <a href="#" data-toggle="modal" data-target="#project_{{i.id}}">
+                                        {{i.project_name}}
+                                    </a>
+                                </div>
                             </td>
                             <td>{{i.id}}</td>
-                            <td>
-                                <a href="#" data-toggle="modal" data-target="#project_{{i.id}}" style="width:100%">
-                                    {{i.project_name}}
-                                </a>
-                            </td>
                             <td>  {{i.project_creator.full_name}}</td>
                             <td>{{i.start_date|default_if_none:"NA"}}</td>
                             <td>{{i.end_date|default_if_none:"NA"}}</td>
@@ -125,6 +165,13 @@ POLA3R search
                                 <a href="{% url 'polaaar:projectmetadata-detail' i.id %}"><i class="fas fa-file-code pl-1"></i></a>
                                 <a href="{% url 'polaaar:GetProjectFiles' i.id %}"><i class="fas fa-file-alt pl-1"></i></a>
                             </td>
+                            <td style="display:none!important">
+                                {% for xx in i.event_hierarchy.all %}
+                                {% for xy in xx.event.all %}
+                                [{{xy.Longitude}},{{xy.Latitude}}]
+                                {% endfor %}
+                                {% endfor %}
+                            </td>
                         </tr>
 
 
@@ -137,14 +184,26 @@ POLA3R search
 
 
             </div>
-            <div class="col-3">
-                <button class="btn btn-biodiversity-blue btn-lg" style="width:100%" onclick="map_refresh()">{{ buttondisplay }}</button>
+            <div class="col-4 col-lg-3">
+                <button class="btn btn-biodiversity-blue btn-lg" style="width:100%" onclick="map_refresh()">
+                    <span class="d-none d-sm-none d-md-block">{{ buttondisplay }}</span>
+                    <span class="d-none d-sm-block d-md-none">Map</span>
+                    <i class="fas fa-map pl-1"></i>
+                </button>
             </div>
-            <div class="col-3">
-                <button class="btn btn-biodiversity-teal btn-lg" style="width:100%" onclick="getPOLA3Rdata(1, '{% url 'polaaar:export_projects' %}','EXCEL')">Download EXCEL <i class="fas fa-file-excel pl-1"></i></button>
+            <div class="col-4 col-lg-3">
+                <button class="btn btn-biodiversity-teal btn-lg" style="width:100%" onclick="getPOLA3Rdata(1, '{% url 'polaaar:export_projects' %}','EXCEL')">
+                 <span class="d-none d-sm-none d-md-block">Download EXCEL</span> 
+                 <span class="d-none d-sm-block d-md-none">Excel</span>
+                 <i class="fas fa-file-excel pl-1"></i>
+                </button>
             </div>
-            <div class="col-3">
-                <button class="btn btn-biodiversity-teal btn-lg" onclick="getPOLA3Rdata(1,'{% url 'polaaar:projectmetadata-list' %}','JSON')" style="width:100%">Download JSON <i class="fas fa-file-code pl-1"></i></button>
+            <div class="col-4 col-lg-3">
+                <button class="btn btn-biodiversity-teal btn-lg" onclick="getPOLA3Rdata(1,'{% url 'polaaar:projectmetadata-list' %}','JSON')" style="width:100%">
+                 <span class="d-none d-sm-none d-md-block">Download JSON</span>
+                 <span class="d-none d-sm-block d-md-none">JSON</span>
+                 <i class="fas fa-file-code pl-1"></i>
+                </button>
             </div>
         </div>
 
@@ -275,14 +334,25 @@ POLA3R search
 
 
 <script>
-    $.extend($.fn.dataTable.defaults, {
-        responsive: true,
-    });
+    
     $(document).ready(function () {
-        var Mytable = $('#myTable').DataTable();
+        var Mytable = $('#myTable').DataTable({
+        responsive:{
+            details:true
+        },
+        columnDefs: [
+                {
+                    render: function (data, type, full, meta) {
+                        return "<div class='text-wrap width-200'>" + data + "</div>";
+                    },
+                    targets: 0
+                }
+             ]
+    });
+        // hide the ID and coordinates columns which are used for queries on the db side
 
-        Mytable.column(0).visible(false)
         Mytable.column(1).visible(false)
+        Mytable.column(8).visible(false)
 
     });
 
@@ -291,6 +361,13 @@ POLA3R search
 
 
 <style>
+    .text-wrap {
+        white-space: normal;
+    }
+
+    .width-200 {
+        width: 200px;
+    }
 
     .leaflet-container { /* all maps */
         width: 100%;

@@ -293,3 +293,8 @@ a.waves-effect, a.waves-light {
 .biodiversity-theme {
     background-color: #0099CC;
 }
+
+
+table.dataTable th, table.dataTable td {
+    white-space: nowrap;
+}

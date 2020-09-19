@@ -1,56 +1,69 @@
 {% load static %}
 
-<div class="row" style="border-width:0px;">
-    <div class="col-12">
+    <div class="row" style="border-width:0px;">
+        <div class="col-12">
 
-        <table id="myTable" class="display nowrap" width="100%">
-            <thead>
-                <tr>
-                    <th style="display:none">id</th>
-                    <th>Project</th>
-                    <th>Event hierarchy</th>
-                    <th>Event</th>
-                    <th>Accession number</th>
-                    <th>Gene</th>
-                    <th>URL</th>                    
-                </tr>
-            </thead>
-            <tbody>
-                {% for i in qs %}
-                <tr>
-                    <td style="display:none">{{i.id}}</td>
-                    <td><a href="{% url 'polaaar:polaaar_search'%}?pid={{ i.event.event_hierarchy.project_metadata.id }}">{{i.event.event_hierarchy.project_metadata.project_name}}</a></td>
-                    <td>{{i.event.event_hierarchy.event_hierarchy_name}}</td>
-                    <td>{{i.event.sample_name}}</td>
-                    <td>{{i.seqData_accessionNumber}}</td>
-                    <td>{{i.target_gene}}</td>
-                    <td>{{i.seqData_url}}</td>                    
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+            <table id="myTable" class="display nowrap" width="100%">
+                <thead>
+                    <tr>
+                        <th>Project</th>
+                        <th style="display:none">id</th>
+                        <th>Event hierarchy</th>
+                        <th>Event</th>
+                        <th>Accession number</th>
+                        <th>Gene</th>
+                        <th>URL</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for i in qs %}
+                    <tr>
+                        <td><a href="{% url 'polaaar:polaaar_search'%}?pid={{ i.event.event_hierarchy.project_metadata.id }}">{{i.event.event_hierarchy.project_metadata.project_name}}</a></td>
+                        <td style="display:none">{{i.id}}</td>
+                        <td>{{i.event.event_hierarchy.event_hierarchy_name}}</td>
+                        <td>{{i.event.sample_name}}</td>
+                        <td>{{i.seqData_accessionNumber}}</td>
+                        <td>{{i.target_gene}}</td>
+                        <td>{{i.seqData_url}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
 
+        </div>
+
+
+        <div class="col-6 col-lg-3">
+            <button class="btn btn-biodiversity-teal btn-lg" style="width:100%" onclick="getPOLA3Rdata(1,'{% url 'polaaar:export_sequences' %}','EXCEL')">
+                <span class="d-none d-sm-none d-md-block">Download EXCEL</span>
+                <span class="d-none d-sm-block d-md-none">Excel</span>
+                <i class="fas fa-file-excel pl-1"></i>
+            </button>
+        </div>
+        <div class="col-6 col-lg-3">
+            <button class="btn btn-biodiversity-teal btn-lg" onclick="getPOLA3Rdata(1,'{% url 'polaaar:sequences-list' %}','JSON')" style="width:100%">
+                <span class="d-none d-sm-none d-md-block">Download JSON</span>
+                <span class="d-none d-sm-block d-md-none">JSON</span>
+                <i class="fas fa-file-code pl-1"></i>
+            </button>
+        </div>        
     </div>
 
-    <div class="col-3">
-        <button class="btn btn-biodiversity-teal btn-lg" style="width:100%" onclick="getPOLA3Rdata(0, '{% url 'polaaar:export_sequences' %}','EXCEL')">Download EXCEL <i class="fas fa-file-excel pl-1"></i></button>
-    </div>
-    <div class="col-3">
-        <button class="btn btn-biodiversity-teal btn-lg" onclick="getPOLA3Rdata(0,'{% url 'polaaar:sequences-list' %}','JSON')" style="width:100%">Download JSON <i class="fas fa-file-code pl-1"></i></button>
-    </div>
-</div>
-
-
-<script type="text/javascript" src="{% static 'js/jquery.dataTables.js' %}"></script>
-<script type="text/javascript" src="{% static 'js/dataTables.responsive.js' %}"></script>
-<script type="text/javascript" src="{% static 'js/polaaar.js' %}"></script>
 
 
 <script>
     $(document).ready(function () {
         var Mytable = $('#myTable').DataTable({
-			responsive: true
+			responsive: true,
+            columnDefs: [
+                {
+                    render: function (data, type, full, meta) {
+                        return "<div class='text-wrap width-200'>" + data + "</div>";
+                    },
+                    targets: 0
+                }
+             ]
 		});
-        Mytable.column(0).visible(false)
+        Mytable.column(1).visible(false)
     });
 </script>

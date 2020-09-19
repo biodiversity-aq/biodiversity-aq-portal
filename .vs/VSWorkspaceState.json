@@ -2,12 +2,16 @@
   "ExpandedNodes": [
     "",
     "\\biodiversity",
-    "\\biodiversity\\templates",
-    "\\biodiversity\\templates\\rest_framework",
+    "\\biodiversity\\static",
+    "\\biodiversity\\static\\js",
+    "\\home",
+    "\\home\\migrations",
     "\\polaaar",
+    "\\polaaar\\migrations",
     "\\polaaar\\templates",
-    "\\polaaar\\templates\\polaaar"
+    "\\polaaar\\templates\\polaaar",
+    "\\polaaar\\templates\\polaaar\\polaaarsearch"
   ],
-  "SelectedNode": "\\polaaar\\views.py",
+  "SelectedNode": "\\home\\migrations\\0038_auto_20200709_0525.py",
   "PreviewInSolutionExplorer": false
 }
