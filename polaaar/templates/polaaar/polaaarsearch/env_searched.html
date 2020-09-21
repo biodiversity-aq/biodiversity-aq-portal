@@ -21,8 +21,8 @@
         <table id="myTable" class="display nowrap" style="width:100%">
             <thead>
                 <tr>
-                    <th style="display:none">id</th>
                     <th>Project name</th>
+                    <th style="display:none">id</th>
                     <th>Event name</th>
                     <th>Location (Lat/Lon)</th>
                     <th>Value</th>
@@ -34,9 +34,9 @@
             </thead>
             <tbody>
                 {% for i in qsenv %}
-                <tr>
-                    <td style="display:none">{{i.id}}</td>
+                <tr>                    
                     <td><a href="{% url 'polaaar:polaaar_search'%}?pid={{ i.event.event_hierarchy.project_metadata.id }}">{{i.event.event_hierarchy.project_metadata.project_name}}</a></td>
+                    <td style="display:none">{{i.id}}</td>
                     <td>{{i.event.sample_name}}</td>
                     <td>{{i.event.Longitude}}/{{i.event.Latitude}}</td>
                     {% if i.env_variable.var_type == "NUM" %}
@@ -67,19 +67,22 @@
 
     </div>
 
-    <div class="col-3">
-        <button class="btn btn-biodiversity-teal btn-lg" style="width:100%" onclick="getPOLA3Rdata(0,'{% url 'polaaar:export_environment' %}','EXCEL')">Download Excel <i class="fas fa-file-excel pl-1"></i></button>
+    <div class="col-6 col-lg-3">
+        <button class="btn btn-biodiversity-teal btn-lg" style="width:100%" onclick="getPOLA3Rdata(1,'{% url 'polaaar:export_environment' %}','EXCEL')">
+        <span class="d-none d-sm-none d-md-block">Download EXCEL</span> 
+                 <span class="d-none d-sm-block d-md-none">Excel</span>
+                 <i class="fas fa-file-excel pl-1"></i></button>
     </div>
-    <div class="col-3">
-        <button class="btn btn-biodiversity-teal btn-lg" onclick="getPOLA3Rdata(0,'{% url 'polaaar:environmentalvariables-list' %}','JSON')" style="width:100%">Download JSON <i class="fas fa-file-code pl-1"></i></button>
+    <div class="col-6 col-lg-3">
+        <button class="btn btn-biodiversity-teal btn-lg" onclick="getPOLA3Rdata(1,'{% url 'polaaar:environmentalvariables-list' %}','JSON')" style="width:100%">
+        <span class="d-none d-sm-none d-md-block">Download JSON</span>
+         <span class="d-none d-sm-block d-md-none">JSON</span>
+         <i class="fas fa-file-code pl-1"></i>
+        </button>
     </div>
 </div>
 
 
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-<script type="text/javascript" src="{% static 'js/jquery.dataTables.js' %}"></script>
-<script type="text/javascript" src="{% static 'js/dataTables.responsive.js' %}"></script>
-<script type="text/javascript" src="{% static 'js/polaaar.js' %}"></script>
 
 <script>
 
@@ -105,10 +108,18 @@
 
     $(document).ready(function () {
     var table = $('#myTable').DataTable({
-    responsive: true
+    responsive: true,
+    columnDefs: [
+                {
+                    render: function (data, type, full, meta) {
+                        return "<div class='text-wrap width-200'>" + data + "</div>";
+                    },
+                    targets: 0
+                }
+             ]
     });
 
-    table.column(0).visible(false)
+    table.column(1).visible(false)
 
     $('#min, #max').keyup(function () {
     table.draw();
