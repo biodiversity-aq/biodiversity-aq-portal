@@ -199,10 +199,7 @@ class ProjectMetadata(models.Model):
     associated_media                = models.TextField(blank=True,null=True)
     created_on                      = models.DateField()
     updated_on                      = models.DateField(auto_now=True)
-
-    project_creator                 = models.ForeignKey(
-                                        settings.AUTH_USER_MODEL,
-                                        on_delete=models.CASCADE)
+    project_contact = models.TextField(blank=True, null=True)
 
     project_qaqc                    = models.BooleanField(blank=True,null=True)
     amplicon_image                  = models.ImageField(upload_to='amplicons',blank=True,null=True)    
