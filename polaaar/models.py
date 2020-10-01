@@ -202,7 +202,6 @@ class ProjectMetadata(models.Model):
     project_contact = models.TextField(blank=True, null=True)
 
     project_qaqc                    = models.BooleanField(blank=True,null=True)
-    amplicon_image                  = models.ImageField(upload_to='amplicons',blank=True,null=True)    
 
     def __str__(self):
         return self.project_name
