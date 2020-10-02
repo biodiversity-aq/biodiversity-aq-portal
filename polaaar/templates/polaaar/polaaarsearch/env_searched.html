@@ -24,7 +24,9 @@
                     <th>Project name</th>
                     <th style="display:none">id</th>
                     <th>Event name</th>
-                    <th>Location (Lat/Lon)</th>
+                    <th>Decimal latitude</th>
+                    <th>Decimal longitude</th>
+                    <th>Measurement</th>
                     <th>Value</th>
                     <th>Units</th>
                     <th>Collection date</th>
@@ -38,7 +40,9 @@
                     <td><a href="{% url 'polaaar:polaaar_search'%}?pid={{ i.event.event_hierarchy.project_metadata.id }}">{{i.event.event_hierarchy.project_metadata.project_name}}</a></td>
                     <td style="display:none">{{i.id}}</td>
                     <td>{{i.event.sample_name}}</td>
-                    <td>{{i.event.Longitude}}/{{i.event.Latitude}}</td>
+                    <td>{{i.event.Latitude}}</td>
+                    <td>{{i.event.Longitude}}</td>
+                    <td>{{ i.env_variable }}</td>
                     {% if i.env_variable.var_type == "NUM" %}
                     <td>{{i.env_numeric_value}}</td>
                     {% else %}
