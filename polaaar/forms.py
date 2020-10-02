@@ -27,7 +27,7 @@ class EmailForm(forms.ModelForm):
         allowed_content_types = [
             'text/plain', 'text/csv', 'application/zip', 'application/vnd.ms-excel', 'text/tab-separated-values',
             'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/zip']
-        if data.content_type not in allowed_content_types:
+        if data and data.content_type not in allowed_content_types:
             raise forms.ValidationError('Content type not allowed: %(value)s', code='invalid',
                                         params={'value': data.content_type})
         return data
