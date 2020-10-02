@@ -11,7 +11,7 @@ class EmailForm(forms.ModelForm):
     subject = forms.CharField(label='Dataset name',
                               widget=forms.TextInput(attrs={'class': "form-control"}))
     document = forms.FileField(
-        required=True, widget=forms.ClearableFileInput, label='Select data file',
+        required=False, widget=forms.ClearableFileInput, label='Select data file',
         validators=[FileExtensionValidator(allowed_extensions=['txt', 'tsv', 'csv', 'xls', 'xlsx', 'zip'])])
 
     class Meta:
