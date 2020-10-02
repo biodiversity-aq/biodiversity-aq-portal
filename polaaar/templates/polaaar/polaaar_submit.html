@@ -14,48 +14,26 @@ POLA3R search
     <div class="row justify-content-center" style="padding-top:20px;padding-bottom:160px; border-width:0px;">
 
         <div class="col-12" style="text-align:center">
-            <h1>Do you have some data to submit?</h1>
+            <h1>Do you have sequence metadata to submit to POLA<sub>3</sub>R?</h1>
         </div>
 
         <div class="col-12 text-center" style="text-align:center">
-
             <a href="#"><img style="background-color:white;border:solid black 2px;border-radius:100px" src="{% static 'imgs/dna_clipart.png' %}" /></a>
-
-            <h2>Submit data to POLA<sub>3</sub>R <i class="fas fa-dna pl-1"></i></h2>
-
-            <a role="button" href="https://press3.mcs.anl.gov/gensc/mixs/" class="btn btn-biodiversity-lightblue btn-lg" style="width:30%;display:inline-block">
-                MIxS instructions
-            </a>
+            <br/>
             <a role="button" href="{% static 'files/Template_SeqDataPolaaar_v1.xlsx' %}" class="btn btn-biodiversity-lightblue btn-lg" style="width:30%;display:inline-block;">
-                Download the datasheet
+                Download the data template (xlsx)
             </a>
 
-        </div>
-        <div class="col-12">
-            <hr />
         </div>
         <div class="col-12 col-md-8" style="text-align:left">
-
-            <h4>1) Click the above button to download the xlsx sheet</h4>
-            <h4>2) Read all the instructions in the ReadMe tab of the spreadsheet</h4>
-            <h4>3) Fill in the <span style="color:darkorange">dark orange cells</span> at minimum</h4>
-            <h4>4) Create a record for your dataset in <a href="https://ipt.biodiversity.aq/">IPT</a></h4>
-            <h4>
-                5) Once completed, <a href="{% url 'polaaar:email_submission' %}">click here</a> to submit your datasheet
-                <strong>(N.B. Your data sheet will be reviewed before data become available online)</strong>
-            </h4>
+            <hr>
+            <h4>1) Populate the data template above with your data according to the instructions in the spreadsheet.</h4>
+            <h4>2) Upload your data sheet with the button below.</h4>
+            <h4>3) Your data will be reviewed before it is published.</h4>
+            <hr>
         </div>
-        <div class="col-12 col-md-5 text-center">
-
-            <a role="button" href="{% url 'polaaar:email_submission' %}" class="btn btn-biodiversity-teal btn-lg">Submit data</a>
-
-        </div>
-        <div class="col-12">
-            <hr />
-        </div>
-        <div class="col-12 col-md-7" style="text-align:left">
-            <h3>Do you have a dataset, but aren't sure where to put it?</h3>
-            <h3><a href="{% url 'polaaar:email_submission' %}">Submit your datasheet</a> to the portal and we will review it</h3>
+        <div class="col-12 text-center">
+            <a role="button" href="{% url 'polaaar:email_submission' %}" class="btn btn-biodiversity-teal btn-lg" style="width:30%;display:inline-block;">Submit data</a>
         </div>
 
                
