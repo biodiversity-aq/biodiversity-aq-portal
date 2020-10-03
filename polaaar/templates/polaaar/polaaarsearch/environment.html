@@ -2,17 +2,21 @@
 <div class="row" style="border-width:0px">
     
     <div class="col-12">
-        <h2>Search below to find the projects that have sampled specific environmental data (you can filter by multiple variables): </h2>
+        <h2>Search below to find the projects that have sampled specific environmental data: </h2>
+        <p>For more advanced search queries, please use the <a href="{% url 'polaaar:api_reference' %}">API</a></p>
     </div>
-    <div class="col-12 col-md-6">       
-        <select style="display:inline-block;width:100%" class="selectpicker show-tick" data-live-search="true" id="Search" multiple data-width="100%">
+    <div class="col-12 col-md-3">
+        <select style="display:inline-block;width:100%" class="selectpicker show-tick" data-live-search="true" id="Search" data-width="100%">
             {% for i in qs %}
-                <option value="{{i.name}}">{{i.name}} ({{i.var_type}})</option>                
+            <option value="{{i.name}}">{{i.name}} ({{i.var_type}})</option>
             {% endfor %}
         </select>
         
     </div>
+    
 </div>    
+
+
 <div class="row" style="border-width:0px;">
     <div class="col-12 col-md-3">
         <button style="display:inline-block;width:100%" type="button" class="btn btn-biodiversity-lightblue" id="searchbut" onclick="search()"><span class="glyphicon glyphicon-search"></span> Search</button>

@@ -3,15 +3,12 @@
     "",
     "\\biodiversity",
     "\\biodiversity\\static",
-    "\\biodiversity\\static\\js",
-    "\\home",
-    "\\home\\migrations",
+    "\\biodiversity\\static\\css",
     "\\polaaar",
-    "\\polaaar\\migrations",
     "\\polaaar\\templates",
     "\\polaaar\\templates\\polaaar",
     "\\polaaar\\templates\\polaaar\\polaaarsearch"
   ],
-  "SelectedNode": "\\home\\migrations\\0038_auto_20200709_0525.py",
+  "SelectedNode": "\\polaaar\\templates\\polaaar\\polaaarsearch\\spatial_search_table.html",
   "PreviewInSolutionExplorer": false
 }
