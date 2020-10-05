@@ -111,7 +111,6 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'djconfig.middleware.DjConfigMiddleware',
 
-    'wagtail.core.middleware.SiteMiddleware',
     'wagtail.contrib.redirects.middleware.RedirectMiddleware',
 ]
 
@@ -370,4 +369,5 @@ POLAAAR_PROJECT_FILES_DIR = 'polaaar/project_files/'  # has to be relative path 
 
 POLAAAR_MAIL_FILE_DIR = 'polaaar/mail_file/'  # has to be relative path to MEDIA_ROOT
 
-POLAAAR_ADMIN_LIST = ['ymgan@naturalsciences.be']  # serves as the recipient list for data submission
+# serves as the recipient list for data submission
+POLAAAR_ADMIN_LIST = ['data.biodiversity.aq@gmail.com', 'msweetlove@naturalsciences.be']

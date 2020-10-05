@@ -185,6 +185,7 @@ class EventType(models.Model):
 
 #fsa = FileSystemStorage(location='/media/project_files')
 class ProjectMetadata(models.Model):
+    resource_url = models.TextField(blank=True, null=True, help_text='Resource link of this dataset, preferrably points to EML resource page.')
     project_name                    = models.CharField(max_length=255,blank=True,null=True)
     start_date                      = models.DateField(blank=True,null=True)
     end_date                        = models.DateField(blank=True,null=True)
@@ -198,13 +199,9 @@ class ProjectMetadata(models.Model):
     associated_media                = models.TextField(blank=True,null=True)
     created_on                      = models.DateField()
     updated_on                      = models.DateField(auto_now=True)
-
-    project_creator                 = models.ForeignKey(
-                                        settings.AUTH_USER_MODEL,
-                                        on_delete=models.CASCADE)
+    project_contact = models.TextField(blank=True, null=True)
 
     project_qaqc                    = models.BooleanField(blank=True,null=True)
-    amplicon_image                  = models.ImageField(upload_to='amplicons',blank=True,null=True)    
 
     def __str__(self):
         return self.project_name

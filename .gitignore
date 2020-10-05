@@ -3,6 +3,7 @@
 
 #  visual studio files
 .vs
+*.sqlite
 
 # Byte-compiled / optimized / DLL files
 *.pyc

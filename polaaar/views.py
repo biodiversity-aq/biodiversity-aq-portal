@@ -238,7 +238,10 @@ def email_submission(request):
             post.save()
             subject = form.cleaned_data.get('subject')
             message = form.cleaned_data.get('message')
+            submitted_by = form.cleaned_data.get('email')
             document = form.cleaned_data.get('document')
+            subject = '[POLA3R Data Submission]{}'.format(subject)
+            message = '{}\nSubmitted by {}'.format(message, submitted_by)
             email_from = settings.SENDER_MAIL
             recipient_list = settings.POLAAAR_ADMIN_LIST
             email = EmailMessage(subject, message, email_from, recipient_list)
