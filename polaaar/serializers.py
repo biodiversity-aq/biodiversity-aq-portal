@@ -254,12 +254,12 @@ class ProjectMetadataSerializer(serializers.ModelSerializer):
         read_only=True,
         view_name='eventhierarchy-detail'
     )
-	project_creator = serializers.StringRelatedField(many=False)
 	class Meta:
 		model = ProjectMetadata
 		fields = [
 		'url',
 		'project_name',
+		'project_contact',
 		'start_date',
 		'end_date',
 		'EML_URL',
@@ -278,6 +278,7 @@ class ProjectMetadataSerializer(serializers.ModelSerializer):
 		pandas_unstacked_header = [		
 		'url',
 		'project_name',
+		'project_contact',
 		'start_date',
 		'end_date',
 		'EML_URL',

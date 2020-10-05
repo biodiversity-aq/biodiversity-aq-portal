@@ -12,6 +12,7 @@ from django.contrib.gis.db import models
 from django.contrib.gis.geos import GEOSGeometry
 from django_countries.fields import CountryField
 from django.core.files.storage import FileSystemStorage
+from accounts.models import UserProfile
 
 
 
@@ -200,6 +201,7 @@ class ProjectMetadata(models.Model):
     created_on                      = models.DateField()
     updated_on                      = models.DateField(auto_now=True)
     project_contact = models.TextField(blank=True, null=True)
+    project_creator = models.ForeignKey(UserProfile, blank=True, null=True, on_delete=models.DO_NOTHING)
 
     project_qaqc                    = models.BooleanField(blank=True,null=True)
 

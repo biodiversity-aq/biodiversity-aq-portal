@@ -153,7 +153,7 @@ class ProjectMetadataAdmin(ModelAdmin):
     menu_order = 100
     add_to_settings_menu=False
     exclude_from_explorer=False
-    search_fields=('project_name','abstract','project_creator__username','project_creator__first_name','project_creator__last_name')
+    search_fields=('project_name','abstract','project_contact')
     list_filter = ('is_public','project_qaqc')    
     list_display = ('project_name','start_date','end_date','is_public','abstract','project_qaqc')
 
@@ -489,7 +489,7 @@ class MIxSAdminImpExp(ImportExportModelAdmin):
 
 class ProjectMetadataAdminImpExp(ImportExportModelAdmin):
     resource_class = ProjectMetadataResource
-    search_fields=('project_name','abstract','project_creator__username','project_creator__first_name','project_creator__last_name')
+    search_fields=('project_name','abstract','project_contact')
     list_filter = ('is_public','project_qaqc')    
     list_display = ('project_name','start_date','end_date','is_public','abstract','project_qaqc')
 

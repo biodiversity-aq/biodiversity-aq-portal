@@ -323,7 +323,7 @@ class ProjectMetadataViewSet(viewsets.ReadOnlyModelViewSet):
         'abstract': ['icontains'],
         'is_public': ['exact'],
         ## Creator search
-        'project_creator__full_name': ['exact', 'icontains'],
+        'project_contact': ['exact', 'icontains'],
         ## Reference search
         'associated_references__full_reference': ['icontains'],
 
@@ -648,7 +648,8 @@ def export_projects(request):
             'created_on',
             'updated_on',
             'project_creator',
-            'project_qaqc'
+            'project_qaqc',
+            'project_contact',
         ]
         project_query_row = [
             'project_name',
@@ -661,7 +662,8 @@ def export_projects(request):
             'created_on',
             'updated_on',
             'project_creator__full_name',
-            'project_qaqc'
+            'project_qaqc',
+            'project_contact',
         ]
         PMlist = PM.annotate(geome=AsGeoJSON('geomet')).values_list(*project_query_row)
 
@@ -1911,7 +1913,8 @@ def export_events(request):
             'created_on',
             'updated_on',
             'project_creator',
-            'project_qaqc'
+            'project_qaqc',
+            'project_contact',
         ]
         project_query_row = [
             'project_name',
@@ -1924,7 +1927,8 @@ def export_events(request):
             'created_on',
             'updated_on',
             'project_creator__full_name',
-            'project_qaqc'
+            'project_qaqc',
+            'project_contact',
         ]
         PMlist = PM.annotate(geome=AsGeoJSON('geomet')).values_list(*project_query_row)
 
