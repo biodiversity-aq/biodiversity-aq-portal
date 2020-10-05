@@ -2,13 +2,12 @@
   "ExpandedNodes": [
     "",
     "\\biodiversity",
-    "\\biodiversity\\static",
-    "\\biodiversity\\static\\css",
+    "\\biodiversity\\templates",
+    "\\biodiversity\\templates\\rest_framework",
     "\\polaaar",
     "\\polaaar\\templates",
-    "\\polaaar\\templates\\polaaar",
     "\\polaaar\\templates\\polaaar\\polaaarsearch"
   ],
-  "SelectedNode": "\\polaaar\\templates\\polaaar\\polaaarsearch\\spatial_search_table.html",
+  "SelectedNode": "\\biodiversity\\templates\\rest_framework\\api.html",
   "PreviewInSolutionExplorer": false
 }
