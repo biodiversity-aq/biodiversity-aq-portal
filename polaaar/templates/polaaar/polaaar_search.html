@@ -9,11 +9,13 @@ POLA3R search
 {% block body_class %}{% endblock %}
 
 {% block polaaar_css %}
+
     <style>
         .btn-biodiversity-darkblue:hover {
             color: #eee;
         }
         </style>
+
 {% leaflet_css %}
 <style>
     .searchimgblk {
@@ -314,8 +316,8 @@ POLA3R search
 <script>
 
     function envfunc() {
-        URL = "{% url 'polaaar:env_search' %}" 
-		$("#searchcontent").load(URL)
+        URL = "{% url 'polaaar:env_search' %}"
+		$("#searchcontent").load(URL) 
     };
     function seqfunc() {
         URL = "{% url 'polaaar:seq_search' %}"
@@ -457,6 +459,8 @@ POLA3R search
 
 
 
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script type="text/javascript">
     function myFunction() {
       var popup = document.getElementById("myPopup");
