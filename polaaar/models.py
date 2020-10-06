@@ -56,9 +56,9 @@ TAXA = (
     )
 
 class Taxa(models.Model):
-    name            = models.CharField(max_length=255,null=True,blank=True)
-    TaxonRank       = models.CharField(max_length=100,choices=TAXA,blank=True,null=True)
-    taxonID         = models.CharField(max_length=100,blank=True,null=True) ## From WORMS
+    name            = models.CharField(max_length=255,null=True,blank=True, help_text="the name and subject or a record (line) in a table")
+    TaxonRank       = models.CharField(max_length=100,choices=TAXA,blank=True,null=True, help_text="http://rs.tdwg.org/dwc/terms/verbatimTaxonRank")
+    taxonID         = models.CharField(max_length=100,blank=True,null=True, help_text="http://rs.tdwg.org/dwc/terms/scientificNameID") ## From WORMS
     ## this is the recursive link to the table. We allow this to be null and blank
     ## because at the top level (Kingdom), we wouldn't have a parent
     parent_taxa     = models.ForeignKey('self',on_delete=models.DO_NOTHING,related_name='TaxonName',blank=True,null=True)
@@ -121,9 +121,9 @@ GEOG_LEVELS = (
 )
 
 class Geog_Location(models.Model):
-    name            = models.CharField(max_length=300,null=True,blank=True)
-    geog_level      = models.CharField(max_length=300,choices=GEOG_LEVELS)
-    parent_geog     = models.ForeignKey('self',on_delete=models.DO_NOTHING,related_name='GeogName',blank=True,null=True)
+    name            = models.CharField(max_length=300,null=True,blank=True, help_text="the name and subject or a record (line) in a table")
+    geog_level      = models.CharField(max_length=300,choices=GEOG_LEVELS, help_text="a level indicating the geographical scale or a geographic name (e.g. continent; country; province; city)")
+    parent_geog     = models.ForeignKey('self',on_delete=models.DO_NOTHING,related_name='GeogName',blank=True,null=True, help_text="foreign key to another (parent) Geog_Location record")
 
     def __str__(self):
         return self.geog_level+': '+self.name  
