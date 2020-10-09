@@ -1,0 +1,142 @@
+table	field	definition
+taxa	id	
+taxa	name	the name and subject or a record (line) in a table
+taxa	TaxonRank	http://rs.tdwg.org/dwc/terms/verbatimTaxonRank
+taxa	taxonID	http://rs.tdwg.org/dwc/terms/scientificNameID
+taxa	parent_taxa	
+geog_location	id	
+geog_location	name	The name and subject or a record (line) in a table
+geog_location	geog_level	A level indicating the geographical scale or a geographic name (e.g. continent; country; province; city)
+geog_location	parent_geog	Foreign key to (parent) Geog_Location table
+package	id	
+package	name	The name and subject or a record (line) in a table
+reference	id	
+reference	full_reference	Citation that form a bibliography on literature related / used in the dataset
+reference	doi	doi of the literature related / used in the dataset
+reference	year	The year of the literature related / used in the dataset
+eventtype	id	
+eventtype	name	The name and subject or a record (line) in a table
+projectmetadata	id	
+projectmetadata	resource_url	Resource link of this dataset, preferrably points to EML resource page
+projectmetadata	project_name	Name of the project within which the sequencing was organized
+projectmetadata	start_date	Start date of the project
+projectmetadata	end_date	End date of the project
+projectmetadata	EML_URL	The url of to the project metadata's EML file on the IPT or GBIF
+projectmetadata	abstract	https://eml.ecoinformatics.org/schema/eml-resource_xsd.html#ResourceGroup_abstract
+projectmetadata	geomet	https://eml.ecoinformatics.org/schema/eml-coverage_xsd.html#GeographicCoverage_boundingCoordinates
+projectmetadata	is_public	Whether a the data of a project is public or embargoed
+projectmetadata	associated_media	http://rs.tdwg.org/dwc/terms/associatedReferences
+projectmetadata	created_on	The date on which the resource created recommended best practice is to use an encoding scheme; such as ISO 8601:2004(E)
+projectmetadata	updated_on	The most recent date on which the resource was changed.
+projectmetadata	project_contact	https://eml.ecoinformatics.org/schema/eml-dataset_xsd.html#DatasetType_contact
+projectmetadata	project_creator	The user who created this record.
+projectmetadata	project_qaqc	Whether or not a dataset has been Quality Controlled
+eventhierarchy	id	
+eventhierarchy	event_hierarchy_name	The original sample name that can be used to identify the material taken in the field.
+eventhierarchy	event_type	Foreign key to EventType table
+eventhierarchy	description	A description of the sample as it was taken from the natural environment
+eventhierarchy	parent_event_hierarchy	Foreign key to EventHierarchy table
+eventhierarchy	event_creator	The user who created this record
+eventhierarchy	created_on	The date on which the resource created recommended best practice is to use an encoding scheme; such as ISO 8601:2004(E)
+eventhierarchy	updated_on	The most recent date on which the resource was changed
+eventhierarchy	project_metadata	
+event	id	
+event	footprintWKT	http://rs.tdwg.org/dwc/terms/footprintWKT
+event	Latitude	http://rs.tdwg.org/dwc/terms/decimalLatitude
+event	Longitude	http://rs.tdwg.org/dwc/terms/decimalLongitude
+event	eventRemarks	http://rs.tdwg.org/dwc/terms/eventRemarks
+event	sample_name	The original sample name that can be used to identify the material taken in the field.
+event	collection_year	http://rs.tdwg.org/dwc/terms/year
+event	collection_month	http://rs.tdwg.org/dwc/terms/month
+event	collection_day	http://rs.tdwg.org/dwc/terms/day
+event	collection_time	http://rs.tdwg.org/dwc/terms/eventTime
+event	event_hierarchy	Foreign key to EventHierarchy record
+event	parent_event	Foreign key to a (parent) Event table
+event	samplingProtocol	http://rs.tdwg.org/dwc/terms/samplingProtocol
+event	event_metadata	Foreign key to SampleMetadata table
+event	metadata_exists	Whether or not there is SampleMetadata associated to this Event record
+event	occurrence_exists	Whether or not there is Occurrence associated to this Event record
+event	environment_exists	Whether or not there is Environment associated to this Event record
+event	sequences_exists	Whether or not there is Sequence associated to this Event record
+occurrence	id	
+occurrence	occurrenceID	http://rs.tdwg.org/dwc/terms/occurrenceID
+occurrence	taxon	Foreign key to Taxa table
+occurrence	occurrence_notes	http://rs.tdwg.org/dwc/terms/occurrenceRemarks
+occurrence	occurrence_status	http://rs.tdwg.org/dwc/iri/occurrenceStatus
+occurrence	occurrence_class	http://rs.tdwg.org/dwc/terms/basisOfRecord
+occurrence	catalog_number	http://rs.tdwg.org/dwc/terms/catalogNumber
+occurrence	date_identified	http://rs.tdwg.org/dwc/terms/dateIdentified
+occurrence	other_catalog_numbers	http://rs.tdwg.org/dwc/terms/otherCatalogNumbers
+occurrence	recorded_by	http://rs.tdwg.org/dwc/iri/recordedBy
+occurrence	event	Foreign key to Event table
+samplemetadata	id	
+samplemetadata	metadata_tag	A tag of metadata
+samplemetadata	md_created_on	The date on which the resource created recommended best practice is to use an encoding scheme; such as ISO 8601:2004(E)
+samplemetadata	metadata_creator	The user who created this record
+samplemetadata	license	http://purl.org/dc/terms/license
+samplemetadata	geographic_location	Foreign key to Geog_Location table
+samplemetadata	locality	http://rs.tdwg.org/dwc/terms/locality
+samplemetadata	geo_loc_name	The geographical origin of the sample as defined by the country or sea name followed by specific region name. Country or sea names should be chosen from the INSDC country list (http://insdc.org/country.html); or the GAZ ontology (v 1.512) (http://purl.bioontology.org/ontology/GAZ)
+samplemetadata	env_biome	Biomes are defined based on factors such as plant structures; leaf types; plant spacing; and other factors like climate. Biome should be treated as the descriptor of the broad ecological context of a sample. Examples include: desert; taiga; deciduous woodland; or coral reef. EnvO (v 2013-06-14) terms can be found via the link: www.environmentontology.org/Browse-EnvO
+samplemetadata	env_package	Foreign key to Package table
+samplemetadata	env_feature	Environmental feature level includes geographic environmental features. Compared to biome; feature is a descriptor of the more local environment. Examples include: harbor; cliff; or lake. EnvO (v 2013-06-14) terms can be found via the link: www.environmentontology.org/Browse-EnvO
+samplemetadata	env_material	The environmental material level refers to the material that was displaced by the sample; or material in which a sample was embedded; prior to the sampling event. Environmental material terms are generally mass nouns. Examples include: air; soil; or water. EnvO (v 2013-06-14) terms can be found via the link: www.environmentontology.org/Browse-EnvO
+samplemetadata	institutionID	http://rs.tdwg.org/dwc/terms/institutionID
+samplemetadata	nucl_acid_amp	A link to a literature reference, electronic resource or a standard operating procedure (SOP), that describes the enzymatic amplification (PCR, TMA, NASBA) of specific nucleic acids
+samplemetadata	nucl_acid_ext	A link to a literature reference, electronic resource or a standard operating procedure (SOP), that describes the material separation to recover the nucleic acid fraction from a sample
+samplemetadata	ref_biomaterial	Primary publication if isolated before genome publication; otherwise, primary genome report
+samplemetadata	rel_to_oxygen	Is this organism an aerobe, anaerobe? Please note that aerobic and anaerobic are valid descriptors for microbial environments
+samplemetadata	rightsHolder	http://purl.org/dc/terms/rightsHolder
+samplemetadata	samp_collect_device	The method or device employed for collecting the sample
+samplemetadata	samp_store_dur	duration for which sample was stored
+samplemetadata	samp_store_loc	location at which sample was stored; usually name of a specific freezer/room
+samplemetadata	samp_store_temp	temperature at which sample was stored, e.g. -80 degree Celsius
+samplemetadata	samp_vol_we_dna_ext	volume (mL) or weight (g) of sample processed for DNA extraction
+samplemetadata	samplingProtocol	http://rs.tdwg.org/dwc/terms/samplingProtocol
+samplemetadata	source_mat_id	A unique identifier assigned to a material sample (as defined by http://rs.tdwg.org/dwc/terms/materialSampleID, and as opposed to a particular digital record of a material sample) used for extracting nucleic acids, and subsequent sequencing. The identifier can refer either to the original material collected or to any derived sub-samples. The INSDC qualifiers /specimen_voucher, /bio_material, or /culture_collection may or may not share the same value as the source_mat_id field. For instance, the /specimen_voucher qualifier and source_mat_id may both contain 'UAM:Herps:14' , referring to both the specimen voucher and sampled tissue with the same identifier. However, the /culture_collection qualifier may refer to a value from an initial culture (e.g. ATCC:11775) while source_mat_id would refer to an identifier from some derived culture from which the nucleic acids were extracted (e.g. xatc123 or ark:/2154/R2).
+samplemetadata	submitted_to_insdc	Depending on the study (large-scale e.g. done with next generation sequencing technology, or small-scale) sequences have to be submitted to SRA (Sequence Read Archive), DRA (DDBJ Read Archive) or via the classical Webin/Sequin systems to Genbank, ENA and DDBJ. Although this field is mandatory, it is meant as a self-test field, therefore it is not necessary to include this field in contextual data submitted to databases
+samplemetadata	investigation_type	Nucleic Acid Sequence Report is the root element of all MIGS/MIMS compliant reports as standardized by Genomic Standards Consortium. This field is either eukaryote,bacteria,virus,plasmid,organelle, metagenome,mimarks-survey, or mimarks-specimen
+samplemetadata	isol_growth_condt	Publication reference in the form of pubmed ID (pmid), digital object identifier (doi) or url for isolation and growth condition specifications of the organism/material
+samplemetadata	lib_size	Total number of clones in the library prepared for the project
+samplemetadata	additional_information	http://rs.tdwg.org/dwc/terms/eventRemarks
+sequences	id	
+sequences	sequence_name	The original sample name that can be used to identify the material taken in the field.
+sequences	MID	Molecular barcodes, called Multiplex Identifiers (MIDs), that are used to specifically tag unique samples in a sequencing run. Sequence should be reported in uppercase letters
+sequences	subspecf_gen_lin	This should provide further information about the genetic distinctness of this lineage by recording additional information i.e biovar, serovar, serotype, biovar, or any relevant genetic typing schemes like Group I plasmid. It can also contain alternative taxonomic information
+sequences	target_gene	Targeted gene or locus name for marker gene studies
+sequences	target_subfragment	Name of subfragment of a gene or locus. Important to e.g. identify special regions on marker genes like V6 on 16S rRNA
+sequences	type	The type of study; either genomic; metagenomic; transcriptomic; metatranscriptomic; viral RNA; synthetic or other.
+sequences	primerName_forward	http://data.ggbn.org/schemas/ggbn/terms/primerNameForward
+sequences	primerName_reverse	http://data.ggbn.org/schemas/ggbn/terms/primerNameReverse
+sequences	primer_forward	http://data.ggbn.org/schemas/ggbn/terms/primerSequenceForward
+sequences	primer_reverse	http://data.ggbn.org/schemas/ggbn/terms/primerSequenceReverse
+sequences	run_type	The type of sequencing run performed. E.g. Illumina MiSeq 250bp paired-end
+sequences	seqData_url	relevant electronic resources
+sequences	seqData_accessionNumber	An assocated INSDC GenBank accession number.
+sequences	seqData_projectNumber	An assocated INSDC BioProject number.
+sequences	seqData_runNumber	An assocated INSDC run accession number. (ERR number)
+sequences	seqData_sampleNumber	An assocated INSDC BioSample number.
+sequences	seqData_numberOfBases	The number of bases predicted in a sequenced sample
+sequences	seqData_numberOfSequences	the number of sequences in a sample or folder
+sequences	ASV_URL	the url to the table with Operational Taxonomic Unit (OTU) or Alternative Sequence Variants (ASV) occurrences
+sequences	event	Foreign key to Event table
+sampling_method	id	
+sampling_method	shortname	http://rs.tdwg.org/dwc/terms/measurementMethod
+sampling_method	description	a description of the sample as it was taken from the natural environment
+units	id	
+units	name	the name and subject or a record (line) in a table
+units	html_tag	http://rs.iobis.org/obis/terms/measurementUnitID
+variable	id	
+variable	name	the name and subject or a record (line) in a table
+variable	var_type	http://rs.tdwg.org/dwc/terms/measurementType
+environment	id	
+environment	env_sample_name	The original sample name that can be used to identify the material taken in the field.
+environment	created_at	The date on which the resource created recommended best practice is to use an encoding scheme; such as ISO 8601:2004(E)
+environment	link_climate_info	link to climate resource
+environment	env_variable	Foreign key to Variable table
+environment	env_method	Foreign key to sampling_method table
+environment	env_units	Foreign key to Units table
+environment	env_numeric_value	http://rs.tdwg.org/dwc/terms/measurementValue
+environment	env_text_value	http://rs.tdwg.org/dwc/terms/measurementValue
+environment	event	Foreign key to Event table
+generated on 2020-10-09T08:55:05.883604
