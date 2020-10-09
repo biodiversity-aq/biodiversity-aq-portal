@@ -95,13 +95,12 @@ POLA3R search
                 </button>
             </div>
             <div class="col-4 col-lg-2">
-                <button type="button" class="btn btn-biodiversity-lightblue" data-toggle="modal" data-target="#exampleModal2" style="width:100%">
-                    <span class="d-none d-lg-block">Database Schema</span>
-                    <span class="d-none d-md-block d-lg-none">Schema</span>
-                    <span class="d-block d-sm-block d-md-none">
-                        <i class="fas fa-database pl-1"></i>
+                <a role="button" class="btn btn-biodiversity-lightblue" href="{% static 'files/terms_map.txt' %}" style="width:100%">
+                    <span class="d-none d-lg-block">Terminology</span>
+                    <span class="d-block d-sm-block d-lg-none">
+                        <i class="fas fa-file-alt pl-1"></i>
                     </span>
-                </button>
+                </a>
             </div>
             <div class="col-4 col-lg-2">
                 <a role="button" class="btn btn-biodiversity-lightblue" href="{% static 'files/POLA3R_read_merge_XLSX.R' %}" style="width:100%">
