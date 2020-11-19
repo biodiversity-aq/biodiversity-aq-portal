@@ -1769,7 +1769,7 @@ def export_sequences(request):
         workbook.close()
         output.seek(0)
         curdate = datetime.datetime.now().strftime("%Y-%M-%d")
-        filename = 'POLA3R_sequences_metadata' + curdate + '.xlsx'
+        filename = 'POLA3R_sequences_metadata_' + curdate + '.xlsx'
         response = HttpResponse(
             output,
             content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
