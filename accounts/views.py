@@ -1,14 +1,6 @@
 # accounts/views.py
-from django.contrib.auth.forms import UserCreationForm
-from django.urls import reverse_lazy
-from django.views import generic
 
-import json
-import urllib
-
-from django.conf import settings
 from django.contrib import messages
-from django.contrib.auth import views as django_views
 from django.urls import reverse
 from django.shortcuts import redirect, render, get_object_or_404
 from django.utils.translation import ugettext as _
@@ -26,7 +18,6 @@ def register(request):
         if form.is_valid() and request.recaptcha_is_valid:
             user = form.save()
             send_activation_email(request, user)
-            send_verification_email(request)
             return redirect(reverse('accounts:registered'))
     else:
         form = CustomUserCreationForm()
@@ -48,10 +39,10 @@ def registration_activation(request, pk, token):
 def authenticated(request):
     return render(request, 'registration/authenticated.html')
 
+
 def registered(request):
     return render(request, 'registration/registration_success.html')
 
+
 def PasswordchangeDone(request):
-    return render(request,'registration/password_change_done.html')
-
-
+    return render(request, 'registration/password_change_done.html')

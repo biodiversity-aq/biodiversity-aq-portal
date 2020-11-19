@@ -39,7 +39,6 @@ def sender(request, subject, template_name, context, to):
         to,
         fail_silently=False,
     )
-    
 
 
 def send_activation_email(request, user):
@@ -48,15 +47,3 @@ def send_activation_email(request, user):
     token = UserActivationTokenGenerator().generate(user)
     context = {'user_id': user.pk, 'token': token, 'request':request}
     sender(request, subject, template_name, context, [user.email, ])
-
-
-def send_verification_email(request):
-    subject = _("New user on biodiversity.aq")
-    template_name = 'registration/new_user.html'
-   
-    admin_emails = [x[1] for x in django_settings.ADMINS]    
-    context = {}
-
-    sender(request,subject,template_name,context, admin_emails)
-
-

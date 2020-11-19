@@ -323,12 +323,7 @@ LOGOUT_REDIRECT_URL = '/'
 AUTH_USER_MODEL = 'accounts.UserProfile'
 LOGIN_URL = 'accounts/login/?next=/'
 
-ADMINS = (
-    ('Grant','grwhumphries@blackbawks.net')
-)
-
-
-SENDER_MAIL = 'Biodiversity.aq <no-reply@biodiversity.aq>'
+SENDER_MAIL = 'biodiversity.aq <no-reply@biodiversity.aq>'
 
 FIXTURE_DIRS = ['fixtures',]
 
