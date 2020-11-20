@@ -21,7 +21,11 @@ import os
 
 def home(request):
     qs_results = Event.objects.annotate(geom=AsGeoJSON(Centroid('footprintWKT')))
-    return render(request, 'polaaar/polaaar_home.html', {'qs_results': qs_results})
+    if 'amplicon_image.png' in os.listdir('biodiversity/static/files'):
+        amplicon_img = True
+    else:
+        amplicon_img = False
+    return render(request, 'polaaar/polaaar_home.html', {'qs_results': qs_results, 'amplicon_img': amplicon_img})
 
 
 def api_reference(request):
