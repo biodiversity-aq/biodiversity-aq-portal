@@ -1,4 +1,3 @@
-import debug_toolbar
 from django.conf import settings
 from django.conf.urls import include, url
 from django.contrib import admin
@@ -47,6 +46,7 @@ urlpatterns = [
 
 
 if settings.DEBUG:
+    import debug_toolbar
     from django.conf.urls.static import static
     from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
