@@ -21,8 +21,9 @@ import os
 
 def home(request):
     qs_results = Event.objects.annotate(geom=AsGeoJSON(Centroid('footprintWKT')))
-    if 'amplicon_image.png' in os.listdir('biodiversity/static/files'):
-        amplicon_img = True
+    path = os.path.join(settings.MEDIA_ROOT, 'polaaar')
+    if 'amplicon_image.png' in os.listdir(path):
+        amplicon_img = os.path.join(settings.MEDIA_URL, 'polaaar', 'amplicon_image.png')
     else:
         amplicon_img = False
     return render(request, 'polaaar/polaaar_home.html', {'qs_results': qs_results, 'amplicon_img': amplicon_img})
