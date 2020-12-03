@@ -21,8 +21,8 @@ import os
 
 def home(request):
     qs_results = Event.objects.annotate(geom=AsGeoJSON(Centroid('footprintWKT')))
-    path = os.path.join(settings.MEDIA_ROOT, 'polaaar')
-    if 'amplicon_image.png' in os.listdir(path):
+    file_path = os.path.join(settings.MEDIA_ROOT, 'polaaar', 'amplicon_image.png')
+    if os.path.isfile(file_path):
         amplicon_img = os.path.join(settings.MEDIA_URL, 'polaaar', 'amplicon_image.png')
     else:
         amplicon_img = False
