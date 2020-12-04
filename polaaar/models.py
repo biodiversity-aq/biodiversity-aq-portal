@@ -419,9 +419,9 @@ class SampleMetadata(models.Model):
                                  help_text="Biomes are defined based on factors such as plant structures; leaf types; plant spacing; and other factors like climate. Biome should be treated as the descriptor of the broad ecological context of a sample. Examples include: desert; taiga; deciduous woodland; or coral reef. EnvO (v 2013-06-14) terms can be found via the link: www.environmentontology.org/Browse-EnvO")
     env_package = models.ForeignKey(_("package"), on_delete=models.DO_NOTHING, blank=True, null=True,
                                     help_text="Foreign key to Package table")
-    env_feature = models.CharField(max_length=50, blank=True, null=True,
+    env_feature = models.CharField(max_length=150, blank=True, null=True,
                                    help_text="Environmental feature level includes geographic environmental features. Compared to biome; feature is a descriptor of the more local environment. Examples include: harbor; cliff; or lake. EnvO (v 2013-06-14) terms can be found via the link: www.environmentontology.org/Browse-EnvO")
-    env_material = models.CharField(max_length=50, blank=True, null=True,
+    env_material = models.CharField(max_length=150, blank=True, null=True,
                                     help_text="The environmental material level refers to the material that was displaced by the sample; or material in which a sample was embedded; prior to the sampling event. Environmental material terms are generally mass nouns. Examples include: air; soil; or water. EnvO (v 2013-06-14) terms can be found via the link: www.environmentontology.org/Browse-EnvO")
 
     institutionID = models.CharField(max_length=255, blank=True, null=True,
