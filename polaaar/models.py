@@ -410,9 +410,9 @@ class SampleMetadata(models.Model):
     geographic_location = models.ForeignKey(_("Geog_Location"), related_name='sample_metadata',
                                             on_delete=models.DO_NOTHING, blank=True, null=True,
                                             help_text="Foreign key to Geog_Location table")
-    locality = models.CharField(max_length=50, blank=True, null=True, help_text="http://rs.tdwg.org/dwc/terms/locality")
+    locality = models.CharField(max_length=500, blank=True, null=True, help_text="http://rs.tdwg.org/dwc/terms/locality")
 
-    geo_loc_name = models.CharField(max_length=50, blank=True, null=True,
+    geo_loc_name = models.CharField(max_length=500, blank=True, null=True,
                                     help_text="The geographical origin of the sample as defined by the country or sea name followed by specific region name. Country or sea names should be chosen from the INSDC country list (http://insdc.org/country.html); or the GAZ ontology (v 1.512) (http://purl.bioontology.org/ontology/GAZ)")  ## MIxS field
 
     env_biome = models.CharField(max_length=255, blank=True, null=True,
@@ -430,17 +430,17 @@ class SampleMetadata(models.Model):
                                      help_text="A link to a literature reference, electronic resource or a standard operating procedure (SOP), that describes the enzymatic amplification (PCR, TMA, NASBA) of specific nucleic acids")
     nucl_acid_ext = models.CharField(max_length=255, blank=True, null=True,
                                      help_text="A link to a literature reference, electronic resource or a standard operating procedure (SOP), that describes the material separation to recover the nucleic acid fraction from a sample")
-    ref_biomaterial = models.CharField(max_length=50, blank=True, null=True,
+    ref_biomaterial = models.CharField(max_length=500, blank=True, null=True,
                                        help_text="Primary publication if isolated before genome publication; otherwise, primary genome report")
-    rel_to_oxygen = models.CharField(max_length=50, blank=True, null=True,
+    rel_to_oxygen = models.CharField(max_length=500, blank=True, null=True,
                                      help_text="Is this organism an aerobe, anaerobe? Please note that aerobic and anaerobic are valid descriptors for microbial environments")
-    rightsHolder = models.CharField(max_length=50, blank=True, null=True,
+    rightsHolder = models.CharField(max_length=500, blank=True, null=True,
                                     help_text="http://purl.org/dc/terms/rightsHolder")
-    samp_collect_device = models.CharField(max_length=50, blank=True, null=True,
+    samp_collect_device = models.CharField(max_length=500, blank=True, null=True,
                                            help_text="The method or device employed for collecting the sample")
     samp_store_dur = models.DecimalField(max_digits=10, decimal_places=3, blank=True, null=True,
                                          help_text="duration for which sample was stored")
-    samp_store_loc = models.CharField(max_length=50, blank=True, null=True,
+    samp_store_loc = models.CharField(max_length=500, blank=True, null=True,
                                       help_text="location at which sample was stored; usually name of a specific freezer/room")
     samp_store_temp = models.DecimalField(max_digits=10, decimal_places=3, blank=True, null=True,
                                           help_text="temperature at which sample was stored, e.g. -80 degree Celsius")
@@ -448,11 +448,11 @@ class SampleMetadata(models.Model):
                                               help_text="volume (mL) or weight (g) of sample processed for DNA extraction")
     samplingProtocol = models.CharField(max_length=255, blank=True, null=True,
                                         help_text="http://rs.tdwg.org/dwc/terms/samplingProtocol")
-    source_mat_id = models.CharField(max_length=50, blank=True, null=True,
+    source_mat_id = models.CharField(max_length=500, blank=True, null=True,
                                      help_text="A unique identifier assigned to a material sample (as defined by http://rs.tdwg.org/dwc/terms/materialSampleID, and as opposed to a particular digital record of a material sample) used for extracting nucleic acids, and subsequent sequencing. The identifier can refer either to the original material collected or to any derived sub-samples. The INSDC qualifiers /specimen_voucher, /bio_material, or /culture_collection may or may not share the same value as the source_mat_id field. For instance, the /specimen_voucher qualifier and source_mat_id may both contain 'UAM:Herps:14' , referring to both the specimen voucher and sampled tissue with the same identifier. However, the /culture_collection qualifier may refer to a value from an initial culture (e.g. ATCC:11775) while source_mat_id would refer to an identifier from some derived culture from which the nucleic acids were extracted (e.g. xatc123 or ark:/2154/R2).")
     submitted_to_insdc = models.BooleanField(blank=True, null=True,
                                              help_text="Depending on the study (large-scale e.g. done with next generation sequencing technology, or small-scale) sequences have to be submitted to SRA (Sequence Read Archive), DRA (DDBJ Read Archive) or via the classical Webin/Sequin systems to Genbank, ENA and DDBJ. Although this field is mandatory, it is meant as a self-test field, therefore it is not necessary to include this field in contextual data submitted to databases")
-    investigation_type = models.CharField(max_length=50, blank=True, null=True,
+    investigation_type = models.CharField(max_length=500, blank=True, null=True,
                                           help_text="Nucleic Acid Sequence Report is the root element of all MIGS/MIMS compliant reports as standardized by Genomic Standards Consortium. This field is either eukaryote,bacteria,virus,plasmid,organelle, metagenome,mimarks-survey, or mimarks-specimen")
     isol_growth_condt = models.CharField(max_length=255, blank=True, null=True,
                                          help_text="Publication reference in the form of pubmed ID (pmid), digital object identifier (doi) or url for isolation and growth condition specifications of the organism/material")
@@ -480,32 +480,32 @@ class Sequences(models.Model):
                                      help_text="The original sample name that can be used to identify the material taken in the field.")
     MID = models.CharField(max_length=255, blank=True, null=True,
                            help_text="Molecular barcodes, called Multiplex Identifiers (MIDs), that are used to specifically tag unique samples in a sequencing run. Sequence should be reported in uppercase letters")
-    subspecf_gen_lin = models.CharField(max_length=50, blank=True, null=True,
+    subspecf_gen_lin = models.CharField(max_length=500, blank=True, null=True,
                                         help_text="This should provide further information about the genetic distinctness of this lineage by recording additional information i.e biovar, serovar, serotype, biovar, or any relevant genetic typing schemes like Group I plasmid. It can also contain alternative taxonomic information")
-    target_gene = models.CharField(max_length=50, blank=True, null=True,
+    target_gene = models.CharField(max_length=500, blank=True, null=True,
                                    help_text="Targeted gene or locus name for marker gene studies")
-    target_subfragment = models.CharField(max_length=50, blank=True, null=True,
+    target_subfragment = models.CharField(max_length=500, blank=True, null=True,
                                           help_text="Name of subfragment of a gene or locus. Important to e.g. identify special regions on marker genes like V6 on 16S rRNA")
-    type = models.CharField(max_length=50, blank=True, null=True,
+    type = models.CharField(max_length=500, blank=True, null=True,
                             help_text="The type of study; either genomic; metagenomic; transcriptomic; metatranscriptomic; viral RNA; synthetic or other.")
-    primerName_forward = models.CharField(max_length=50, blank=True, null=True,
+    primerName_forward = models.CharField(max_length=500, blank=True, null=True,
                                           help_text="http://data.ggbn.org/schemas/ggbn/terms/primerNameForward")
-    primerName_reverse = models.CharField(max_length=50, blank=True, null=True,
+    primerName_reverse = models.CharField(max_length=500, blank=True, null=True,
                                           help_text="http://data.ggbn.org/schemas/ggbn/terms/primerNameReverse")
     primer_forward = models.CharField(max_length=255, blank=True, null=True,
                                       help_text="http://data.ggbn.org/schemas/ggbn/terms/primerSequenceForward")
     primer_reverse = models.CharField(max_length=255, blank=True, null=True,
                                       help_text="http://data.ggbn.org/schemas/ggbn/terms/primerSequenceReverse")
-    run_type = models.CharField(max_length=50, blank=True, null=True,
+    run_type = models.CharField(max_length=500, blank=True, null=True,
                                 help_text="The type of sequencing run performed. E.g. Illumina MiSeq 250bp paired-end")
     seqData_url = models.URLField(blank=True, null=True, help_text="relevant electronic resources")
-    seqData_accessionNumber = models.CharField(max_length=50, blank=True, null=True,
+    seqData_accessionNumber = models.CharField(max_length=500, blank=True, null=True,
                                                help_text="An assocated INSDC GenBank accession number.")
-    seqData_projectNumber = models.CharField(max_length=50, blank=True, null=True,
+    seqData_projectNumber = models.CharField(max_length=500, blank=True, null=True,
                                              help_text="An assocated INSDC BioProject number.")
-    seqData_runNumber = models.CharField(max_length=50, blank=True, null=True,
+    seqData_runNumber = models.CharField(max_length=500, blank=True, null=True,
                                          help_text="An assocated INSDC run accession number. (ERR number)")
-    seqData_sampleNumber = models.CharField(max_length=50, blank=True, null=True,
+    seqData_sampleNumber = models.CharField(max_length=500, blank=True, null=True,
                                             help_text="An assocated INSDC BioSample number.")
     seqData_numberOfBases = models.IntegerField(blank=True, null=True,
                                                 help_text="The number of bases predicted in a sequenced sample")
