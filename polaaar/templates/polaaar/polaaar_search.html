@@ -170,11 +170,11 @@ POLA3R search
                                 <a href="{% url 'polaaar:GetProjectFiles' i.id %}"><i class="fas fa-file-alt pl-1"></i></a>
                             </td>
                             <td style="display:none!important">
-                                {% for xx in i.event_hierarchy.all %}
-                                {% for xy in xx.event.all %}
-                                [{{xy.Longitude}},{{xy.Latitude}}]
-                                {% endfor %}
-                                {% endfor %}
+{#                                {% for xx in i.event_hierarchy.all %}#}
+{#                                {% for xy in xx.event.all %}#}
+{#                                [{{xy.Longitude}},{{xy.Latitude}}]#}
+{#                                {% endfor %}#}
+{#                                {% endfor %}#}
                             </td>
                         </tr>
 
@@ -296,7 +296,7 @@ POLA3R search
                     </button>
                 </div>
                 <div class="modal-body">
-                
+
                     <p>{{ i.abstract }}</p>
                 </div>
                 <div class="modal-footer">
@@ -316,7 +316,7 @@ POLA3R search
 
     function envfunc() {
         URL = "{% url 'polaaar:env_search' %}"
-		$("#searchcontent").load(URL) 
+		$("#searchcontent").load(URL)
     };
     function seqfunc() {
         URL = "{% url 'polaaar:seq_search' %}"
@@ -338,7 +338,7 @@ POLA3R search
 
 
 <script>
-    
+
     $(document).ready(function () {
         var Mytable = $('#myTable').DataTable({
         responsive:{
