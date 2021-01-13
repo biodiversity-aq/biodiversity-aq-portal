@@ -132,10 +132,7 @@ POLA3R search
                             <th>Contact</th>
                             <th>Start date</th>
                             <th>End date</th>
-                            <th>Occurrences</th>
-                            <th>Sequences</th>
                             <th>Download</th>
-                            <th style="display:none">coordinates</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -150,31 +147,10 @@ POLA3R search
                             <td>  {{i.project_contact}}</td>
                             <td>{{i.start_date|default_if_none:"NA"}}</td>
                             <td>{{i.end_date|default_if_none:"NA"}}</td>
-                            <td style="text-align:center;font-size:16pt">
-                                {% if i|getTrueOccurrence == "True" %}
-                                <i style="color:green;" class="fas fa-check-circle pl-1"></i>
-                                {% else %}
-                                <i style="color:red" class="fas fa-times-circle pl-1"></i>
-                                {% endif %}
-                            </td>
-                            <td style="text-align:center;font-size:16pt">
-                                {% if i|getTrueSequences == "True" %}
-                                <i style="color:green;" class="fas fa-check-circle pl-1"></i>
-                                {% else %}
-                                <i style="color:red" class="fas fa-times-circle pl-1"></i>
-                                {% endif %}
-                            </td>
                             <td style="font-size:25pt;color:black">
                                 <a href="{% url 'polaaar:export_projects'%}?id={{i.id}}"><i class="fas fa-file-excel pl-1"></i></a>
                                 <a href="{% url 'polaaar:projectmetadata-detail' i.id %}"><i class="fas fa-file-code pl-1"></i></a>
                                 <a href="{% url 'polaaar:GetProjectFiles' i.id %}"><i class="fas fa-file-alt pl-1"></i></a>
-                            </td>
-                            <td style="display:none!important">
-{#                                {% for xx in i.event_hierarchy.all %}#}
-{#                                {% for xy in xx.event.all %}#}
-{#                                [{{xy.Longitude}},{{xy.Latitude}}]#}
-{#                                {% endfor %}#}
-{#                                {% endfor %}#}
                             </td>
                         </tr>
 
@@ -469,8 +445,8 @@ POLA3R search
     // Javascript will load the data initially from the database and then use the hidden coordinates column to re-populate a new set of markers
 
 
-    var collection = {{ qs_results|geojsonfeature|safe }};
-
+    {#var collection = {{ qs_results|geojsonfeature|safe }};#}
+    var collection = none;
     var newMarkers = L.featureGroup();
 
     var geojsonMarkerOptions = {

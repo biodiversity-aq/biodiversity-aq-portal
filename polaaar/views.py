@@ -48,23 +48,13 @@ def polaaar_search(request):
         if user.is_authenticated and user.is_superuser:
             qs = ProjectMetadata.objects.filter(id=proj)
 
-            qs_results = Event.objects.annotate(
-                geom=AsGeoJSON(Centroid('footprintWKT'))).filter(id=proj)
-
         elif user.is_authenticated:
             qs = ProjectMetadata.objects.filter(Q(is_public=True) | Q(
-                project_creator__username=user.username)).filter(id=proj).prefetch_related('event_hierarchy')
+                project_creator__username=user.username)).filter(id=proj)
 
-            qs_results = Event.objects.annotate(
-                geom=AsGeoJSON(Centroid('footprintWKT'))).filter(
-                Q(event_hierarchy__project_metadata__is_public=True) | Q(
-                    event_hierarchy__project_metadata__project_creator__username=user.username))
         else:
-            qs = ProjectMetadata.objects.filter(Q(is_public=True)).filter(id=proj).prefetch_related('event_hierarchy')
+            qs = ProjectMetadata.objects.filter(Q(is_public=True)).filter(id=proj)
 
-            qs_results = Event.objects.annotate(
-                geom=AsGeoJSON(Centroid('footprintWKT'))).filter(
-                Q(event_hierarchy__project_metadata__is_public=True))
         buttondisplay = "Display events"
         ## This triggers a refresh button to appear in the project search tool if the user is looking at filtered project data
         viewprojs = True
@@ -73,24 +63,18 @@ def polaaar_search(request):
 
         if user.is_authenticated and user.is_superuser:
             qs = ProjectMetadata.objects.all()
-            qs_results = Event.objects.annotate(
-                geom=AsGeoJSON(Centroid('footprintWKT'))).all()
+
         elif user.is_authenticated:
             qs = ProjectMetadata.objects.filter(Q(is_public=True) | Q(
-                project_creator__username=user.username)).prefetch_related('event_hierarchy')
-            qs_results = Event.objects.annotate(
-                geom=AsGeoJSON(Centroid('footprintWKT'))).filter(
-                Q(event_hierarchy__project_metadata__is_public=True) | Q(
-                    event_hierarchy__project_metadata__project_creator__username=user.username))
+                project_creator__username=user.username))
+
         else:
-            qs = ProjectMetadata.objects.filter(Q(is_public=True)).prefetch_related('event_hierarchy')
-            qs_results = Event.objects.annotate(
-                geom=AsGeoJSON(Centroid('footprintWKT'))).filter(
-                Q(event_hierarchy__project_metadata__is_public=True))
+            qs = ProjectMetadata.objects.filter(Q(is_public=True))
+
         buttondisplay = "Refresh map"
         viewprojs = False
     return render(request, 'polaaar/polaaar_search.html',
-                  {'qs_results': qs_results, 'qs': qs, 'buttondisplay': buttondisplay, 'viewprojs': viewprojs})
+                  {'qs': qs, 'buttondisplay': buttondisplay, 'viewprojs': viewprojs})
 
 
 def env_search(request):
