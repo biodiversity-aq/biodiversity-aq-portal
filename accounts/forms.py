@@ -133,7 +133,7 @@ class CustomUserCreationForm(UserCreationForm):
                 Column('resident_country',css_class='form-group col-md-6'),
                 Column('home_country',css_class='form-group col-md-6'),                       
                 ),
-            HTML('<script src="https://www.google.com/recaptcha/api.js"></script>'),
+            HTML('<script src="https://www.google.com/recaptcha/api.js" async defer></script>'),
             HTML('<div class="g-recaptcha" data-sitekey="{}"></div>'.format(settings.RECAPTCHA_SITE_KEY)),
             ButtonHolder(
                 Submit("submit", "Register",css_class="btn btn-deep-orange btn-lg")
