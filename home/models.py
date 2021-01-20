@@ -183,7 +183,7 @@ class RepoPage(MenuPage):
 
     def serve(self, request, *args, **kwargs):
         response = super().serve(request)
-        response['Content-Security-Policy'] = "frame-ancestors 'self';"
+        response['Content-Security-Policy'] = "frame-ancestors http://antabif.bebif.be/ https://www.biodiversity.aq/"
         return response
 
 
