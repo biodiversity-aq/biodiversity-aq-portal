@@ -12,7 +12,7 @@ from wagtail.images.blocks import ImageChooserBlock
 from wagtail.images.models import Image, AbstractImage, AbstractRendition
 from wagtail.snippets.models import register_snippet
 from wagtail.snippets.edit_handlers import SnippetChooserPanel
-from wagtailmenus.models import MenuPage, AbstractLinkPage
+from wagtailmenus.models import MenuPage, AbstractLinkPage, HttpResponse
 from wagtailmenus.panels import menupage_panel
 
 from modelcluster.fields import ParentalKey
@@ -180,6 +180,11 @@ class RepoPage(MenuPage):
     settings_panels = [menupage_panel]
 
     template = 'home/repo_page.html'
+
+    def serve(self, request, *args, **kwargs):
+        response = super().serve(request)
+        response['Content-Security-Policy'] = "frame-ancestors 'self';"
+        return response
 
 
 class DetailIndexPage(Page):
