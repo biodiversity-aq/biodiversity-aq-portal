@@ -1,6 +1,10 @@
 {% extends "home/base.html" %}
 {% load static wagtailcore_tags wagtailimages_tags %}
 
+{% block meta %}
+<meta http-equiv="Content-Security-Policy" content="frame-ancestors 'self'">
+{% endblock %}
+
 {% block extra_css %}
     <style>
     .biodiversity-theme, .navbar {
