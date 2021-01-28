@@ -293,10 +293,10 @@ LOGGING = {
             'level': 'INFO',
         },
         'home': {
-            'handlers': ['home', 'console']
+            'handlers': ['console']
         },
         'polaaar': {
-            'handlers': ['polaaar', 'console']
+            'handlers': ['console']
         }
     }
 }
