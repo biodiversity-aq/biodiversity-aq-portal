@@ -1,13 +1,18 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.http import HttpResponse
-from django.db.models import Q
+from django.db.models import Q, Count
 from django.contrib.gis.db.models.functions import AsGeoJSON, Centroid
+from django.views.generic import DetailView
+from rest_framework.renderers import TemplateHTMLRenderer
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
 from .forms import EmailForm
 from django.core.mail import EmailMessage
 from django_filters.rest_framework import DjangoFilterBackend
 
-from rest_framework import viewsets
+from rest_framework import viewsets, generics
 from biodiversity.decorators import verify_recaptcha
 from polaaar.serializers import *
 from polaaar.models import Reference
@@ -38,26 +43,10 @@ def api_reference(request):
 
 def polaaar_search(request):
 
-    #### This is used to generate the links back to the project search page. If there is a ?pid search string 
-    #### Then the user is directed to the project search page with data filtered by that specific project.
-
-    if len(request.GET.get('pid', '')):
-        proj = request.GET.get('pid', '')
-
-        qs = ProjectMetadata.objects.filter(Q(is_public=True)).filter(id=proj)
-
-        buttondisplay = "Display events"
-        ## This triggers a refresh button to appear in the project search tool if the user is looking at filtered project data
-        viewprojs = True
-
-    else:
-
-        qs = ProjectMetadata.objects.filter(Q(is_public=True))
-
-        buttondisplay = "Refresh map"
-        viewprojs = False
+    buttondisplay = "Refresh map"
+    viewprojs = False
     return render(request, 'polaaar/polaaar_search.html',
-                  {'qs': qs, 'buttondisplay': buttondisplay, 'viewprojs': viewprojs})
+                  {'buttondisplay': buttondisplay, 'viewprojs': viewprojs})
 
 
 def env_search(request):
@@ -1958,5 +1947,40 @@ def export_events(request):
         response['Content-Disposition'] = 'attachment; filename=%s' % filename
         output.close()
         return response
+
+
+def project_metadata_detail(request, pk):
+    context = dict()
+    project = ProjectMetadata.objects.get(pk=pk)
+    event = Event.objects.filter(event_hierarchy__project_metadata=project)
+    env_var = Variable.objects.filter(environment__event__event_hierarchy__project_metadata=project)
+    sequence = Sequences.objects.filter(event__event_hierarchy__project_metadata=project)
+
+    event_per_year = event.values('collection_year').annotate(count=Count('collection_year')).order_by()
+    event_per_month = event.values('collection_month').annotate(count=Count('collection_month')).order_by()
+    sample = SampleMetadata.objects.filter(environment__event__event_hierarchy__project_metadata=project)
+    sample_geo_loc_name = sample.values('geo_loc_name').annotate(count=Count('geo_loc_name')).order_by()
+    env_var_name = env_var.values('name').annotate(count=Count('name')).order_by()
+    seq_target_gene = sequence.values('target_gene').annotate(count=Count('target_gene')).order_by()
+    seq_target_subfg = sequence.values('target_subfragment').annotate(count=Count('target_subfragment')).order_by()
+    seq_type = sequence.values('type').annotate(count=Count('type')).order_by()
+    seq_run_type = sequence.values('run_type').annotate(count=Count('run_type')).order_by()
+    seq_seqData_projectNumber = sequence.values('seqData_projectNumber').annotate(count=Count('seqData_projectNumber')).order_by()
+
+    context['project'] = project
+    context['event_count'] = event.count()
+    context['event_per_year'] = event_per_year
+    context['event_per_month'] = event_per_month
+    context['sample_count'] = sample.count()
+    context['sample_geo_loc_name'] = sample_geo_loc_name
+    context['env_count'] = env_var.count()
+    context['env_var_name'] = env_var_name
+    context['seq_count'] = sequence.count()
+    context['seq_target_gene'] = seq_target_gene
+    context['seq_target_subfg'] = seq_target_subfg
+    context['seq_type'] = seq_type
+    context['seq_run_type'] = seq_run_type
+    context['seq_seqData_projectNumber'] = seq_seqData_projectNumber
+    return render(request, template_name='polaaar/projectmetadata_detail.html', context=context)
 
 
