@@ -21,11 +21,13 @@
     {# Global stylesheets #}
     <link rel="stylesheet" type="text/css" href="{% static 'css/styles.all.min.css' %}">
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
     <!-- Bootstrap core CSS -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+{#    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">#}
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet"/>
     <!-- Material Design Bootstrap -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.8.11/css/mdb.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.2.0/mdb.min.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
     <style>
         @media (min-width: 800px) and (max-width: 850px) {
@@ -45,9 +47,6 @@
     </style>
     {# Override this in templates to add extra stylesheets #}
     {% block extra_css %}{% endblock %}
-
-
-
 
 
 </head>
@@ -103,8 +102,8 @@
 {% block banner %}{% endblock %}
 
 {# flex-wrapper is needed to push the footer to the bottom of the page if the content of viewport is <100% height #}
-      {# fixed-bottom is not applied on footer because it blocks the content of when scrolls down. Having both #}
-      {# fixed-top navbar and fixed-bottom footer is taking too much space on the screen #}
+{# fixed-bottom is not applied on footer because it blocks the content of when scrolls down. Having both #}
+{# fixed-top navbar and fixed-bottom footer is taking too much space on the screen #}
 <div class="flex-wrapper">
     {% block content %}{% endblock %}
     {% footer %}
@@ -120,7 +119,10 @@
 <script type="text/javascript"
         src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
 <!-- MDB core JavaScript -->
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.8.11/js/mdb.min.js"></script>
+<script
+  type="text/javascript"
+  src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.2.0/mdb.min.js"
+></script>
 
 {% block extra_js %}{% endblock %}
 
@@ -129,23 +131,23 @@
 <script src="https://cdn.wpcc.io/lib/1.0.2/cookieconsent.min.js"></script>
 <script>
     window.addEventListener("load", function () {
-    window.wpcc.init({
-        "border": "normal",
-        "colors": {
-            "popup": {"background": "#222222", "text": "#ffffff", "border": "#b4eae4"},
-            "button": {"background": "#b4eae4", "text": "#000000"}
-        },
-        "position": "bottom",
-        "pushdown": false,
-        "fontsize": "large",
-        "content": {
-            "href": "#",
-            "message": "This website uses cookies to ensure that you have the best user experience! By clicking accept, you agree to the terms of the privacy policy",
-            "link": "#",
-            "button": "Accept"
-        }
-    })
-});
+        window.wpcc.init({
+            "border": "normal",
+            "colors": {
+                "popup": {"background": "#222222", "text": "#ffffff", "border": "#b4eae4"},
+                "button": {"background": "#b4eae4", "text": "#000000"}
+            },
+            "position": "bottom",
+            "pushdown": false,
+            "fontsize": "large",
+            "content": {
+                "href": "#",
+                "message": "This website uses cookies to ensure that you have the best user experience! By clicking accept, you agree to the terms of the privacy policy",
+                "link": "#",
+                "button": "Accept"
+            }
+        })
+    });
 </script>
 
 </body>

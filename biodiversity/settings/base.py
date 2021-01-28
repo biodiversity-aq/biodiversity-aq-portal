@@ -269,12 +269,34 @@ LOGGING = {
             'level': 'DEBUG',
             'class': 'logging.StreamHandler',
             'formatter': 'verbose'
-        }
+        },
+        'home': {
+            'level': 'WARNING',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'maxBytes': 1 * 1024 * 1024,
+            'backupCount': 2,
+            'filename': r'logs/home.log',
+            'formatter': 'verbose',
+        },
+        'polaaar': {
+            'level': 'WARNING',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'maxBytes': 1 * 1024 * 1024,
+            'backupCount': 2,
+            'filename': r'logs/polaaar.log',
+            'formatter': 'verbose',
+        },
     },
     'loggers': {
         'testlogger': {
             'handlers': ['console'],
             'level': 'INFO',
+        },
+        'home': {
+            'handlers': ['home', 'console']
+        },
+        'polaaar': {
+            'handlers': ['polaaar', 'console']
         }
     }
 }
@@ -357,7 +379,7 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.NamespaceVersioning',
     'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',),
-    'PAGE_SIZE': 10
+    'PAGE_SIZE': 20
 }
 
 # POLAAAR SETTINGS

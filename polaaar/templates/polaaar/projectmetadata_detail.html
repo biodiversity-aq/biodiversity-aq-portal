@@ -1,0 +1,207 @@
+{% extends "polaaar/base.html" %}
+{% load static leaflet_tags geojson_tags polaaar_tags %}
+
+{% block title %}
+    POLA3R
+{% endblock title %}
+
+
+{% block body_class %}{% endblock %}
+
+{% block content %}
+    <div class="container mt-4">
+        <h2>{{ project.project_name }}</h2>
+        <table class="table table-borderless table-hover table-sm mt-4">
+            {% if project.resource_url %}
+                <tr>
+                    <th scope="row">Resource URL</th>
+                    <td><a href="{{ project.resource_url }}">{{ project.resource_url }}</a></td>
+                </tr>
+            {% endif %}
+            <tr>
+                <th scope="row">Last updated</th>
+                <td>{{ project.updated_on }}</td>
+            </tr>
+            {% if project.start_date %}
+                <tr>
+                    <th scope="row">Time range</th>
+                    <td>{{ project.start_date }}{% if project.end_date %} - {{ project.end_date }}{% endif %}</td>
+                </tr>
+            {% endif %}
+            <tr>
+                <th scope="row">Project contact</th>
+                <td>{{ project.project_contact|default_if_none:"Not provided" }}</td>
+            </tr>
+            <tr>
+                <th scope="row">Abstract</th>
+                <td>{{ project.abstract|urlize }}</td>
+            </tr>
+            <tr>
+                <th scope="row">Rights</th>
+                <td></td>
+            </tr>
+            <tr>
+                <th scope="row">Citation</th>
+                <td></td>
+            </tr>
+        </table>
+        <div class="row row-cols-1 row-cols-md-2">
+            <div class="col mb-4">
+                <div class="card" id="statistics">
+                    <div class="card-body">
+                        <h5 class="card-title">Summary statistics</h5>
+                        <table class="table table-borderless table-hover table-sm mt-4 card-text">
+                            <tr>
+                                <th scope="row">Sampling event records</th>
+                                <td>{{ event_count }}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Sample records</th>
+                                <td>{{ sample_count }}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Sequence metadata records</th>
+                                <td>{{ seq_count }}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Environmental metadata records</th>
+                                <td>{{ env_count }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col mb-4">
+                <div class="card">
+                    <div class="card-body" id="events">
+                        <h5 class="card-title">Sampling Events</h5>
+                        <table class="table table-borderless table-hover table-sm mt-4 card-text">
+                            <tr>
+                                <th>Year</th>
+                                <th>Sampling event records</th>
+                            </tr>
+                            {% for record in event_per_year %}
+                                <tr>
+                                    <td>{{ record.collection_year }}</td>
+                                    <td>{{ record.count }}</td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                        <table class="table table-borderless table-hover table-sm mt-4 card-text">
+                            <tr>
+                                <th>Month</th>
+                                <th>Sampling event records</th>
+                            </tr>
+                            {% for record in event_per_month %}
+                                <tr>
+                                    <td>{{ record.collection_month }}</td>
+                                    <td>{{ record.count }}</td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+                </div>
+            </div>
+        {% if sample_geo_loc_name %}
+            <div class="col mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Sample metadata</h5>
+                        <table class="table table-borderless table-hover table-sm mt-4 card-text">
+                            <tr>
+                                <th>Location</th>
+                                <th>Sampling event records</th>
+                            </tr>
+                            {% for record in sample_geo_loc_name %}
+                                <tr>
+                                    <td>{{ record.geo_loc_name }}</td>
+                                    <td>{{ record.count }}</td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+        {% if env_var_name %}
+            <div class="col mb-4">
+                <div class="card" id="environment">
+                    <div class="card-body">
+                        <h5 class="card-title">Environmental metadata</h5>
+                        <table class="table table-borderless table-hover table-sm mt-4 card-text">
+                            <tr>
+                                <th>Environmental variable</th>
+                                <th>Records</th>
+                            </tr>
+                            {% for record in env_var_name %}
+                                <tr>
+                                    <td>{{ record.name }}</td>
+                                    <td>{{ record.count }}</td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+        <div class="col mb-4">
+                <div class="card" id="sequence">
+                    <div class="card-body">
+                        <h5 class="card-title">Sequence metadata</h5>
+                        <table class="table table-borderless table-hover table-sm mt-4 card-text">
+                            <tr>
+                                <th></th>
+                                <th>Sequence metadata</th>
+                                <th>Records</th>
+                            </tr>
+                            {% for record in seq_target_gene %}
+                                <tr>
+                                    <th scope="row">Target gene</th>
+                                    <td>{{ record.target_gene }}</td>
+                                    <td>{{ record.count }}</td>
+                                </tr>
+                            {% endfor %}
+                            {% for record in seq_target_subfg %}
+                                <tr>
+                                    <th scope="row">Target subfragment</th>
+                                    <td>{{ record.target_subfragment }}</td>
+                                    <td>{{ record.count }}</td>
+                                </tr>
+                            {% endfor %}
+                            {% for record in seq_type %}
+                                <tr>
+                                    <th scope="row">Study type</th>
+                                    <td>{{ record.seq_type }}</td>
+                                    <td>{{ record.count }}</td>
+                                </tr>
+                            {% endfor %}
+                            {% for record in seq_run_type %}
+                                <tr>
+                                    <th scope="row">Run type</th>
+                                    <td>{{ record.run_type }}</td>
+                                    <td>{{ record.count }}</td>
+                                </tr>
+                            {% endfor %}
+                            {% for record in seq_seqData_projectNumber %}
+                                <tr>
+                                    <th scope="row">BioProject</th>
+                                    <td><a href="https://www.ncbi.nlm.nih.gov/bioproject/?term={{ record.seqData_projectNumber }}">{{ record.seqData_projectNumber }}</a></td>
+                                    <td>{{ record.count }}</td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+{% endblock %}

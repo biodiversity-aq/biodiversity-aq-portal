@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+- use log files for logging when level is WARNING and above.
+
 ## [1.1.0](https://git.bebif.be/antabif/biodiversityaq/-/tags/v1.1.0) - 2020-08-10
 
 ### Added
