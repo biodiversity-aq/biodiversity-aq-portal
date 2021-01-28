@@ -263,7 +263,7 @@ class EventHierarchy(models.Model):
                                          on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.event_type.name + ': ' + self.event_hierarchy_name
+        return '{}: {}'.format(self.event_type.name, self.event_hierarchy_name)
 
     class Meta:
         ordering = ['event_hierarchy_name']
@@ -387,7 +387,7 @@ class Occurrence(models.Model):
                               help_text="Foreign key to Event table")
 
     def __str__(self):
-        return self.occurrenceID + ': ' + self.taxon.name
+        return '{}: {}'.format(self.occurrenceID, self.taxon.name)
 
 
 ### End of occurrences model block
@@ -466,7 +466,7 @@ class SampleMetadata(models.Model):
                                               help_text="http://rs.tdwg.org/dwc/terms/eventRemarks")
 
     def __str__(self):
-        return self.metadata_tag
+        return self.metadata_tag or ''
 
     class Meta:
         verbose_name_plural = 'Metadata'
