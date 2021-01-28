@@ -121,9 +121,6 @@ POLA3R search
 
 
             <div class="col-12">
-
-
-
                 <table id="myTable" class="display nowrap" style="width:100%;">
                     <thead>
                         <tr>
@@ -260,28 +257,6 @@ POLA3R search
     </div>
 </div>
 
-<!-- Block of modals that will open the project abstract -->
-{% for i in qs %}
-    <div class="modal fade" id="project_{{i.id}}" tabindex="-1" role="dialog" aria-labelledby="Label_{{i.id}}" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content" style="padding-left:20px;padding-right:20px;">
-                <div class="modal-header">
-                    <h3 class="modal-title" id="Label_{{i.id}}"><strong>{{ i.project_name }} abstract</strong></h3>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-
-                    <p>{{ i.abstract }}</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-elegant" data-dismiss="modal">Got it</button>
-                </div>
-            </div>
-        </div>
-    </div>
-{% endfor %}
 {% endblock %}
 
 
@@ -317,23 +292,25 @@ POLA3R search
 
     $(document).ready(function () {
         var Mytable = $('#myTable').DataTable({
-        responsive:{
-            details:true
-        },
-        columnDefs: [
+            columns: [
+                { data: 'Project name' },
+                { data: 'Contact'},
+                { data: 'Start date'},
+                { data: 'End date'},
+                { data: 'Abstract'}
+            ],
+            responsive: {
+                details: true
+            },
+            columnDefs: [
                 {
                     render: function (data, type, full, meta) {
                         return "<div class='text-wrap width-200'>" + data + "</div>";
                     },
                     targets: 0
                 }
-             ]
-    });
-        // hide the ID and coordinates columns which are used for queries on the db side
-
-        Mytable.column(1).visible(false)
-        Mytable.column(8).visible(false)
-
+            ]
+        });
     });
 
 </script>
