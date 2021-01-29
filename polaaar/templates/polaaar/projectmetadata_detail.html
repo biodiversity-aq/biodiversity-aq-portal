@@ -44,6 +44,17 @@
                 <th scope="row">Citation</th>
                 <td></td>
             </tr>
+        {% if seq_seqData_projectNumber %}
+            <tr>
+                <th scope="row">BioProject</th>
+            <td>
+            {% for record in seq_seqData_projectNumber %}
+                <a href="https://www.ncbi.nlm.nih.gov/bioproject/?term={{ record.seqData_projectNumber }}">{{ record.seqData_projectNumber }}</a> ({{ record.count }} records) <br />
+            {% endfor %}
+            </td>
+            </tr>
+
+        {% endif %}
         </table>
         <div class="row row-cols-1 row-cols-md-2">
             <div class="col mb-4">
@@ -179,13 +190,6 @@
                                 <tr>
                                     <th scope="row">Run type</th>
                                     <td>{{ record.run_type }}</td>
-                                    <td>{{ record.count }}</td>
-                                </tr>
-                            {% endfor %}
-                            {% for record in seq_seqData_projectNumber %}
-                                <tr>
-                                    <th scope="row">BioProject</th>
-                                    <td><a href="https://www.ncbi.nlm.nih.gov/bioproject/?term={{ record.seqData_projectNumber }}">{{ record.seqData_projectNumber }}</a></td>
                                     <td>{{ record.count }}</td>
                                 </tr>
                             {% endfor %}

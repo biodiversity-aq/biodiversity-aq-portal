@@ -500,13 +500,13 @@ class Sequences(models.Model):
                                 help_text="The type of sequencing run performed. E.g. Illumina MiSeq 250bp paired-end")
     seqData_url = models.URLField(blank=True, null=True, help_text="relevant electronic resources")
     seqData_accessionNumber = models.CharField(max_length=500, blank=True, null=True,
-                                               help_text="An assocated INSDC GenBank accession number.")
+                                               help_text="An associated INSDC GenBank accession number.")
     seqData_projectNumber = models.CharField(max_length=500, blank=True, null=True,
-                                             help_text="An assocated INSDC BioProject number.")
+                                             help_text="An associated INSDC BioProject number.")
     seqData_runNumber = models.CharField(max_length=500, blank=True, null=True,
-                                         help_text="An assocated INSDC run accession number. (ERR number)")
+                                         help_text="An associated INSDC run accession number. (ERR number)")
     seqData_sampleNumber = models.CharField(max_length=500, blank=True, null=True,
-                                            help_text="An assocated INSDC BioSample number.")
+                                            help_text="An associated INSDC BioSample number.")
     seqData_numberOfBases = models.IntegerField(blank=True, null=True,
                                                 help_text="The number of bases predicted in a sequenced sample")
     seqData_numberOfSequences = models.IntegerField(blank=True, null=True,
