@@ -25,4 +25,5 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
+        migrations.RunPython(remove_project_name_from_bioproject_field),
     ]
