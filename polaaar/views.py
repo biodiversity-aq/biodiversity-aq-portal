@@ -1953,14 +1953,15 @@ def project_metadata_detail(request, pk):
     context = dict()
     project = ProjectMetadata.objects.get(pk=pk)
     event = Event.objects.filter(event_hierarchy__project_metadata=project)
-    env_var = Variable.objects.filter(environment__event__event_hierarchy__project_metadata=project)
+    mof = Variable.objects.filter(environment__event__event_hierarchy__project_metadata=project)
     sequence = Sequences.objects.filter(event__event_hierarchy__project_metadata=project)
+    sample = SampleMetadata.objects.filter(event_sample_metadata__event_hierarchy__project_metadata=project)
 
     event_per_year = event.exclude(collection_year__isnull=True).values('collection_year').annotate(count=Count('collection_year')).order_by()
     event_per_month = event.exclude(collection_month__isnull=True).values('collection_month').annotate(count=Count('collection_month')).order_by()
-    sample = SampleMetadata.objects.filter(environment__event__event_hierarchy__project_metadata=project)
     sample_geo_loc_name = sample.exclude(geo_loc_name__isnull=True).values('geo_loc_name').annotate(count=Count('geo_loc_name')).order_by()
-    env_var_name = env_var.exclude(name__isnull=True).values('name').annotate(count=Count('name')).order_by()
+    sample_env_biome = sample.exclude(env_biome__isnull=True).values('env_biome').annotate(count=Count('env_biome')).order_by()
+    mof_name = mof.exclude(name__isnull=True).values('name').annotate(count=Count('name')).order_by()
     seq_target_gene = sequence.exclude(target_gene__isnull=True).values('target_gene').annotate(count=Count('target_gene')).order_by()
     seq_target_subfg = sequence.exclude(target_subfragment__isnull=True).values('target_subfragment').annotate(count=Count('target_subfragment')).order_by()
     seq_type = sequence.exclude(type__isnull=True).values('type').annotate(count=Count('type')).order_by()
@@ -1973,8 +1974,9 @@ def project_metadata_detail(request, pk):
     context['event_per_month'] = event_per_month
     context['sample_count'] = sample.count()
     context['sample_geo_loc_name'] = sample_geo_loc_name
-    context['env_count'] = env_var.count()
-    context['env_var_name'] = env_var_name
+    context['sample_env_biome'] = sample_env_biome
+    context['mof_count'] = mof.count()
+    context['mof_name'] = mof_name
     context['seq_count'] = sequence.count()
     context['seq_target_gene'] = seq_target_gene
     context['seq_target_subfg'] = seq_target_subfg

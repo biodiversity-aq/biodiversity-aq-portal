@@ -44,17 +44,17 @@
                 <th scope="row">Citation</th>
                 <td></td>
             </tr>
-        {% if seq_seqData_projectNumber %}
-            <tr>
-                <th scope="row">Sequence data</th>
-            <td>
-            {% for record in seq_seqData_projectNumber %}
-                <a href="https://www.ncbi.nlm.nih.gov/bioproject/?term={{ record.seqData_projectNumber }}">{{ record.seqData_projectNumber }}</a> ({{ record.count }} records) <br />
-            {% endfor %}
-            </td>
-            </tr>
-
-        {% endif %}
+            {% if seq_seqData_projectNumber %}
+                <tr>
+                    <th scope="row">BioProject</th>
+                    <td>
+                        {% for record in seq_seqData_projectNumber %}
+                            <a href="https://www.ncbi.nlm.nih.gov/bioproject/?term={{ record.seqData_projectNumber }}">{{ record.seqData_projectNumber }}</a>
+                            <br/>
+                        {% endfor %}
+                    </td>
+                </tr>
+            {% endif %}
         </table>
         <div class="row row-cols-1 row-cols-md-2">
             <div class="col mb-4">
@@ -76,7 +76,7 @@
                             </tr>
                             <tr>
                                 <th scope="row">Environmental metadata records</th>
-                                <td>{{ env_count }}</td>
+                                <td>{{ mof_count }}</td>
                             </tr>
                         </table>
                     </div>
@@ -85,11 +85,11 @@
             <div class="col mb-4">
                 <div class="card">
                     <div class="card-body" id="events">
-                        <h5 class="card-title">Sampling Events</h5>
+                        <h5 class="card-title">Sampling events</h5>
                         <table class="table table-borderless table-hover table-sm mt-4 card-text">
                             <tr>
                                 <th>Year</th>
-                                <th>Sampling event records</th>
+                                <th>Records</th>
                             </tr>
                             {% for record in event_per_year %}
                                 <tr>
@@ -98,64 +98,54 @@
                                 </tr>
                             {% endfor %}
                         </table>
-                        <table class="table table-borderless table-hover table-sm mt-4 card-text">
-                            <tr>
-                                <th>Month</th>
-                                <th>Sampling event records</th>
-                            </tr>
-                            {% for record in event_per_month %}
+                        {% if event_per_month %}
+                            <table class="table table-borderless table-hover table-sm mt-4 card-text">
                                 <tr>
-                                    <td>{{ record.collection_month }}</td>
-                                    <td>{{ record.count }}</td>
+                                    <th>Month</th>
+                                    <th>Records</th>
                                 </tr>
-                            {% endfor %}
-                        </table>
+                                {% for record in event_per_month %}
+                                    <tr>
+                                        <td>{{ record.collection_month }}</td>
+                                        <td>{{ record.count }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </table>
+                        {% endif %}
                     </div>
                 </div>
             </div>
-        {% if sample_geo_loc_name %}
+            {% if sample_geo_loc_name %}
+                <div class="col mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Sample metadata</h5>
+                            <table class="table table-borderless table-hover table-sm mt-4 card-text">
+                                <tr>
+                                    <th></th>
+                                    <th>Sample Metadata</th>
+                                    <th>Records</th>
+                                </tr>
+                                {% for record in sample_geo_loc_name %}
+                                    <tr>
+                                        <th scope="row">Location</th>
+                                        <td>{{ record.geo_loc_name }}</td>
+                                        <td>{{ record.count }}</td>
+                                    </tr>
+                                {% endfor %}
+                                {% for record in sample_env_biome %}
+                                    <tr>
+                                        <th scope="row">Environmental biome</th>
+                                        <td>{{ record.env_biome }}</td>
+                                        <td>{{ record.count }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
             <div class="col mb-4">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Sample metadata</h5>
-                        <table class="table table-borderless table-hover table-sm mt-4 card-text">
-                            <tr>
-                                <th>Location</th>
-                                <th>Sampling event records</th>
-                            </tr>
-                            {% for record in sample_geo_loc_name %}
-                                <tr>
-                                    <td>{{ record.geo_loc_name }}</td>
-                                    <td>{{ record.count }}</td>
-                                </tr>
-                            {% endfor %}
-                        </table>
-                    </div>
-                </div>
-            </div>
-        {% endif %}
-        {% if env_var_name %}
-            <div class="col mb-4">
-                <div class="card" id="environment">
-                    <div class="card-body">
-                        <h5 class="card-title">Environmental metadata</h5>
-                        <table class="table table-borderless table-hover table-sm mt-4 card-text">
-                            <tr>
-                                <th>Environmental variable</th>
-                                <th>Records</th>
-                            </tr>
-                            {% for record in env_var_name %}
-                                <tr>
-                                    <td>{{ record.name }}</td>
-                                    <td>{{ record.count }}</td>
-                                </tr>
-                            {% endfor %}
-                        </table>
-                    </div>
-                </div>
-            </div>
-        {% endif %}
-        <div class="col mb-4">
                 <div class="card" id="sequence">
                     <div class="card-body">
                         <h5 class="card-title">Sequence metadata</h5>
@@ -197,15 +187,27 @@
                     </div>
                 </div>
             </div>
+            {% if mof_name %}
+                <div class="col mb-4">
+                    <div class="card" id="environment">
+                        <div class="card-body">
+                            <h5 class="card-title">Measurement or fact</h5>
+                            <table class="table table-borderless table-hover table-sm mt-4 card-text">
+                                <tr>
+                                    <th>Measurement or fact</th>
+                                    <th>Records</th>
+                                </tr>
+                                {% for record in mof_name %}
+                                    <tr>
+                                        <td>{{ record.name }}</td>
+                                        <td>{{ record.count }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
         </div>
     </div>
-
-
-
-
-
-
-
-
-
 {% endblock %}
