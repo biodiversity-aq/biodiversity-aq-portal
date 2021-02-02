@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.http import HttpResponse
 from django.db.models import Q, Count
@@ -1951,6 +1951,7 @@ def export_events(request):
 
 def project_metadata_detail(request, pk):
     context = dict()
+    get_object_or_404(ProjectMetadata, pk=pk)
     project = ProjectMetadata.objects.get(pk=pk)
     event = Event.objects.filter(event_hierarchy__project_metadata=project)
     mof = Variable.objects.filter(environment__event__event_hierarchy__project_metadata=project)
