@@ -1970,6 +1970,8 @@ def project_metadata_detail(request, pk):
     seq_seqData_projectNumber = sequence.exclude(seqData_projectNumber__isnull=True).values('seqData_projectNumber').annotate(count=Count('seqData_projectNumber')).order_by()
 
     context['project'] = project
+    context['license'] = project.get_license()
+    context['citation'] = project.get_citation()
     context['event_count'] = event.count()
     context['event_per_year'] = event_per_year
     context['event_per_month'] = event_per_month

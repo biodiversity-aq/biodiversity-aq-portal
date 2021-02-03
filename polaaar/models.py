@@ -1,12 +1,17 @@
 from __future__ import unicode_literals
 
+import datetime
 import json
+
+import requests
+import defusedxml.ElementTree as ET
 from django.utils.translation import gettext as _
 from django.conf import settings
 from django.contrib.gis.gdal import *
 from django.contrib.gis.db import models
 from django.contrib.gis.geos import GEOSGeometry
 from accounts.models import UserProfile
+
 
 ### Hard-wiring in choices for continent
 CONTINENTS = [
@@ -229,6 +234,34 @@ class ProjectMetadata(models.Model):
 
     def __str__(self):
         return self.project_name
+
+    def get_eml(self):
+        r = requests.get(self.EML_URL).content
+        etree = ET.fromstring(r)
+        return etree
+
+    def get_license(self):
+        """
+        Get license from eml
+        """
+        etree = self.get_eml()
+        project_license_dict = etree.find('.//intellectualRights/para/ulink')
+        project_license = project_license_dict.get('url')
+        return project_license
+
+    def get_citation(self):
+        """
+        Get citation from eml
+        """
+        etree = self.get_eml()
+        citation_ipt = etree.find('./additionalMetadata/metadata/gbif/citation').text
+        if citation_ipt:
+            now = datetime.datetime.now().date()
+            pola3r = "(Available: Polar 'Omics Links to Antarctic, Arctic and Alpine Research. Antarctic Biodiversity Portal. Scientific Committee for Antarctic Research. www.biodiversity.aq/pola3r. Accessed: {})".format(now)
+            citation = "{} {}".format(citation_ipt, pola3r)
+        else:
+            citation = None
+        return citation
 
     class Meta:
         ordering = ['project_name']
