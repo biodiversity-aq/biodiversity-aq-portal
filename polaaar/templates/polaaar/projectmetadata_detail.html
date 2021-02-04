@@ -46,7 +46,7 @@
             </tr>
             {% if seq_seqData_projectNumber %}
                 <tr>
-                    <th scope="row">BioProject</th>
+                    <th scope="row">Sequence data</th>
                     <td>
                         {% for record in seq_seqData_projectNumber %}
                             <a href="https://www.ncbi.nlm.nih.gov/bioproject/?term={{ record.seqData_projectNumber }}">{{ record.seqData_projectNumber }}</a>
