@@ -1962,7 +1962,6 @@ def project_metadata_detail(request, pk):
     cache_key = 'project{}_{}'.format(project.id, project.created_on)
     project_cache = cache.get(cache_key)
     if not project_cache:
-        cache.delete(cache_key)
         context = dict()
         event = Event.objects.filter(event_hierarchy__project_metadata=project)
         mof = Variable.objects.filter(environment__event__event_hierarchy__project_metadata=project)
