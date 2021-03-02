@@ -368,6 +368,9 @@ class Event(models.Model):
                                              help_text="Whether or not there is Environment associated to this Event record")
     sequences_exists = models.BooleanField(blank=True, null=True,
                                            help_text="Whether or not there is Sequence associated to this Event record")
+    # add ProjectMetadata here because it is easier to query for the map
+    project_metadata = models.ForeignKey(ProjectMetadata, blank=True, null=True, on_delete=models.CASCADE,
+                                         help_text='Foreign key to ProjectMetadata record')
 
     def save(self, *args, **kwargs):
         coords = json.loads(GEOSGeometry(self.footprintWKT).centroid.json)["coordinates"]
