@@ -308,6 +308,12 @@ FORMS_EXTRA_FIELDS = (
     (100, "captcha.fields.ReCaptchaField","ReCaptcha"),
     )
 
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+        'LOCATION': 'biodiversityaq_cache_table'
+    }
+}
 
 
 #########################################################################################
@@ -389,3 +395,6 @@ POLAAAR_MAIL_FILE_DIR = 'polaaar/mail_file/'  # has to be relative path to MEDIA
 
 # serves as the recipient list for data submission
 POLAAAR_ADMIN_LIST = ['data.biodiversity.aq@gmail.com', 'msweetlove@naturalsciences.be']
+
+GEOSERVER_HOST = 'http://sandbox.bebif.be/geoserver/'
+
