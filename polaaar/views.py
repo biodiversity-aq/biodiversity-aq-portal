@@ -1,7 +1,8 @@
+from django.core.cache import cache
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.http import HttpResponse
-from django.db.models import Q, Count
+from django.db.models import Q, Count, Min
 from django.contrib.gis.db.models.functions import AsGeoJSON, Centroid
 from django.views.generic import DetailView
 from rest_framework.renderers import TemplateHTMLRenderer
@@ -1950,42 +1951,61 @@ def export_events(request):
 
 
 def project_metadata_detail(request, pk):
-    context = dict()
+    """
+    Project Metadata detail page, displays statistics of various variables related to project.
+    :param request: http GET request
+    :param pk: pk of the ProjectMetadata object
+    :return: HttpResponse of the ProjectMetadata with statistics in the context
+    """
     get_object_or_404(ProjectMetadata, pk=pk)
     project = ProjectMetadata.objects.get(pk=pk)
-    event = Event.objects.filter(event_hierarchy__project_metadata=project)
-    mof = Variable.objects.filter(environment__event__event_hierarchy__project_metadata=project)
-    sequence = Sequences.objects.filter(event__event_hierarchy__project_metadata=project)
-    sample = SampleMetadata.objects.filter(event_sample_metadata__event_hierarchy__project_metadata=project)
+    cache_key = 'project{}_{}'.format(project.id, project.created_on)
+    project_cache = cache.get(cache_key)
+    if not project_cache:
+        cache.delete(cache_key)
+        context = dict()
+        event = Event.objects.filter(event_hierarchy__project_metadata=project)
+        mof = Variable.objects.filter(environment__event__event_hierarchy__project_metadata=project)
+        sequence = Sequences.objects.filter(event__event_hierarchy__project_metadata=project)
+        sample = SampleMetadata.objects.filter(event_sample_metadata__event_hierarchy__project_metadata=project)
 
-    event_per_year = event.exclude(collection_year__isnull=True).values('collection_year').annotate(count=Count('collection_year')).order_by()
-    event_per_month = event.exclude(collection_month__isnull=True).values('collection_month').annotate(count=Count('collection_month')).order_by()
-    sample_geo_loc_name = sample.exclude(geo_loc_name__isnull=True).values('geo_loc_name').annotate(count=Count('geo_loc_name')).order_by()
-    sample_env_biome = sample.exclude(env_biome__isnull=True).values('env_biome').annotate(count=Count('env_biome')).order_by()
-    mof_name = mof.exclude(name__isnull=True).values('name').annotate(count=Count('name')).order_by()
-    seq_target_gene = sequence.exclude(target_gene__isnull=True).values('target_gene').annotate(count=Count('target_gene')).order_by()
-    seq_target_subfg = sequence.exclude(target_subfragment__isnull=True).values('target_subfragment').annotate(count=Count('target_subfragment')).order_by()
-    seq_type = sequence.exclude(type__isnull=True).values('type').annotate(count=Count('type')).order_by()
-    seq_run_type = sequence.exclude(run_type__isnull=True).values('run_type').annotate(count=Count('run_type')).order_by()
-    seq_seqData_projectNumber = sequence.exclude(seqData_projectNumber__isnull=True).values('seqData_projectNumber').annotate(count=Count('seqData_projectNumber')).order_by()
-
-    context['project'] = project
-    context['license'] = project.get_license()
-    context['citation'] = project.get_citation()
-    context['event_count'] = event.count()
-    context['event_per_year'] = event_per_year
-    context['event_per_month'] = event_per_month
-    context['sample_count'] = sample.count()
-    context['sample_geo_loc_name'] = sample_geo_loc_name
-    context['sample_env_biome'] = sample_env_biome
-    context['mof_count'] = mof.count()
-    context['mof_name'] = mof_name
-    context['seq_count'] = sequence.count()
-    context['seq_target_gene'] = seq_target_gene
-    context['seq_target_subfg'] = seq_target_subfg
-    context['seq_type'] = seq_type
-    context['seq_run_type'] = seq_run_type
-    context['seq_seqData_projectNumber'] = seq_seqData_projectNumber
-    return render(request, template_name='polaaar/projectmetadata_detail.html', context=context)
+        event_per_year = event.exclude(collection_year__isnull=True).values('collection_year').annotate(count=Count('collection_year')).order_by()
+        event_per_month = event.exclude(collection_month__isnull=True).values('collection_month').annotate(count=Count('collection_month')).order_by()
+        sample_geo_loc_name = sample.exclude(geo_loc_name__isnull=True).values('geo_loc_name').annotate(count=Count('geo_loc_name')).order_by()
+        sample_env_biome = sample.exclude(env_biome__isnull=True).values('env_biome').annotate(count=Count('env_biome')).order_by()
+        mof_name = mof.exclude(name__isnull=True).values('name').annotate(count=Count('name')).order_by()
+        seq_target_gene = sequence.exclude(target_gene__isnull=True).values('target_gene').annotate(count=Count('target_gene')).order_by()
+        seq_target_subfg = sequence.exclude(target_subfragment__isnull=True).values('target_subfragment').annotate(count=Count('target_subfragment')).order_by()
+        seq_type = sequence.exclude(type__isnull=True).values('type').annotate(count=Count('type')).order_by()
+        seq_run_type = sequence.exclude(run_type__isnull=True).values('run_type').annotate(count=Count('run_type')).order_by()
+        seq_seqData_projectNumber = sequence.exclude(seqData_projectNumber__isnull=True).values('seqData_projectNumber').annotate(count=Count('seqData_projectNumber')).order_by()
+        try:
+            min_lat = event.values('Latitude').annotate(min=Min('Latitude')).order_by().values('min')[0].get('min')
+        except IndexError:
+            min_lat = 0
+        context['project'] = project
+        context['license'] = project.get_license()
+        context['citation'] = project.get_citation()
+        context['event_count'] = event.count()
+        context['event_per_year'] = event_per_year
+        context['event_per_month'] = event_per_month
+        context['sample_count'] = sample.count()
+        context['sample_geo_loc_name'] = sample_geo_loc_name
+        context['sample_env_biome'] = sample_env_biome
+        context['mof_count'] = mof.count()
+        context['mof_name'] = mof_name
+        context['seq_count'] = sequence.count()
+        context['seq_target_gene'] = seq_target_gene
+        context['seq_target_subfg'] = seq_target_subfg
+        context['seq_type'] = seq_type
+        context['seq_run_type'] = seq_run_type
+        context['seq_seqData_projectNumber'] = seq_seqData_projectNumber
+        context['min_lat'] = min_lat
+        context['geoserver_host'] = settings.GEOSERVER_HOST
+        cache.set(cache_key, context)
+    else:
+        context = project_cache
+    response = render(request, template_name='polaaar/projectmetadata_detail.html', context=context)
+    return response
 
 
