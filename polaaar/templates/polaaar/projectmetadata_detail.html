@@ -1,9 +1,14 @@
 {% extends "polaaar/base.html" %}
-{% load static leaflet_tags geojson_tags polaaar_tags %}
+{% load static %}
 
 {% block title %}
     POLA3R
 {% endblock title %}
+
+{% block extra_css %}
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.5.0/css/ol.css">
+{% endblock %}
 
 
 {% block body_class %}{% endblock %}
@@ -56,6 +61,10 @@
                 </tr>
             {% endif %}
         </table>
+        <!-- Map -->
+        <div class="my-4" id="mapid" style="height: 400px;"></div>
+    </div>
+    <!-- Cards -->
         <div class="row row-cols-1 row-cols-md-2">
             <div class="col mb-4">
                 <div class="card" id="statistics">
@@ -209,5 +218,78 @@
                 </div>
             {% endif %}
         </div>
-    </div>
+{% endblock %}
+
+{% block polaaar_js %}
+    <script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.5.0/build/ol.js"></script>
+    <script>
+        let fill = new ol.style.Fill({
+            color: "rgba(213, 30, 71, 0.3)"
+        });
+
+        let stroke = new ol.style.Stroke({
+            color: "rgba(236, 101, 49, 0.3)",
+            width: 1
+        });
+
+        let style_simple = new ol.style.Style({
+            image: new ol.style.Circle({
+                fill: fill,
+                radius: 2
+            }),
+            fill: fill,
+            stroke: stroke,
+        });
+
+        let layer = 'antabif:polaaar_event';
+        let projection_epsg_no = '4326';
+
+        function simpleStyle(feature) {
+            if (feature.get("project_metadata_id") === {{ project.pk }}) {
+                return style_simple
+            }
+        }
+
+        let baseLayer = new ol.layer.Tile({
+            source: new ol.source.XYZ({
+                attributions:
+                    'Tiles © <a href="https://services.arcgisonline.com/ArcGIS/' +
+                    'rest/services/World_Light_Gray_Base/MapServer">ArcGIS</a>',
+                url:
+                    'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}',
+
+
+            }),
+            maxZoom: 19,
+            projection: 'EPSG:4326',
+            tileSize: 512,
+        })
+
+        let projectLayer = new ol.layer.VectorTile({
+            style: simpleStyle,
+            source: new ol.source.VectorTile({
+                tilePixelRatio: 120, // oversampling when > 1
+                tileGrid: ol.tilegrid.createXYZ({maxZoom: 15}),
+                format: new ol.format.MVT(),
+                url: '{{ geoserver_host }}gwc/service/tms/1.0.0/' + layer +
+                    '@EPSG%3A' + projection_epsg_no + '@pbf/{z}/{x}/{-y}.pbf'
+            })
+        })
+
+        let map = new ol.Map({
+            target: 'mapid',
+            view: new ol.View({
+                center: new ol.proj.fromLonLat([0, {{ min_lat }}]),
+                zoom: 2,
+                minZoom: 1,
+                maxZoom: 16
+            }),
+            layers: [baseLayer, projectLayer]
+        });
+
+
+    </script>
+
+
+
 {% endblock %}
