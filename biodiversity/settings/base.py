@@ -396,5 +396,5 @@ POLAAAR_MAIL_FILE_DIR = 'polaaar/mail_file/'  # has to be relative path to MEDIA
 # serves as the recipient list for data submission
 POLAAAR_ADMIN_LIST = ['data.biodiversity.aq@gmail.com', 'msweetlove@naturalsciences.be']
 
-GEOSERVER_HOST = 'http://sandbox.bebif.be/geoserver/'
+GEOSERVER_HOST = 'https://sandbox.bebif.be/geoserver'
 
