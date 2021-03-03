@@ -14,7 +14,7 @@
 {% block body_class %}{% endblock %}
 
 {% block content %}
-    <div class="container mt-4">
+    <section class="container mt-4">
         <h2>{{ project.project_name }}</h2>
         <table class="table table-borderless table-hover table-sm mt-4">
             {% if project.resource_url %}
@@ -63,8 +63,9 @@
         </table>
         <!-- Map -->
         <div class="my-4" id="mapid" style="height: 400px;"></div>
-    </div>
+    </section>
     <!-- Cards -->
+    <section class="container">
         <div class="row row-cols-1 row-cols-md-2">
             <div class="col mb-4">
                 <div class="card" id="statistics">
@@ -218,6 +219,7 @@
                 </div>
             {% endif %}
         </div>
+    </section>
 {% endblock %}
 
 {% block polaaar_js %}
