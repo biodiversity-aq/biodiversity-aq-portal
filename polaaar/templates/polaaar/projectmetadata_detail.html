@@ -271,9 +271,9 @@
             style: simpleStyle,
             source: new ol.source.VectorTile({
                 tilePixelRatio: 120, // oversampling when > 1
-                tileGrid: ol.tilegrid.createXYZ({maxZoom: 15}),
+                tileGrid: ol.tilegrid.createXYZ({maxZoom: 19}),
                 format: new ol.format.MVT(),
-                url: '{{ geoserver_host }}gwc/service/tms/1.0.0/' + layer +
+                url: '{{ geoserver_host }}/gwc/service/tms/1.0.0/' + layer +
                     '@EPSG%3A' + projection_epsg_no + '@pbf/{z}/{x}/{-y}.pbf'
             })
         })
@@ -282,9 +282,8 @@
             target: 'mapid',
             view: new ol.View({
                 center: new ol.proj.fromLonLat([0, {{ min_lat }}]),
-                zoom: 2,
-                minZoom: 1,
-                maxZoom: 16
+                zoom: 1,
+                maxZoom: 19
             }),
             layers: [baseLayer, projectLayer]
         });
