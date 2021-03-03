@@ -262,6 +262,7 @@
 
 
             }),
+            minZoom: 1,
             maxZoom: 19,
             projection: 'EPSG:4326',
             tileSize: 512,
@@ -283,6 +284,7 @@
             view: new ol.View({
                 center: new ol.proj.fromLonLat([0, {{ min_lat }}]),
                 zoom: 1,
+                minZoom:1,
                 maxZoom: 19
             }),
             layers: [baseLayer, projectLayer]
