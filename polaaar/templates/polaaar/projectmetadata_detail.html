@@ -225,32 +225,6 @@
 {% block polaaar_js %}
     <script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.5.0/build/ol.js"></script>
     <script>
-        let fill = new ol.style.Fill({
-            color: "rgba(213, 30, 71, 0.3)"
-        });
-
-        let stroke = new ol.style.Stroke({
-            color: "rgba(236, 101, 49, 0.3)",
-            width: 1
-        });
-
-        let style_simple = new ol.style.Style({
-            image: new ol.style.Circle({
-                fill: fill,
-                radius: 2
-            }),
-            fill: fill,
-            stroke: stroke,
-        });
-
-        let layer = 'antabif:polaaar_event';
-        let projection_epsg_no = '4326';
-
-        function simpleStyle(feature) {
-            if (feature.get("project_metadata_id") === {{ project.pk }}) {
-                return style_simple
-            }
-        }
 
         let baseLayer = new ol.layer.Tile({
             source: new ol.source.XYZ({
@@ -259,8 +233,6 @@
                     'rest/services/World_Light_Gray_Base/MapServer">ArcGIS</a>',
                 url:
                     'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}',
-
-
             }),
             minZoom: 1,
             maxZoom: 19,
@@ -268,14 +240,20 @@
             tileSize: 512,
         })
 
-        let projectLayer = new ol.layer.VectorTile({
-            style: simpleStyle,
-            source: new ol.source.VectorTile({
-                tilePixelRatio: 120, // oversampling when > 1
-                tileGrid: ol.tilegrid.createXYZ({maxZoom: 19}),
-                format: new ol.format.MVT(),
-                url: '{{ geoserver_host }}/gwc/service/tms/1.0.0/' + layer +
-                    '@EPSG%3A' + projection_epsg_no + '@pbf/{z}/{x}/{-y}.pbf'
+        let projectLayer = new ol.layer.Image({
+            source: new ol.source.ImageWMS({
+                params: {
+                    'SERVICE': 'WMS',
+                    'VERSION': '1.1.1',
+                    'SRS': 'EPSG:4326',
+                    'LAYERS': layer,
+                    'FORMAT': 'image/png',
+                    'TILED': true,
+                    'BUFFER': 0,
+                    'CQL_FILTER': 'project_metadata_id={{ project.id }}',
+                },
+                url: '{{ geoserver_host }}/antabif/wms?'
+
             })
         })
 
@@ -284,15 +262,10 @@
             view: new ol.View({
                 center: new ol.proj.fromLonLat([0, {{ min_lat }}]),
                 zoom: 1,
-                minZoom:1,
+                minZoom: 1,
                 maxZoom: 19
             }),
             layers: [baseLayer, projectLayer]
         });
-
-
     </script>
-
-
-
 {% endblock %}
