@@ -228,12 +228,6 @@
 
         let layer = 'antabif:polaaar_event';
 
-        function simpleStyle(feature) {
-            if (feature.get("project_metadata_id") === {{ project.pk }}) {
-                return style_simple
-            }
-        }
-
         let baseLayer = new ol.layer.Tile({
             source: new ol.source.XYZ({
                 attributions:
