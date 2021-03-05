@@ -272,5 +272,16 @@
       "env_text_value": "YES",
       "event_id": 1
     }
+  },
+  {
+    "model": "polaaar.Reference",
+    "pk": 1,
+    "fields": {
+      "full_reference": "my reference.",
+      "year": 2021,
+      "associated_projects": [
+        1
+      ]
+    }
   }
 ]

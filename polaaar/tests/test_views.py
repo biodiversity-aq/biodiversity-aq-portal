@@ -1,5 +1,6 @@
 import datetime
 
+from django.core.cache import cache
 from django.urls import reverse
 from django.test import TestCase
 
@@ -138,5 +139,28 @@ class ProjectMetadataDetailTest(TestCase):
                    "between different ice types. v1.0. SCAR - Microbial Antarctic Resource System. Dataset/Metadata. " \
                    "https://ipt.biodiversity.aq/resource?r=microorganisms_in_frost_flowers_on_young_arctic_sea_ice&v=1.0 " \
                    "(Available: Polar 'Omics Links to Antarctic, Arctic and Alpine Research. Antarctic Biodiversity " \
-                   "Portal. Scientific Committee for Antarctic Research. www.biodiversity.aq/pola3r. Accessed: {})".format(now)
+                   "Portal. Scientific Committee for Antarctic Research. www.biodiversity.aq/pola3r. Accessed: {})".format(
+            now)
         self.assertEqual(self.context.get('citation'), '{}'.format(citation))
+
+    def test_context_reference(self):
+        """
+        Ensure the reference is populated in context
+        """
+        self.assertQuerysetEqual(self.context.get('ref'), ['<Reference: my reference.>'])
+
+    def test_geoserver_host_no_trailing_slash(self):
+        """
+        Ensure the geoserver host has no trailing slash
+        """
+        geoserver_host = self.context.get('geoserver_host')
+        self.assertNotEqual(geoserver_host[-1:], '/')
+
+    def test_cache_created(self):
+        """
+        Ensure context is cached after the first visit of the project
+        """
+        self.client.get(reverse('polaaar:project_metadata_detail', args=[1, ]))
+        # cache should be created after the GET request
+        project_cache = cache.get('project1_2020-08-19')
+        self.assertTrue(project_cache)

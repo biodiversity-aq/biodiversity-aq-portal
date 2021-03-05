@@ -1967,6 +1967,7 @@ def project_metadata_detail(request, pk):
         mof = Variable.objects.filter(environment__event__event_hierarchy__project_metadata=project)
         sequence = Sequences.objects.filter(event__event_hierarchy__project_metadata=project)
         sample = SampleMetadata.objects.filter(event_sample_metadata__event_hierarchy__project_metadata=project)
+        ref = Reference.objects.filter(associated_projects=project)
 
         event_per_year = event.exclude(collection_year__isnull=True).values('collection_year').annotate(count=Count('collection_year')).order_by()
         event_per_month = event.exclude(collection_month__isnull=True).values('collection_month').annotate(count=Count('collection_month')).order_by()
@@ -2000,6 +2001,7 @@ def project_metadata_detail(request, pk):
         context['seq_run_type'] = seq_run_type
         context['seq_seqData_projectNumber'] = seq_seqData_projectNumber
         context['min_lat'] = min_lat
+        context['ref'] = ref
         context['geoserver_host'] = settings.GEOSERVER_HOST
         cache.set(cache_key, context)
     else:
