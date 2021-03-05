@@ -16,7 +16,7 @@
 {% block content %}
     <section class="container mt-4">
         <h2>{{ project.project_name }}</h2>
-        <table class="table table-borderless table-hover table-sm mt-4">
+        <table class="table table-borderless table-striped table-responsive-sm table-hover mt-4">
             {% if project.resource_url %}
                 <tr>
                     <th scope="row">Resource URL</th>
@@ -74,7 +74,7 @@
             {% endif %}
         </table>
         <!-- Map -->
-        <div class="my-4" id="mapid" style="height: 400px;"></div>
+        <div class="my-4 container" id="mapid" style="height: 400px;"></div>
     </section>
     <!-- Cards -->
     <section class="container">
