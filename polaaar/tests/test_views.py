@@ -162,5 +162,5 @@ class ProjectMetadataDetailTest(TestCase):
         """
         self.client.get(reverse('polaaar:project_metadata_detail', args=[1, ]))
         # cache should be created after the GET request
-        project_cache = cache.get('project1_2020-08-19')
+        project_cache = cache.get('project1_2020-08-20')
         self.assertTrue(project_cache)

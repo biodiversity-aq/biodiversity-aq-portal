@@ -1959,7 +1959,7 @@ def project_metadata_detail(request, pk):
     """
     get_object_or_404(ProjectMetadata, pk=pk)
     project = ProjectMetadata.objects.get(pk=pk)
-    cache_key = 'project{}_{}'.format(project.id, project.created_on)
+    cache_key = 'project{}_{}'.format(project.id, project.updated_on)
     project_cache = cache.get(cache_key)
     if not project_cache:
         context = dict()
