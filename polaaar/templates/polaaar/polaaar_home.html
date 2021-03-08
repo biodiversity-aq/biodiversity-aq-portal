@@ -2,7 +2,7 @@
 {% load static leaflet_tags geojson_tags %}
 
 {% block title %}
-POLA3R
+    POLA3R
 {% endblock title %}
 
 
@@ -37,133 +37,131 @@ POLA3R
 
 
 {% block content %}
-<div class="container-fluid" id="polaaar_bkgd"
-     style="background-image: url({% static 'imgs/img1.png' %});background-size:cover;background-repeat:no-repeat;padding-bottom:20px;">
-    <div class="row" style="border-bottom-width:0px;">
-        <div class="col-12" style="text-align:center; padding-top:30px;">
-            <img style="border-radius:15px;" width="9%" class="fadeinclass" src="{% static 'logos/pola3r_logo.png' %}" />
-        </div>
-    </div>
-
-    <div class="row justify-content-md-center" style="border-width:0px;">
-        <div class="col-12 col-lg-5 fadeinclass" style="float:right;">
-
-            {% leaflet_map "landing_map" callback="window.map_init"  %}
-
-            <p style="font-size:10pt;color:white">Map attribution: Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012</p>
-        </div>
-        <div class="col-12 col-lg-3 fadeinclass">
-            <div style="background-color:rgba(255,255,255,0.75);border-radius:15px;padding-bottom:5px;padding-right:12px; padding-top:5px;">
-                <a role="button" href="{% url 'polaaar:polaaar_search' %}" class="btn btn-biodiversity-lightblue btn-lg waves-effect" style="width:100%">
-                Search the database <i class="fas fa-search pl-1"></i>
-                </a>
-                <a role="button" href="{% url 'polaaar:polaaar_submit_data' %}" class="btn btn-biodiversity-lightblue btn-lg" style="width:100%">
-                    How to submit a dataset <i class="fas fa-cloud-upload-alt pl-1"></i>
-                </a>
+    <div class="container-fluid" id="polaaar_bkgd"
+         style="background-image: url({% static 'imgs/img1.png' %});background-size:cover;background-repeat:no-repeat;padding-bottom:20px;">
+        <div class="row" style="border-bottom-width:0px;">
+            <div class="col-12" style="text-align:center; padding-top:30px;">
+                <img style="border-radius:15px;" width="9%" class="fadeinclass"
+                     src="{% static 'logos/pola3r_logo.png' %}"/>
             </div>
-            
-            {% if user.is_authenticated %}
-            {% else %}
-            <div style="background-color:rgba(255,255,255,0.75);border-radius:15px;margin-top:5px;padding-bottom:5px;padding-right:12px">
-                <p style="font-size:18pt">To submit data:</p>
-                <a role="button" href="{% url 'login' %}?next={{request.path}}" class="btn btn-biodiversity-teal btn-lg" style="width:100%">
-                    Login <i class="fas fa-user pl-1"></i>
-                </a>
-                <a role="button" href="{% url 'accounts:register' %}" class="btn btn-biodiversity-teal btn-lg" style="width:100%">
-                    Register <i class="fas fa-user-plus pl-1"></i>
-                </a>
+        </div>
+
+        <div class="row justify-content-md-center" style="border-width:0px;">
+            <div class="col-12 col-lg-5 fadeinclass" style="float:right;">
+
+                {% leaflet_map "landing_map" callback="window.map_init" %}
+
+                <p style="font-size:10pt;color:white">Map attribution: Tiles &copy; Esri &mdash; Source: Esri, DeLorme,
+                    NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand),
+                    TomTom, 2012</p>
             </div>
-            {% endif %}
+            <div class="col-12 col-lg-3 fadeinclass">
+                <div style="background-color:rgba(255,255,255,0.75);border-radius:15px;padding-bottom:5px;padding-right:12px; padding-top:5px;">
+                    <a role="button" href="{% url 'polaaar:polaaar_search' %}"
+                       class="btn btn-biodiversity-lightblue btn-lg waves-effect" style="width:100%">
+                        Search the database <i class="fas fa-search pl-1"></i>
+                    </a>
+                    <a role="button" href="{% url 'polaaar:polaaar_submit_data' %}"
+                       class="btn btn-biodiversity-lightblue btn-lg" style="width:100%">
+                        How to submit a dataset <i class="fas fa-cloud-upload-alt pl-1"></i>
+                    </a>
+                </div>
+
+                {% if user.is_authenticated %}
+                {% else %}
+                    <div style="background-color:rgba(255,255,255,0.75);border-radius:15px;margin-top:5px;padding-bottom:5px;padding-right:12px">
+                        <p style="font-size:18pt">To submit data:</p>
+                        <a role="button" href="{% url 'login' %}?next={{ request.path }}"
+                           class="btn btn-biodiversity-teal btn-lg" style="width:100%">
+                            Login <i class="fas fa-user pl-1"></i>
+                        </a>
+                        <a role="button" href="{% url 'accounts:register' %}" class="btn btn-biodiversity-teal btn-lg"
+                           style="width:100%">
+                            Register <i class="fas fa-user-plus pl-1"></i>
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
         </div>
+
     </div>
 
-</div>
+    <div class="container">
+        <div class="row justify-content-md-center" style="border-width:0px;">
+            <div class="col-12">
+                <h1>Welcome</h1>
+                <p>
+                    Pola<sub>3</sub>r is an information system dedicated to facilitate the discovery, access and
+                    analysis of molecular
+                    microbial diversity (meta)data generated by Antarctic researchers.
 
-<div class="container">
-    <div class="row justify-content-md-center" style="border-width:0px;">
-        <div class="col-12">
-            <h1>Welcome</h1>
-            <p>
-                Pola<sub>3</sub>r is an information system dedicated to facilitate the discovery, access and analysis of molecular
-                microbial diversity (meta)data generated by Antarctic researchers.
-
-                This includes the ability to upload information that describes (i) a research project that involves
-                molecular microbial diversity sequence information (this goes into the Integrated Publishing Toolkit
-                system that was developed by GBIF), (ii) communicating descriptive environmental information through a
-                relatively newly accepted standard set of terms (Genomic Standards Consortium, MiMARKS), (iii) uploading
-                links to DNA, RNA, proteomic or metabolomic data sets that have been deposited in public repositories, and
-                the required metadata describing them.
-            </p>            
+                    This includes the ability to upload information that describes (i) a research project that involves
+                    molecular microbial diversity sequence information (this goes into the Integrated Publishing Toolkit
+                    system that was developed by GBIF), (ii) communicating descriptive environmental information through
+                    a
+                    relatively newly accepted standard set of terms (Genomic Standards Consortium, MiMARKS), (iii)
+                    uploading
+                    links to DNA, RNA, proteomic or metabolomic data sets that have been deposited in public
+                    repositories, and
+                    the required metadata describing them.
+                </p>
+            </div>
         </div>
-    </div>
-    {% if amplicon_img %}
-    <div class="row">
-        <img src="{{ amplicon_img }}" alt="amplicon_image" class="center">
-    </div>
-    {% endif %}
+        {% if amplicon_img %}
+            <div class="row">
+                <img src="{{ amplicon_img }}" alt="amplicon_image" class="center">
+            </div>
+        {% endif %}
 
 
-</div>
+    </div>
 {% endblock content %}
 
 {% block polaaar_js %}
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-<style>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <style>
 
-    .leaflet-container { /* all maps */
-        width: 100%;
-        height: 400px;
-        -webkit-box-shadow: 10px 10px 42px 0px rgba(0,0,0,0.75);
-        -moz-box-shadow: 10px 10px 42px 0px rgba(0,0,0,0.75);
-        box-shadow: 10px 10px 42px 0px rgba(0,0,0,0.75);
-    }
+        .leaflet-container { /* all maps */
+            width: 100%;
+            height: 400px;
+            -webkit-box-shadow: 10px 10px 42px 0px rgba(0, 0, 0, 0.75);
+            -moz-box-shadow: 10px 10px 42px 0px rgba(0, 0, 0, 0.75);
+            box-shadow: 10px 10px 42px 0px rgba(0, 0, 0, 0.75);
+        }
 
-    #specialbigmap {
-        height: 800px;
-    }
+        #specialbigmap {
+            height: 800px;
+        }
 
-    /* Resize the "display_raw" textbox */
-    .django-leaflet-raw-textarea {
-        width: 100%;
-    }
+        /* Resize the "display_raw" textbox */
+        .django-leaflet-raw-textarea {
+            width: 100%;
+        }
 
-    .leaflet-control-attribution{
-        display:none;
-    }
-</style>
+        .leaflet-control-attribution {
+            display: none;
+        }
+    </style>
 
-<script type="text/javascript">
-    var collection = {{ qs_results|geojsonfeature|safe }};    
+    <script type="text/javascript">
+        function map_init(map, options) {
 
-    function map_init(map, options) {
-        var geojsonMarkerOptions = {
-            radius: 3,
-            fillColor: "#ff7800",
-            color: "#000",
-            weight: 1,
-            opacity: 1,
-            fillOpacity: 0.8
-        };
-
-        L.geoJson(collection,{
-            pointToLayer: function(feature,latlng){
-                return L.circleMarker(latlng,geojsonMarkerOptions);
+            let mapOptions = {
+                layers: 'antabif:polaaar_event',
+                format: 'image/png',
+                transparent: true
             }
-        }).addTo(map);
+            let wmsLayer = L.tileLayer.wms('{{ geoserver_host }}/wms', mapOptions)
+            let tileLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
+                attribution: ''
+            })
+            tileLayer.addTo(map);
+            wmsLayer.addTo(map);
 
-        map.attributionControl.removeAttribution()
-
-         L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
-                    attribution: ''
-                }).addTo(map);
-
-      }
-
-
-    
+        }
 
 
-</script>
+    </script>
 
 {% endblock polaaar_js %}
 

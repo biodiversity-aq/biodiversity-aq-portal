@@ -26,13 +26,12 @@ import os
 
 
 def home(request):
-    qs_results = Event.objects.annotate(geom=AsGeoJSON(Centroid('footprintWKT')))
     file_path = os.path.join(settings.MEDIA_ROOT, 'polaaar', 'amplicon_image.png')
     if os.path.isfile(file_path):
         amplicon_img = os.path.join(settings.MEDIA_URL, 'polaaar', 'amplicon_image.png')
     else:
         amplicon_img = False
-    return render(request, 'polaaar/polaaar_home.html', {'qs_results': qs_results, 'amplicon_img': amplicon_img})
+    return render(request, 'polaaar/polaaar_home.html', {'geoserver_host': settings.GEOSERVER_HOST, 'amplicon_img': amplicon_img})
 
 
 def api_reference(request):
@@ -2003,7 +2002,7 @@ def project_metadata_detail(request, pk):
         context['min_lat'] = min_lat
         context['ref'] = ref
         context['geoserver_host'] = settings.GEOSERVER_HOST
-        cache.set(cache_key, context)
+        cache.set(cache_key, context)  # cache the context if not found
     else:
         context = project_cache
     response = render(request, template_name='polaaar/projectmetadata_detail.html', context=context)
