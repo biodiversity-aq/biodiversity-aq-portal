@@ -41,7 +41,8 @@ urlpatterns = [
     path('spatialsearch/', views.spatial_searching, name='spatialsearch'),
     path('spatial_search_table/', views.spatial_search_table, name='spatial_search_table'),
 
-    path('project/<int:pk>', views.project_metadata_detail, name='project_metadata_detail'),
+    path('project/', views.ProjectMetadataListView.as_view(), name='project_metadata_list'),
+    path('project/<int:pk>/', views.project_metadata_detail, name='project_metadata_detail'),
 
     path('submit_data/', views.email_submission, name='email_submission'),
     path('submit_success/', views.submit_success, name='submit_success'),

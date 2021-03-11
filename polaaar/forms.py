@@ -33,3 +33,14 @@ class EmailForm(forms.ModelForm):
         return data
 
 
+class ProjectSearchForm(forms.Form):
+    q = forms.CharField(label='', widget=forms.TextInput(attrs={
+        "class": "form-control form-control-sm ml-3 w-75",  "type": "text", "placeholder": "Search",
+        "aria-label": "Search"}), required=False)
+
+    def clean(self):
+        cleaned_data = super(ProjectSearchForm, self).clean()
+        return cleaned_data
+
+
+

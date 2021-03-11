@@ -4,12 +4,13 @@ from django.urls import reverse
 from django.http import HttpResponse
 from django.db.models import Q, Count, Min
 from django.contrib.gis.db.models.functions import AsGeoJSON, Centroid
+from django.views import generic
 from django.views.generic import DetailView
 from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .forms import EmailForm
+from .forms import EmailForm, ProjectSearchForm
 from django.core.mail import EmailMessage
 from django_filters.rest_framework import DjangoFilterBackend
 
@@ -1949,9 +1950,33 @@ def export_events(request):
         return response
 
 
+class ProjectMetadataListView(generic.ListView):
+    """
+    List the search results for ProjectMetadata instances
+    """
+    template_name = 'polaaar/projectmetadata_list.html'
+    paginate_by = 20
+
+    def get_queryset(self):
+        qs = ProjectMetadata.objects.filter(is_public=True)
+        form = ProjectSearchForm(self.request.GET)
+        if form.is_valid():
+            search_term = form.cleaned_data.get('q')
+            # filter for ProjectMetadata which is public AND (project_name contains search term or abstract
+            # contains search term)
+            qs = ProjectMetadata.objects.filter(
+                Q(is_public=True), Q(project_name__icontains=search_term) | Q(abstract__icontains=search_term))
+        return qs
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = ProjectSearchForm(self.request.GET)
+        return context
+
+
 def project_metadata_detail(request, pk):
     """
-    Project Metadata detail page, displays statistics of various variables related to project.
+    ProjectMetadata detail page, displays statistics of various variables related to project.
     :param request: http GET request
     :param pk: pk of the ProjectMetadata object
     :return: HttpResponse of the ProjectMetadata with statistics in the context
