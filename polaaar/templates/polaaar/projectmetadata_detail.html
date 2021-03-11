@@ -16,7 +16,12 @@
 {% block content %}
     <section class="container mt-4">
         <h2>{{ project.project_name }}</h2>
-        <table class="table table-borderless table-striped table-responsive-sm table-hover mt-4">
+        <a class="btn btn-md btn-biodiversity-lightblue" type="button" style="display: inline-block;"
+                                   href="{% url 'polaaar:GetProjectFiles' project.id %}">Download source archive</a>
+    <a class="btn btn-md btn-biodiversity-lightblue" type="button" style="display: inline-block;"
+                                   href="{% url 'polaaar:export_projects' %}?id={{ project.id }}">Download data</a>
+
+        <table class="table table-borderless table-striped table-responsive-sm mt-4">
             {% if project.resource_url %}
                 <tr>
                     <th scope="row">Resource URL</th>
