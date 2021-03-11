@@ -17,8 +17,28 @@
         </form>
 
         {% if page_obj.object_list %}
-            <h6>{{ page_obj.start_index }} - {{ page_obj.end_index }} of {{ page_obj.paginator.count|intcomma }}
-                results</h6>
+            {% if is_paginated %}
+                <p>{{ page_obj.start_index }} - {{ page_obj.end_index }} of {{ page_obj.paginator.count|intcomma }}
+                results</p>
+            <nav>
+                <ul class="pagination">
+                    {% if page_obj.has_previous %}
+                        <li>
+                            <a class="btn btn-sm btn-biodiversity-lightblue" type="button"
+                               href="?{% url_replace page=page_obj.previous_page_number %}">Previous</a>
+                        </li>
+                    {% endif %}
+                    {% if page_obj.has_next %}
+                        <li>
+                            <a class="btn btn-sm btn-biodiversity-lightblue" type="button"
+                               href="?{% url_replace page=page_obj.next_page_number %}">Next</a>
+                        </li>
+                    {% endif %}
+
+                </ul>
+            </nav>
+
+        {% endif %}
             {% for project in object_list %}
                 <a href="{% url 'polaaar:project_metadata_detail' project.pk %}" style="color:#0099CC"><h5 class="mt-4">{{ project.project_name }}</h5></a>
                 {% if project.start_date %}
@@ -29,23 +49,7 @@
             {% endfor %}
         {% endif %}
 
-        {% if is_paginated %}
-            <nav>
-                <ul class="pagination">
-                    {% if page_obj.has_previous %}
-                        <li class="page-item">
-                            <a class="page-link"
-                               href="?{% url_replace page=page_obj.previous_page_number %}">Previous</a>
-                        </li>
-                    {% endif %}
-                    {% if page_obj.has_next %}
-                        <li class="page-item">
-                            <a class="page-link" href="?{% url_replace page=page_obj.next_page_number %}">Next</a>
-                        </li>
-                    {% endif %}
-                </ul>
-            </nav>
-        {% endif %}
+
 
     </div>
 
