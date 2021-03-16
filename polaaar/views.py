@@ -5,10 +5,6 @@ from django.http import HttpResponse
 from django.db.models import Q, Count, Min
 from django.contrib.gis.db.models.functions import AsGeoJSON, Centroid
 from django.views import generic
-from django.views.generic import DetailView
-from rest_framework.renderers import TemplateHTMLRenderer
-from rest_framework.response import Response
-from rest_framework.views import APIView
 
 from .forms import EmailForm, ProjectSearchForm
 from django.core.mail import EmailMessage
@@ -21,9 +17,13 @@ from polaaar.models import Reference
 
 import xlsxwriter
 import io
+import logging
 import datetime
 import zipfile
 import os
+
+# Get an instance of a logger
+logger = logging.getLogger(__name__)
 
 
 def home(request):
@@ -32,18 +32,19 @@ def home(request):
         amplicon_img = os.path.join(settings.MEDIA_URL, 'polaaar', 'amplicon_image.png')
     else:
         amplicon_img = False
-    return render(request, 'polaaar/polaaar_home.html', {'geoserver_host': settings.GEOSERVER_HOST, 'amplicon_img': amplicon_img})
+    return render(request, 'polaaar/polaaar_home.html',
+                  {'geoserver_host': settings.GEOSERVER_HOST, 'amplicon_img': amplicon_img})
 
 
 def api_reference(request):
     return render(request, 'polaaar/api_reference.html')
+
 
 #########################################################
 ### DJANGO Search views
 ##########  
 
 def polaaar_search(request):
-
     buttondisplay = "Refresh map"
     viewprojs = False
     return render(request, 'polaaar/polaaar_search.html',
@@ -62,7 +63,7 @@ def env_searched(request):
 
         # vartype = request.GET.get('vartype','')
         qsenv = Environment.objects.filter(env_variable__name__in=vars).filter(
-                Q(event__event_hierarchy__project_metadata__is_public=True))
+            Q(event__event_hierarchy__project_metadata__is_public=True))
 
         Y = qsenv.values_list('env_variable__var_type')
 
@@ -72,7 +73,8 @@ def env_searched(request):
         except:
             x = False
 
-        return render(request, 'polaaar/polaaarsearch/env_searched.html', {'qsenv': qsenv, 'test': x})  # ,'vartype':vartype
+        return render(request, 'polaaar/polaaarsearch/env_searched.html',
+                      {'qsenv': qsenv, 'test': x})  # ,'vartype':vartype
 
 
 def seq_search(request):
@@ -83,7 +85,7 @@ def seq_search(request):
 
 def spatial_searching(request):
     qs_results = Event.objects.annotate(geom=AsGeoJSON(Centroid('footprintWKT'))).filter(
-            Q(event_hierarchy__project_metadata__is_public=True))
+        Q(event_hierarchy__project_metadata__is_public=True))
     return render(request, 'polaaar/polaaarsearch/spatial_search.html', {'qs_results': qs_results})
 
 
@@ -92,7 +94,7 @@ def spatial_search_table(request):
         IDS = request.GET.getlist('id')
         IDS = IDS[0].split(',')
         qs_results = Event.objects.annotate(geom=AsGeoJSON(Centroid('footprintWKT'))).filter(
-                Q(event_hierarchy__project_metadata__is_public=True)).filter(pk__in=IDS)
+            Q(event_hierarchy__project_metadata__is_public=True)).filter(pk__in=IDS)
 
     return render(request, 'polaaar/polaaarsearch/spatial_search_table.html', {'qs_results': qs_results})
 
@@ -105,31 +107,34 @@ def GetProjectFiles(request, pk):
     # FIXME: Change this (get paths from DB etc)
     if request.method == "GET":
         pf = ProjectFiles.objects.filter(project__id=pk)
-        filenames = [x.files.path for x in pf]
-        pfnm = ProjectMetadata.objects.filter(id=pk).values_list('project_name')[0][0]
-        pfnm = '-'.join(pfnm.split(' '))  # remove spaces in file name
+        try:
+            filenames = [x.files.path for x in pf]
+            pfnm = ProjectMetadata.objects.filter(id=pk).values_list('project_name')[0][0]
+            pfnm = '-'.join(pfnm.split(' '))  # remove spaces in file name
 
-        # Folder name in ZIP archive which contains the above files
-        # E.g [thearchive.zip]/somefiles/file2.txt
-        zip_subdir = "%s_raw-files" % pfnm
-        zip_filename = "%s.zip" % zip_subdir
+            # Folder name in ZIP archive which contains the above files
+            # E.g [thearchive.zip]/somefiles/file2.txt
+            zip_subdir = "%s_raw-files" % pfnm
+            zip_filename = "%s.zip" % zip_subdir
 
-        # Open StringIO to grab in-memory ZIP contents
-        s = io.BytesIO()
+            # Open StringIO to grab in-memory ZIP contents
+            s = io.BytesIO()
 
-        # The zip compressor
-        zf = zipfile.ZipFile(s, "w")
+            # The zip compressor
+            zf = zipfile.ZipFile(s, "w")
 
-        for fpath in filenames:
-            # Calculate path for file in zip
-            fdir, fname = os.path.split(fpath)
-            zip_path = os.path.join(zip_subdir, fname)
+            for fpath in filenames:
+                # Calculate path for file in zip
+                fdir, fname = os.path.split(fpath)
+                zip_path = os.path.join(zip_subdir, fname)
 
-            # Add file, at correct path
-            zf.write(fpath, zip_path)
-
-        # Must close zip for all contents to be written
-        zf.close()
+                # Add file, at correct path
+                zf.write(fpath, zip_path)
+                # Must close zip for all contents to be written
+                zf.close()
+        except Exception as e:
+            logger.error('ProjectMetadata id:{} | {}'.format(pk, e))
+        pass
 
         # Grab ZIP file from in-memory, make response with correct MIME-type
         resp = HttpResponse(s.getvalue(), content_type="application/x-zip-compressed")
@@ -196,8 +201,8 @@ class ReferenceViewSet(viewsets.ReadOnlyModelViewSet):
 
     def get_queryset(self):
         queryset = Reference.objects.filter(Q(
-                associated_projects__project_metadata__is_public=True)).order_by('full_reference').distinct(
-                'full_reference')
+            associated_projects__project_metadata__is_public=True)).order_by('full_reference').distinct(
+            'full_reference')
         return queryset
 
 
@@ -306,8 +311,8 @@ class GeogViewSet(viewsets.ReadOnlyModelViewSet):
 
     def get_queryset(self):
         queryset = Geog_Location.objects.filter(Q(
-                sample_metadata__event_sample_metadata__event_hierarchy__project_metadata__is_public=True)).order_by(
-                'name').distinct('name')
+            sample_metadata__event_sample_metadata__event_hierarchy__project_metadata__is_public=True)).order_by(
+            'name').distinct('name')
         return queryset
 
 
@@ -852,7 +857,7 @@ def export_environment(request):
         #### Authentication checks
 
         PM = ProjectMetadata.objects.filter(event_hierarchy__event__environment__id__in=IDS).filter(
-                Q(is_public=True)).distinct('project_name')
+            Q(is_public=True)).distinct('project_name')
 
         EH = EventHierarchy.objects.filter(event__environment__id__in=IDS).filter(
             Q(project_metadata__is_public=True)).distinct('event_hierarchy_name')
@@ -1484,7 +1489,6 @@ def export_events(request):
         ##################################################################################################################
         ##### Authentication checks
 
-
         PM = ProjectMetadata.objects.filter(event_hierarchy__event__id__in=IDS).filter(Q(is_public=True)).order_by(
             'project_name').distinct('project_name')
 
@@ -1993,16 +1997,24 @@ def project_metadata_detail(request, pk):
         sample = SampleMetadata.objects.filter(event_sample_metadata__event_hierarchy__project_metadata=project)
         ref = Reference.objects.filter(associated_projects=project)
 
-        event_per_year = event.exclude(collection_year__isnull=True).values('collection_year').annotate(count=Count('collection_year')).order_by()
-        event_per_month = event.exclude(collection_month__isnull=True).values('collection_month').annotate(count=Count('collection_month')).order_by()
-        sample_geo_loc_name = sample.exclude(geo_loc_name__isnull=True).values('geo_loc_name').annotate(count=Count('geo_loc_name')).order_by()
-        sample_env_biome = sample.exclude(env_biome__isnull=True).values('env_biome').annotate(count=Count('env_biome')).order_by()
+        event_per_year = event.exclude(collection_year__isnull=True).values('collection_year').annotate(
+            count=Count('collection_year')).order_by()
+        event_per_month = event.exclude(collection_month__isnull=True).values('collection_month').annotate(
+            count=Count('collection_month')).order_by()
+        sample_geo_loc_name = sample.exclude(geo_loc_name__isnull=True).values('geo_loc_name').annotate(
+            count=Count('geo_loc_name')).order_by()
+        sample_env_biome = sample.exclude(env_biome__isnull=True).values('env_biome').annotate(
+            count=Count('env_biome')).order_by()
         mof_name = mof.exclude(name__isnull=True).values('name').annotate(count=Count('name')).order_by()
-        seq_target_gene = sequence.exclude(target_gene__isnull=True).values('target_gene').annotate(count=Count('target_gene')).order_by()
-        seq_target_subfg = sequence.exclude(target_subfragment__isnull=True).values('target_subfragment').annotate(count=Count('target_subfragment')).order_by()
+        seq_target_gene = sequence.exclude(target_gene__isnull=True).values('target_gene').annotate(
+            count=Count('target_gene')).order_by()
+        seq_target_subfg = sequence.exclude(target_subfragment__isnull=True).values('target_subfragment').annotate(
+            count=Count('target_subfragment')).order_by()
         seq_type = sequence.exclude(type__isnull=True).values('type').annotate(count=Count('type')).order_by()
-        seq_run_type = sequence.exclude(run_type__isnull=True).values('run_type').annotate(count=Count('run_type')).order_by()
-        seq_seqData_projectNumber = sequence.exclude(seqData_projectNumber__isnull=True).values('seqData_projectNumber').annotate(count=Count('seqData_projectNumber')).order_by()
+        seq_run_type = sequence.exclude(run_type__isnull=True).values('run_type').annotate(
+            count=Count('run_type')).order_by()
+        seq_seqData_projectNumber = sequence.exclude(seqData_projectNumber__isnull=True).values(
+            'seqData_projectNumber').annotate(count=Count('seqData_projectNumber')).order_by()
         try:
             min_lat = event.values('Latitude').annotate(min=Min('Latitude')).order_by().values('min')[0].get('min')
         except IndexError:
@@ -2032,5 +2044,3 @@ def project_metadata_detail(request, pk):
         context = project_cache
     response = render(request, template_name='polaaar/projectmetadata_detail.html', context=context)
     return response
-
-
