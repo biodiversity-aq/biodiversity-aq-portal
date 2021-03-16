@@ -253,14 +253,14 @@ LOGGING = {
             'class': 'logging.StreamHandler',
             'formatter': 'verbose'
         },
-        'home': {
-            'level': 'WARNING',
-            'class': 'logging.handlers.RotatingFileHandler',
-            'maxBytes': 1 * 1024 * 1024,
-            'backupCount': 2,
-            'filename': r'logs/home.log',
-            'formatter': 'verbose',
-        },
+        # 'home': {
+        #     'level': 'WARNING',
+        #     'class': 'logging.handlers.RotatingFileHandler',
+        #     'maxBytes': 1 * 1024 * 1024,
+        #     'backupCount': 2,
+        #     'filename': r'logs/home.log',
+        #     'formatter': 'verbose',
+        # },
         'polaaar': {
             'level': 'WARNING',
             'class': 'logging.handlers.RotatingFileHandler',
@@ -276,10 +276,12 @@ LOGGING = {
             'level': 'INFO',
         },
         'home': {
-            'handlers': ['console']
+            'handlers': ['console'],
+            'level': 'WARNING',
         },
         'polaaar': {
-            'handlers': ['console', 'polaaar']
+            'handlers': ['console', 'polaaar'],
+            'level': 'WARNING',
         }
     }
 }
