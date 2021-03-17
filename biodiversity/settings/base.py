@@ -258,7 +258,7 @@ LOGGING = {
             'class': 'logging.handlers.RotatingFileHandler',
             'maxBytes': 1 * 1024 * 1024,
             'backupCount': 2,
-            'filename': r'logs/home.log',
+            'filename': r'log/home.log',
             'formatter': 'verbose',
         },
         'polaaar': {
@@ -266,7 +266,7 @@ LOGGING = {
             'class': 'logging.handlers.RotatingFileHandler',
             'maxBytes': 1 * 1024 * 1024,
             'backupCount': 2,
-            'filename': r'logs/polaaar.log',
+            'filename': r'log/polaaar.log',
             'formatter': 'verbose',
         },
     },
@@ -276,7 +276,7 @@ LOGGING = {
             'level': 'INFO',
         },
         'home': {
-            'handlers': ['console']
+            'handlers': ['console', 'home']
         },
         'polaaar': {
             'handlers': ['console', 'polaaar']
