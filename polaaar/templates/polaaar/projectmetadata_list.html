@@ -49,7 +49,19 @@
                 {% endif %}
                 <p>{{ project.abstract }}</p>
             {% endfor %}
-            {% else %}
+            <div class="row">
+                <div class="col-4 col-lg-3">
+                    <a class="btn btn-biodiversity-lightblue btn-lg" style="width:100%"
+                       href="{% url 'polaaar:export_projects' %}?id={{ id_list }}">Download EXCEL <i
+                            class="fas fa-file-excel pl-1"></i></a>
+                </div>
+                <div class="col-4 col-lg-4">
+                    <a class="btn btn-biodiversity-lightblue btn-lg" style="width:100%"
+                       href="{% url 'polaaar:projectmetadata-list' %}?id__in={{ id_list }}">Download JSON <i
+                            class="fas fa-file-code pl-1"></i></a>
+                </div>
+            </div>
+        {% else %}
             <p>Sorry, no results.</p>
         {% endif %}
 

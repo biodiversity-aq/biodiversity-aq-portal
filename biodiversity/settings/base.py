@@ -253,20 +253,20 @@ LOGGING = {
             'class': 'logging.StreamHandler',
             'formatter': 'verbose'
         },
-        # 'home': {
-        #     'level': 'WARNING',
-        #     'class': 'logging.handlers.RotatingFileHandler',
-        #     'maxBytes': 1 * 1024 * 1024,
-        #     'backupCount': 2,
-        #     'filename': r'logs/home.log',
-        #     'formatter': 'verbose',
-        # },
+        'home': {
+            'level': 'WARNING',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'maxBytes': 1 * 1024 * 1024,
+            'backupCount': 2,
+            'filename': r'log/home.log',
+            'formatter': 'verbose',
+        },
         'polaaar': {
             'level': 'WARNING',
             'class': 'logging.handlers.RotatingFileHandler',
             'maxBytes': 1 * 1024 * 1024,
             'backupCount': 2,
-            'filename': r'logs/polaaar.log',
+            'filename': r'log/polaaar.log',
             'formatter': 'verbose',
         },
     },
@@ -276,8 +276,8 @@ LOGGING = {
             'level': 'INFO',
         },
         'home': {
-            'handlers': ['console'],
             'level': 'WARNING',
+            'handlers': ['console', 'home']
         },
         'polaaar': {
             'handlers': ['console', 'polaaar'],
