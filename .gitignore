@@ -20,7 +20,7 @@ biodiversity/settings/local.py
 biodiversity/settings/secrets.py
 
 # logs
-logs/
+log/
 
 # media directories
 media
