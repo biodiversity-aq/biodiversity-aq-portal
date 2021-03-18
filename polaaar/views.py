@@ -1,3 +1,4 @@
+from django.contrib.postgres.search import SearchVector, SearchRank, SearchQuery
 from django.core.cache import cache
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
@@ -6,7 +7,7 @@ from django.db.models import Q, Count, Min
 from django.contrib.gis.db.models.functions import AsGeoJSON, Centroid
 from django.views import generic
 
-from .forms import EmailForm, ProjectSearchForm
+from .forms import EmailForm, ProjectSearchForm, EnvironmentSearchForm
 from django.core.mail import EmailMessage
 from django_filters.rest_framework import DjangoFilterBackend
 
@@ -52,29 +53,14 @@ def polaaar_search(request):
 
 
 def env_search(request):
-    qs = Variable.objects.all()
-    return render(request, 'polaaar/polaaarsearch/environment.html', {'qs': qs})
-
-
-def env_searched(request):
-    if request.method == 'GET':
-        var = request.GET.get('var', '')
-        vars = var.split(',')
-
-        # vartype = request.GET.get('vartype','')
-        qsenv = Environment.objects.filter(env_variable__name__in=vars).filter(
-            Q(event__event_hierarchy__project_metadata__is_public=True))
-
-        Y = qsenv.values_list('env_variable__var_type')
-
-        try:
-            x = list(Y).index(('NUM',))
-            x = True
-        except:
-            x = False
-
-        return render(request, 'polaaar/polaaarsearch/env_searched.html',
-                      {'qsenv': qsenv, 'test': x})  # ,'vartype':vartype
+    form = EnvironmentSearchForm(request.GET)
+    qs = None
+    if form.is_valid():
+        var_id = form.cleaned_data.get('variable')
+        var_type = Variable.objects.get(id=var_id).var_type
+        qs = Environment.objects.filter(
+            event__event_hierarchy__project_metadata__is_public=True, env_variable_id=var_id)
+    return render(request, 'polaaar/environment_list.html', {'qs': qs, 'form': form})
 
 
 def seq_search(request):
@@ -1966,15 +1952,20 @@ class ProjectMetadataListView(generic.ListView):
         form = ProjectSearchForm(self.request.GET)
         if form.is_valid():
             search_term = form.cleaned_data.get('q')
-            # filter for ProjectMetadata which is public AND (project_name contains search term or abstract
-            # contains search term)
-            qs = ProjectMetadata.objects.filter(
-                Q(is_public=True), Q(project_name__icontains=search_term) | Q(abstract__icontains=search_term))
+            if search_term:  # return queryset if there is no search term
+                vector = SearchVector('project_name', 'abstract')
+                query = SearchQuery(search_term)
+                # filter for ProjectMetadata which is public AND (project_name contains search term or abstract
+                # contains search term)
+                qs = ProjectMetadata.objects.annotate(rank=SearchRank(vector, query))\
+                    .filter(is_public=True, rank__gte=0.01).order_by('-rank')
         return qs
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         context['form'] = ProjectSearchForm(self.request.GET)
+        id_list = self.get_queryset().values_list('id', flat=True)
+        context['id_list'] = ','.join(map(str, id_list))
         return context
 
 

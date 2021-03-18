@@ -17,9 +17,10 @@
     <section class="container mt-4">
         <h2>{{ project.project_name }}</h2>
         <a class="btn btn-md btn-biodiversity-lightblue" type="button" style="display: inline-block;"
-                                   href="{% url 'polaaar:GetProjectFiles' project.id %}">Download source archive</a>
+                                   href="{% url 'polaaar:GetProjectFiles' project.id %}">Download source csv</a>
     <a class="btn btn-md btn-biodiversity-lightblue" type="button" style="display: inline-block;"
-                                   href="{% url 'polaaar:export_projects' %}?id={{ project.id }}">Download data</a>
+                                   href="{% url 'polaaar:export_projects' %}?id={{ project.id }}">
+        Download POLA3R formatted archive</a>
 
         <table class="table table-borderless table-striped table-responsive-sm mt-4">
             {% if project.resource_url %}
