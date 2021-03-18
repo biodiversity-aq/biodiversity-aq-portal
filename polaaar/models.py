@@ -264,7 +264,7 @@ class ProjectMetadata(models.Model):
         return citation
 
     class Meta:
-        ordering = ['project_name']
+        ordering = ['-start_date']
         verbose_name = 'Project metadata'
         verbose_name_plural = 'Project metadata'
 
