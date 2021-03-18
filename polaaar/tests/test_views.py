@@ -6,7 +6,7 @@ from django.test import TestCase
 
 
 class ProjectMetadataDetailTest(TestCase):
-    """Ensure ProjectMetadata object returns correct related objects."""
+    """Ensure ProjectMetadataDetailView returns correct information."""
     fixtures = ['polaaar/project_metadata_detail.json']
     maxDiff = None
 
@@ -164,3 +164,34 @@ class ProjectMetadataDetailTest(TestCase):
         # cache should be created after the GET request
         project_cache = cache.get('project1_2020-08-20')
         self.assertTrue(project_cache)
+
+
+class ProjectMetadataListTest(TestCase):
+    fixtures = ['polaaar/project_metadata_list.json']
+    maxDiff = None
+
+    def test_search_results_does_not_return_private_project(self):
+        """
+        Ensure that search does not return private project
+        """
+        # only ProjectMetadata with is_public=False has the word "private" in project_name and abstract
+        response = self.client.get(reverse('polaaar:project_metadata_list'), data={'q': 'private'})
+        qs = response.context.get('object_list')
+        self.assertQuerysetEqual(qs, [])
+
+    def test_search_returns_relevant_results_only(self):
+        """
+        Ensure that search only returns hits
+        """
+        response = self.client.get(reverse('polaaar:project_metadata_list'), data={'q': 'arctic'})
+        qs = response.context.get('object_list')
+        self.assertQuerysetEqual(qs, ['<ProjectMetadata: arctic project>'])
+
+    def test_return_all_public_projects_without_search_term(self):
+        """
+        Ensure that all ProjectMetadata with is_public=True is returned if the search term is not provided
+        """
+        response = self.client.get(reverse('polaaar:project_metadata_list'), data={'q': ''})
+        qs = response.context.get('object_list')
+        self.assertQuerysetEqual(qs, ['<ProjectMetadata: arctic project>',
+                                      '<ProjectMetadata: a public belgian antarctic dataset>'])

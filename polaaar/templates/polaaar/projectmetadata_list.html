@@ -37,17 +37,25 @@
 
                     </ul>
                 </nav>
-
             {% endif %}
-            {% for project in object_list %}
+            {% for project in page_obj.object_list %}
                 <a href="{% url 'polaaar:project_metadata_detail' project.pk %}" style="color:#0099CC"><h5
                         class="mt-4">{{ project.project_name }}</h5></a>
-                {% if project.start_date %}
-                    <span class="fas fa-calendar mr-1" style="color: #0099CC;"></span>
-                    {{ project.start_date|date:'Y-m-d' }}{% if project.end_date %} to
-                        {{ project.end_date|date:'Y-m-d' }}{% endif %}
-                {% endif %}
-                <p>{{ project.abstract }}</p>
+                <div class="row">
+                    <div class="col">
+                        {% if project.start_date %}
+                            <i class="fas fa-calendar mr-1" style="color: #0099CC;"></i>
+                            {{ project.start_date|date:'Y-m-d' }}
+                        {% endif %}
+                        {% if project.project_contact %}
+                            <i class="fas fa-user ml-4 mr-1" style="color: #0099CC;"></i>
+                            {{ project.project_contact }}
+                        {% endif %}
+                        <i class="fas fa-download ml-4 mr-1" style="color: #0099CC;"></i>
+                        <a href="{% url 'polaaar:GetProjectFiles' project.id %}">Source csv</a>
+                    </div>
+                </div>
+                <p>{{ project.abstract|truncatechars:300 }}</p>
             {% endfor %}
             <div class="row">
                 <div class="col-4 col-lg-3">
