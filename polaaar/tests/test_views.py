@@ -4,6 +4,8 @@ from django.core.cache import cache
 from django.urls import reverse
 from django.test import TestCase
 
+from polaaar.models import ProjectMetadata
+
 
 class ProjectMetadataDetailTest(TestCase):
     """Ensure ProjectMetadataDetailView returns correct information."""
@@ -195,3 +197,47 @@ class ProjectMetadataListTest(TestCase):
         qs = response.context.get('object_list')
         self.assertQuerysetEqual(qs, ['<ProjectMetadata: arctic project>',
                                       '<ProjectMetadata: a public belgian antarctic dataset>'])
+
+    def test_display_no_results_message(self):
+        """
+        Ensure that a message is returned if no result found.
+        """
+        response = self.client.get(reverse('polaaar:project_metadata_list'), data={'q': 'sadfjhaliusent'})
+        self.assertContains(response, 'Sorry, no result.', status_code=200, html=True)
+
+
+class ProjectMetadataListPaginationTest(TestCase):
+
+    def setUp(self):
+        ProjectMetadata.objects.create(project_name='antarctic project', abstract='antarctic abstract',
+                                       created_on=datetime.datetime.now(), is_public=True)
+        for i in range(1, 30):
+            ProjectMetadata.objects.create(project_name='test project', abstract='test project abstract',
+                                           created_on=datetime.datetime.now(), is_public=True)
+
+    def test_no_previous_next_button_if_not_paginated(self):
+        """
+        Ensure that there is no previous/next page button if result is not paginated
+        """
+        response = self.client.get(reverse('polaaar:project_metadata_list'), data={'q': 'antarctic'})
+        self.assertNotContains(response, 'Sorry, no result.', status_code=200, html=True)
+        self.assertNotContains(response, '">Previous</a>', status_code=200, html=True)  # fraction of previous button
+        self.assertNotContains(response, '">Next</a>', status_code=200, html=True)  # fraction of  next button
+
+    def test_next_button_rendered(self):
+        """
+        Ensure that Next button is rendered when the results are paginated
+        """
+        response = self.client.get(reverse('polaaar:project_metadata_list'), data={'q': 'test'})  # returns 30 results
+        self.assertNotContains(response, 'Sorry, no result.', status_code=200, html=True)
+        self.assertContains(response, 'href="?q=test&page=2">Next</a>', status_code=200)  # fraction of next button
+        self.assertNotContains(response, '>Previous</a>', status_code=200)  # fraction of previous button
+
+    def test_previous_next_button_rendered(self):
+        """
+        Ensure that Previous and Next button are rendered when the results are paginated
+        """
+        response = self.client.get(reverse('polaaar:project_metadata_list'), data={'q': 'test', 'page': 2})  # returns 30 results
+        self.assertNotContains(response, 'Sorry, no result.', status_code=200, html=True)
+        self.assertContains(response, 'href="?q=test&page=3">Next</a>', status_code=200)  # fraction of next button
+        self.assertContains(response, 'href="?q=test&page=1">Previous</a>', status_code=200)  # fraction of previous button

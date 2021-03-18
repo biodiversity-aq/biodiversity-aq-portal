@@ -1945,7 +1945,7 @@ class ProjectMetadataListView(generic.ListView):
     List the search results for ProjectMetadata instances
     """
     template_name = 'polaaar/projectmetadata_list.html'
-    paginate_by = 20
+    paginate_by = 10
 
     def get_queryset(self):
         qs = ProjectMetadata.objects.filter(is_public=True)
