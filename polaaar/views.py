@@ -7,7 +7,7 @@ from django.db.models import Q, Count, Min
 from django.contrib.gis.db.models.functions import AsGeoJSON, Centroid
 from django.views import generic
 
-from .forms import EmailForm, ProjectSearchForm, EnvironmentSearchForm
+from .forms import EmailForm, ProjectSearchForm
 from django.core.mail import EmailMessage
 from django_filters.rest_framework import DjangoFilterBackend
 
