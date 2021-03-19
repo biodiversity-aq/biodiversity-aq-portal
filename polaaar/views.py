@@ -93,42 +93,37 @@ def GetProjectFiles(request, pk):
     # FIXME: Change this (get paths from DB etc)
     if request.method == "GET":
         pf = ProjectFiles.objects.filter(project__id=pk)
-        try:
-            filenames = [x.files.path for x in pf]
-            pfnm = ProjectMetadata.objects.filter(id=pk).values_list('project_name')[0][0]
-            pfnm = '-'.join(pfnm.split(' '))  # remove spaces in file name
+        filenames = [x.files.path for x in pf]
+        pfnm = ProjectMetadata.objects.filter(id=pk).values_list('project_name')[0][0]
+        pfnm = '-'.join(pfnm.split(' '))  # remove spaces in file name
 
-            # Folder name in ZIP archive which contains the above files
-            # E.g [thearchive.zip]/somefiles/file2.txt
-            zip_subdir = "%s_raw-files" % pfnm
-            zip_filename = "%s.zip" % zip_subdir
+        # Folder name in ZIP archive which contains the above files
+        # E.g [thearchive.zip]/somefiles/file2.txt
+        zip_subdir = "%s_raw-files" % pfnm
+        zip_filename = "%s.zip" % zip_subdir
 
-            # Open StringIO to grab in-memory ZIP contents
-            s = io.BytesIO()
+        # Open StringIO to grab in-memory ZIP contents
+        s = io.BytesIO()
 
-            # The zip compressor
-            zf = zipfile.ZipFile(s, "w")
+        # The zip compressor
+        zf = zipfile.ZipFile(s, "w")
 
-            for fpath in filenames:
-                # Calculate path for file in zip
-                fdir, fname = os.path.split(fpath)
-                zip_path = os.path.join(zip_subdir, fname)
+        for fpath in filenames:
+            # Calculate path for file in zip
+            fdir, fname = os.path.split(fpath)
+            zip_path = os.path.join(zip_subdir, fname)
 
-                # Add file, at correct path
-                zf.write(fpath, zip_path)
-                # Must close zip for all contents to be written
-                zf.close()
-            # Grab ZIP file from in-memory, make response with correct MIME-type
-            resp = HttpResponse(s.getvalue(), content_type="application/x-zip-compressed")
-            # ..and correct content-disposition
-            resp['Content-Disposition'] = 'attachment; filename=%s' % zip_filename
-            return resp
-        except Exception as e:
-            logger.error('ProjectMetadata id:{} | {}'.format(pk, e))
-        pass
+            # Add file, at correct path
+            zf.write(fpath, zip_path)
+            # Must close zip for all contents to be written
+            zf.close()
+        # Grab ZIP file from in-memory, make response with correct MIME-type
+        resp = HttpResponse(s.getvalue(), content_type="application/x-zip-compressed")
+        # ..and correct content-disposition
+        resp['Content-Disposition'] = 'attachment; filename=%s' % zip_filename
+        return resp
 
-
-
+    pass
 
 
 #########################################################
@@ -1958,7 +1953,7 @@ class ProjectMetadataListView(generic.ListView):
                 query = SearchQuery(search_term)
                 # filter for ProjectMetadata which is public AND (project_name contains search term or abstract
                 # contains search term)
-                qs = ProjectMetadata.objects.annotate(rank=SearchRank(vector, query))\
+                qs = ProjectMetadata.objects.annotate(rank=SearchRank(vector, query)) \
                     .filter(is_public=True, rank__gte=0.01).order_by('-rank')
         return qs
 
