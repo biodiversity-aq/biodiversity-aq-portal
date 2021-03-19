@@ -118,16 +118,17 @@ def GetProjectFiles(request, pk):
                 zf.write(fpath, zip_path)
                 # Must close zip for all contents to be written
                 zf.close()
+            # Grab ZIP file from in-memory, make response with correct MIME-type
+            resp = HttpResponse(s.getvalue(), content_type="application/x-zip-compressed")
+            # ..and correct content-disposition
+            resp['Content-Disposition'] = 'attachment; filename=%s' % zip_filename
+            return resp
         except Exception as e:
             logger.error('ProjectMetadata id:{} | {}'.format(pk, e))
         pass
 
-        # Grab ZIP file from in-memory, make response with correct MIME-type
-        resp = HttpResponse(s.getvalue(), content_type="application/x-zip-compressed")
-        # ..and correct content-disposition
-        resp['Content-Disposition'] = 'attachment; filename=%s' % zip_filename
 
-        return resp
+
 
 
 #########################################################

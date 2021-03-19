@@ -40,7 +40,7 @@
             {% endif %}
             {% for project in page_obj.object_list %}
                 <a href="{% url 'polaaar:project_metadata_detail' project.pk %}" style="color:#0099CC"><h5
-                        class="mt-4">{{ project.project_name }}</h5></a>
+                        class="mt-5">{{ project.project_name }}</h5></a>
                 <div class="row">
                     <div class="col">
                         {% if project.start_date %}
