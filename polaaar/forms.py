@@ -1,4 +1,4 @@
-from .models import MailFile
+from .models import MailFile, Variable
 from django import forms
 from django.core.validators import FileExtensionValidator
 
@@ -43,4 +43,14 @@ class ProjectSearchForm(forms.Form):
         return cleaned_data
 
 
+class EnvironmentSearchForm(forms.Form):
+    variable = forms.ModelChoiceField(queryset=Variable.objects.all())
+    # text = forms.CharField(label='', widget=forms.TextInput(attrs={
+    #     "class": "form-control form-control-sm ml-3 w-75",  "type": "text", "placeholder": "Search",
+    #     "aria-label": "Search"}), required=False)
+    # min_value = forms.FloatField(required=False)
+    # max_value = forms.FloatField(required=False)
 
+    def clean(self):
+        cleaned_data = super(EnvironmentSearchForm, self).clean()
+        return cleaned_data
