@@ -34,9 +34,7 @@ urlpatterns = [
     # path('events/',views.EventViewSet,name='events'),
 
     path('api_reference/', views.api_reference, name='api_reference'),
-
-    path('envsearch/', views.env_search, name='env_search'),
-    # url(r'var/', views.env_searched, name='env_searched'),
+    path('environment/', views.env_search, name='env_search'),
     path('seqsearch/', views.seq_search, name='seq_search'),
     path('spatialsearch/', views.spatial_searching, name='spatialsearch'),
     path('spatial_search_table/', views.spatial_search_table, name='spatial_search_table'),
