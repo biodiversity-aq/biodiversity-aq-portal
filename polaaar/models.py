@@ -12,7 +12,6 @@ from django.contrib.gis.db import models
 from django.contrib.gis.geos import GEOSGeometry
 from accounts.models import UserProfile
 
-
 ### Hard-wiring in choices for continent
 CONTINENTS = [
     ('NA', 'North America'),
@@ -257,7 +256,8 @@ class ProjectMetadata(models.Model):
         citation_ipt = etree.find('./additionalMetadata/metadata/gbif/citation').text
         if citation_ipt:
             now = datetime.datetime.now().date()
-            pola3r = "(Available: Polar 'Omics Links to Antarctic, Arctic and Alpine Research. Antarctic Biodiversity Portal. Scientific Committee for Antarctic Research. www.biodiversity.aq/pola3r. Accessed: {})".format(now)
+            pola3r = "(Available: Polar 'Omics Links to Antarctic, Arctic and Alpine Research. Antarctic Biodiversity Portal. Scientific Committee for Antarctic Research. www.biodiversity.aq/pola3r. Accessed: {})".format(
+                now)
             citation = "{} {}".format(citation_ipt, pola3r)
         else:
             citation = None
@@ -446,7 +446,8 @@ class SampleMetadata(models.Model):
     geographic_location = models.ForeignKey(_("Geog_Location"), related_name='sample_metadata',
                                             on_delete=models.DO_NOTHING, blank=True, null=True,
                                             help_text="Foreign key to Geog_Location table")
-    locality = models.CharField(max_length=500, blank=True, null=True, help_text="http://rs.tdwg.org/dwc/terms/locality")
+    locality = models.CharField(max_length=500, blank=True, null=True,
+                                help_text="http://rs.tdwg.org/dwc/terms/locality")
 
     geo_loc_name = models.CharField(max_length=500, blank=True, null=True,
                                     help_text="The geographical origin of the sample as defined by the country or sea name followed by specific region name. Country or sea names should be chosen from the INSDC country list (http://insdc.org/country.html); or the GAZ ontology (v 1.512) (http://purl.bioontology.org/ontology/GAZ)")  ## MIxS field
@@ -543,10 +544,10 @@ class Sequences(models.Model):
                                          help_text="An associated INSDC run accession number. (ERR number)")
     seqData_sampleNumber = models.CharField(max_length=500, blank=True, null=True,
                                             help_text="An associated INSDC BioSample number.")
-    seqData_numberOfBases = models.IntegerField(blank=True, null=True,
-                                                help_text="The number of bases predicted in a sequenced sample")
-    seqData_numberOfSequences = models.IntegerField(blank=True, null=True,
-                                                    help_text="the number of sequences in a sample or folder")
+    seqData_numberOfBases = models.BigIntegerField(blank=True, null=True,
+                                                   help_text="The number of bases predicted in a sequenced sample")
+    seqData_numberOfSequences = models.BigIntegerField(blank=True, null=True,
+                                                       help_text="the number of sequences in a sample or folder")
     ASV_URL = models.URLField(blank=True, null=True,
                               help_text="the url to the table with Operational Taxonomic Unit (OTU) or Alternative Sequence Variants (ASV) occurrences")  ## a URL to the Alternative Sequencing Variants
     event = models.ForeignKey(_("Event"), related_name='sequences', blank=True, null=True, on_delete=models.DO_NOTHING,
@@ -637,7 +638,7 @@ class Environment(models.Model):
     ## if env_variable.var_type is 'Numeric', then users input value for env_numeric_value
     env_numeric_value = models.DecimalField(decimal_places=5, max_digits=25, blank=True, null=True,
                                             help_text="http://rs.tdwg.org/dwc/terms/measurementValue")
-    env_text_value = models.CharField(max_length=100, blank=True, null=True,
+    env_text_value = models.CharField(max_length=300, blank=True, null=True,
                                       help_text="http://rs.tdwg.org/dwc/terms/measurementValue")
 
     event = models.ForeignKey(_("Event"), related_name='environment', blank=True, null=True,
