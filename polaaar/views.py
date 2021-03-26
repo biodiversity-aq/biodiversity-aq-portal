@@ -90,10 +90,9 @@ class EnvironmentListView(generic.ListView):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         context['form'] = EnvironmentSearchForm(self.request.GET)
-        # event = Event.objects.filter()
-        # id_list = self.get_queryset().values_list('id', flat=True)
-        # context['event_list'] = ','.join(map(str, id_list))
-        # print(context)
+        id_list = self.get_queryset().values_list('id', flat=True)
+        context['id_list'] = ','.join(map(str, id_list))
+        print(context)
         return context
 
 
