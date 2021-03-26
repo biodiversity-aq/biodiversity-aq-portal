@@ -1,0 +1,115 @@
+{% extends "polaaar/base.html" %}
+{% load static humanize url_replace %}
+
+{% block title %}
+    Environmental metadata search
+{% endblock title %}
+
+{% block body_class %}{% endblock %}
+
+{% block content %}
+    <div class="container mt-4">
+        <h3>Search for sequences based on environmental metadata</h3>
+        <small class="text-muted">For more advanced search queries, please use the <a
+                href="{% url 'polaaar:api_reference' %}">API</a></small>
+        <form action="." method="get">
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label for="{{ form.variable.id_for_label }}">Environmental metadata</label>
+                    {{ form.variable }}
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="{{ form.text.id_for_label }}">Text search</label>
+                    {{ form.text }}
+                </div>
+                <div class="form-group col-md-1">
+                    <label for="{{ form.min_value.id_for_label }}">Min value</label>
+                    {{ form.min_value }}
+                </div>
+                <div class="form-group col-md-1">
+                    <label for="{{ form.max_value.id_for_label }}">Max value</label>
+                    {{ form.max_value }}
+                </div>
+                <input type="submit" value="Submit" role="button" class="btn btn-biodiversity-lightblue">
+            </div>
+        </form>
+        <hr/>
+        {% if page_obj.object_list %}
+            <p>{{ page_obj.start_index }} - {{ page_obj.end_index }} of {{ page_obj.paginator.count|intcomma }}
+                results</p>
+            {% if is_paginated %}
+                {% include 'polaaar/pagination.html' %}
+            {% endif %}
+            <div class="table-responsive text-nowrap mt-5">
+                <table class="table table-striped table-sm">
+                    <thead>
+                    <tr>
+                        <th scope="col">Variable</th>
+                        <th scope="col">Text value</th>
+                        <th scope="col">Numeric value</th>
+                        <th scope="col">Unit</th>
+                        <th scope="col">Sampling method</th>
+                        <th scope="col">Sequences</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for env in page_obj.object_list %}
+                        <tr>
+                            <td>{{ env.env_variable }}</td>
+                            <td>{{ env.env_text_value|default_if_none:"" }}</td>
+                            <td>{{ env.env_numeric_value|default_if_none:"" }}</td>
+                            <td>{{ env.unit|default_if_none:"" }}</td>
+                            <td>{{ env.env_method|default_if_none:"" }}</td>
+                            <td><a href="{{ env.event.sequences.seqData_url|default_if_none:"" }}">{{ env.event.sequences.seqData_accessionNumber }}</a></td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+
+
+                </table>
+            </div>
+
+        {% else %}
+            <p>Sorry, no result</p>
+        {% endif %}
+    </div>
+
+
+
+
+{% endblock %}
+
+{% block polaaar_js %}
+    {#    <script type="text/javascript">#}
+    {##}
+    {#        $(document).ready(function () {#}
+    {#            $('.selectpicker').selectpicker({#}
+    {#                size: 10,#}
+    {##}
+    {#            });#}
+    {#        });#}
+    {##}
+    {#        function search() {#}
+    {#            var X = $('#Search option:selected');#}
+    {##}
+    {#            var vars = []#}
+    {#            for (var i = 0; i < X.length; i++) {#}
+    {#                vars.push(X[i].getAttribute('value'));#}
+    {#            }#}
+    {#            //var vals = X.split(' ')#}
+    {##}
+    {#            var URL = "{% url 'polaaar:home' %}" + '/data/var/?var='.concat(vars)//.concat('&vartype=').concat(vals[1]);#}
+    {##}
+    {#            $.ajax({#}
+    {#                url: URL,#}
+    {#                dataType: "html",#}
+    {#                success: function (data) {#}
+    {#                    $('#dataholder').html(data);#}
+    {#                }#}
+    {#            })#}
+    {#                        console.log(URL);#}
+    {##}
+    {#        }#}
+    {#    </script>#}
+
+{% endblock %}
