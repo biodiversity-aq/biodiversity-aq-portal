@@ -7,7 +7,7 @@ from django.db.models import Q, Count, Min
 from django.contrib.gis.db.models.functions import AsGeoJSON, Centroid
 from django.views import generic
 
-from .forms import EmailForm, ProjectSearchForm
+from .forms import EmailForm, ProjectSearchForm, EnvironmentSearchForm
 from django.core.mail import EmailMessage
 from django_filters.rest_framework import DjangoFilterBackend
 
@@ -52,15 +52,49 @@ def polaaar_search(request):
                   {'buttondisplay': buttondisplay, 'viewprojs': viewprojs})
 
 
-def env_search(request):
-    form = EnvironmentSearchForm(request.GET)
-    qs = None
-    if form.is_valid():
-        var_id = form.cleaned_data.get('variable')
-        var_type = Variable.objects.get(id=var_id).var_type
-        qs = Environment.objects.filter(
-            event__event_hierarchy__project_metadata__is_public=True, env_variable_id=var_id)
-    return render(request, 'polaaar/environment_list.html', {'qs': qs, 'form': form})
+class EnvironmentListView(generic.ListView):
+    """
+    List the search results for Environment instances
+    """
+    template_name = 'polaaar/environment_list.html'
+    paginate_by = 20
+
+    def get_queryset(self):
+        form = EnvironmentSearchForm(self.request.GET)
+        qs = Environment.objects.all()
+        if form.is_valid():
+            variable = form.cleaned_data.get('variable')  # required
+            text = form.cleaned_data.get('text', '')
+            min_value = form.cleaned_data.get('min_value')
+            max_value = form.cleaned_data.get('max_value')
+            var_type = variable.var_type
+
+            if var_type == 'TXT':
+                query = {"event__event_hierarchy__project_metadata__is_public": True, "env_variable": variable,
+                         "env_text_value__icontains": text}
+            elif var_type == 'NUM' and min_value and max_value:
+                query = {"event__event_hierarchy__project_metadata__is_public": True, "env_variable": variable,
+                         "env_numeric_value__gte": min_value, "env_numeric_value__lte": max_value}
+            elif var_type == 'NUM' and min_value:
+                query = {"event__event_hierarchy__project_metadata__is_public": True, "env_variable": variable,
+                         "env_numeric_value__gte": min_value}
+            elif var_type == 'NUM' and max_value:
+                query = {"event__event_hierarchy__project_metadata__is_public": True, "env_variable": variable,
+                         "env_numeric_value__lte": max_value}
+            else:  # only var_id
+                query = {"event__event_hierarchy__project_metadata__is_public": True, "env_variable": variable}
+            qs = Environment.objects.filter(**query).prefetch_related('env_variable').select_related('event')\
+                .prefetch_related('event__sequences')
+        return qs
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = EnvironmentSearchForm(self.request.GET)
+        # event = Event.objects.filter()
+        # id_list = self.get_queryset().values_list('id', flat=True)
+        # context['event_list'] = ','.join(map(str, id_list))
+        # print(context)
+        return context
 
 
 def seq_search(request):
@@ -94,6 +128,7 @@ def GetProjectFiles(request, pk):
     if request.method == "GET":
         pf = ProjectFiles.objects.filter(project__id=pk)
         filenames = [x.files.path for x in pf]
+        print(filenames)
         pfnm = ProjectMetadata.objects.filter(id=pk).values_list('project_name')[0][0]
         pfnm = '-'.join(pfnm.split(' '))  # remove spaces in file name
 

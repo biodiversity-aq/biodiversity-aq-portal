@@ -44,12 +44,13 @@ class ProjectSearchForm(forms.Form):
 
 
 class EnvironmentSearchForm(forms.Form):
-    variable = forms.ModelChoiceField(queryset=Variable.objects.all())
-    # text = forms.CharField(label='', widget=forms.TextInput(attrs={
-    #     "class": "form-control form-control-sm ml-3 w-75",  "type": "text", "placeholder": "Search",
-    #     "aria-label": "Search"}), required=False)
-    # min_value = forms.FloatField(required=False)
-    # max_value = forms.FloatField(required=False)
+    variable = forms.ModelChoiceField(queryset=Variable.objects.all(), required=True, label='Environment variable',
+                                      widget=forms.Select(attrs={"class": "browser-default custom-select mb-4"}))
+    text = forms.CharField(label='', widget=forms.TextInput(attrs={
+        "class": "form-control",  "type": "text", "placeholder": "Search",
+        "aria-label": "Search"}), required=False)
+    min_value = forms.FloatField(required=False, widget=forms.NumberInput(attrs={"class": "form-control"}))
+    max_value = forms.FloatField(required=False, widget=forms.NumberInput(attrs={"class": "form-control"}))
 
     def clean(self):
         cleaned_data = super(EnvironmentSearchForm, self).clean()
