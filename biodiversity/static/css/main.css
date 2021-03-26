@@ -256,11 +256,13 @@ a.waves-effect, a.waves-light {
 .btn-biodiversity-lightblue {
     color: #fff;
     background-color: #0099CC !important;
+    -webkit-appearance: none;
 }
 
 .btn-biodiversity-blue {
     color: #fff;
     background-color: #3952a4 !important;
+    -webkit-appearance: none;
 }
 
 .btn-biodiversity-darkblue {
@@ -271,16 +273,19 @@ a.waves-effect, a.waves-light {
 .btn-biodiversity-teal {
     color: #fff;
     background-color: #006f71 !important;
+    -webkit-appearance: none;
 }
 
 .btn-biodiversity-red {
     color: #fff;
     background-color: #d51e47 !important;
+    -webkit-appearance: none;
 }
 
 .btn-biodiversity-orange {
     color: #fff;
     background-color: #ec6633 !important;
+    -webkit-appearance: none;
 }
 
 /* Use for card cover image when height is fixed so that image will not be squished but cropped
