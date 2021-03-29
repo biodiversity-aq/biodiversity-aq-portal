@@ -1,3 +1,5 @@
+from django.db.models import Count
+
 from .models import MailFile, Variable
 from django import forms
 from django.core.validators import FileExtensionValidator
@@ -44,8 +46,11 @@ class ProjectSearchForm(forms.Form):
 
 
 class EnvironmentSearchForm(forms.Form):
-    variable = forms.ModelChoiceField(queryset=Variable.objects.all(), required=True, label='Environment variable',
-                                      widget=forms.Select(attrs={"class": "browser-default custom-select mb-4"}))
+    variable = forms.ModelChoiceField(
+        queryset=Variable.objects.filter(environment__event__event_hierarchy__project_metadata__is_public=True)
+            .annotate(count=Count('id')).order_by('name'),
+        required=True, label='Environment variable',
+        widget=forms.Select(attrs={"class": "browser-default custom-select mb-4"}))
     text = forms.CharField(label='', widget=forms.TextInput(attrs={
         "class": "form-control",  "type": "text", "placeholder": "Search",
         "aria-label": "Search"}), required=False)
