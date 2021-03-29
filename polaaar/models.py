@@ -604,7 +604,7 @@ class Variable(models.Model):
                                 help_text="http://rs.tdwg.org/dwc/terms/measurementType")
 
     def __str__(self):
-        return self.name
+        return '{} ({})'.format(self.name, self.var_type.lower())
 
     class Meta:
         ordering = ['name']
