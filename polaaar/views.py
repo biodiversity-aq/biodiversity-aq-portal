@@ -61,7 +61,7 @@ class EnvironmentListView(generic.ListView):
 
     def get_queryset(self):
         form = EnvironmentSearchForm(self.request.GET)
-        qs = Environment.objects.all()
+        qs = Environment.objects.filter(event__event_hierarchy__project_metadata__is_public=True)
         if form.is_valid():
             variable = form.cleaned_data.get('variable')  # required
             text = form.cleaned_data.get('text', '')
@@ -70,21 +70,21 @@ class EnvironmentListView(generic.ListView):
             var_type = variable.var_type
 
             if var_type == 'TXT':
-                query = {"event__event_hierarchy__project_metadata__is_public": True, "env_variable": variable,
+                query = {"event__event_hierarchy__project_metadata__is_public": True, "env_variable": variable.id,
                          "env_text_value__icontains": text}
             elif var_type == 'NUM' and min_value and max_value:
-                query = {"event__event_hierarchy__project_metadata__is_public": True, "env_variable": variable,
+                query = {"event__event_hierarchy__project_metadata__is_public": True, "env_variable": variable.id,
                          "env_numeric_value__gte": min_value, "env_numeric_value__lte": max_value}
             elif var_type == 'NUM' and min_value:
-                query = {"event__event_hierarchy__project_metadata__is_public": True, "env_variable": variable,
+                query = {"event__event_hierarchy__project_metadata__is_public": True, "env_variable": variable.id,
                          "env_numeric_value__gte": min_value}
             elif var_type == 'NUM' and max_value:
-                query = {"event__event_hierarchy__project_metadata__is_public": True, "env_variable": variable,
+                query = {"event__event_hierarchy__project_metadata__is_public": True, "env_variable": variable.id,
                          "env_numeric_value__lte": max_value}
             else:  # only var_id
-                query = {"event__event_hierarchy__project_metadata__is_public": True, "env_variable": variable}
-            qs = Environment.objects.filter(**query).prefetch_related('env_variable').select_related('event')\
-                .prefetch_related('event__sequences')
+                query = {"event__event_hierarchy__project_metadata__is_public": True, "env_variable": variable.id}
+            qs = Environment.objects.filter(**query).prefetch_related('event__sequences')\
+                .select_related('event', 'env_variable')
         return qs
 
     def get_context_data(self, *, object_list=None, **kwargs):
@@ -92,7 +92,6 @@ class EnvironmentListView(generic.ListView):
         context['form'] = EnvironmentSearchForm(self.request.GET)
         id_list = self.get_queryset().values_list('id', flat=True)
         context['id_list'] = ','.join(map(str, id_list))
-        print(context)
         return context
 
 
@@ -333,9 +332,11 @@ class GeogViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class EnvironmentViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Environment.objects.all()
     serializer_class = EnvironmentSerializer
     filter_backends = [DjangoFilterBackend]
+    filterset_fields = {
+        'id': ['exact', 'in'],
+    }
 
     def get_queryset(self):
         queryset = Environment.objects.filter(Q(event__event_hierarchy__project_metadata__is_public=True))
