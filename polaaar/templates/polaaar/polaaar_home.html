@@ -57,13 +57,21 @@
             </div>
             <div class="col-12 col-lg-3 fadeinclass">
                 <div style="background-color:rgba(255,255,255,0.75);border-radius:15px;padding-bottom:5px;padding-right:12px; padding-top:5px;">
-                    <a role="button" href="{% url 'polaaar:polaaar_search' %}"
+                    <a role="button" href="{% url 'polaaar:project_metadata_list' %}"
                        class="btn btn-biodiversity-lightblue btn-lg waves-effect" style="width:100%">
-                        Search the database <i class="fas fa-search pl-1"></i>
+                        Project search<i class="fas fa-search pl-1"></i>
                     </a>
-                    <a role="button" href="{% url 'polaaar:polaaar_submit_data' %}"
-                       class="btn btn-biodiversity-lightblue btn-lg" style="width:100%">
-                        How to submit a dataset <i class="fas fa-cloud-upload-alt pl-1"></i>
+                    <a role="button" href="{% url 'polaaar:env_search' %}"
+                       class="btn btn-biodiversity-lightblue btn-lg waves-effect" style="width:100%">
+                        Environmental Metadata search<i class="fas fa-search pl-1"></i>
+                    </a>
+                    <a role="button" href="#"
+                       class="btn btn-biodiversity-lightblue btn-lg waves-effect" style="width:100%">
+                        Omics search<i class="fas fa-search pl-1"></i>
+                    </a>
+                    <a role="button" href="#"
+                       class="btn btn-biodiversity-lightblue btn-lg waves-effect" style="width:100%">
+                        Spatial search<i class="fas fa-search pl-1"></i>
                     </a>
                 </div>
 
@@ -71,6 +79,10 @@
                 {% else %}
                     <div style="background-color:rgba(255,255,255,0.75);border-radius:15px;margin-top:5px;padding-bottom:5px;padding-right:12px">
                         <p style="font-size:18pt">To submit data:</p>
+                        <a role="button" href="{% url 'polaaar:polaaar_submit_data' %}"
+                       class="btn btn-biodiversity-teal btn-lg" style="width:100%">
+                        How to submit a dataset <i class="fas fa-cloud-upload-alt pl-1"></i>
+                    </a>
                         <a role="button" href="{% url 'login' %}?next={{ request.path }}"
                            class="btn btn-biodiversity-teal btn-lg" style="width:100%">
                             Login <i class="fas fa-user pl-1"></i>
