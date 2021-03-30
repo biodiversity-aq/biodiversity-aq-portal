@@ -49,8 +49,9 @@
                         <th scope="col">Text value</th>
                         <th scope="col">Numeric value</th>
                         <th scope="col">Unit</th>
-                        <th scope="col">Sampling method</th>
-                        <th scope="col">Sequences</th>
+                        <th scope="col">Sequences accession number</th>
+                        <th scope="col">Bioproject</th>
+                        <th scope="col">Project</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -60,27 +61,26 @@
                             <td>{{ env.env_text_value|default_if_none:"" }}</td>
                             <td>{{ env.env_numeric_value|default_if_none:"" }}</td>
                             <td>{{ env.unit|default_if_none:"" }}</td>
-                            <td>{{ env.env_method|default_if_none:"" }}</td>
-                            <td>
-                                <a href="{{ env.event.sequences.seqData_url|default_if_none:"" }}">{{ env.event.sequences.seqData_accessionNumber }}</a>
-                            </td>
+                            <td>{{ env.event.sequences.seqData_accessionNumber }}</td>
+                            <td>{{ env.event.sequences.seqData_projectNumber }}</td>
+                            <td><a href="{% url 'polaaar:project_metadata_detail' env.event.event_hierarchy.project_metadata.id %}">{{ env.event.event_hierarchy.project_metadata }}</a></td>
                         </tr>
                     {% endfor %}
                     </tbody>
                 </table>
             </div>
-             <div class="row">
-{#                    <div class="col-4 col-md-3">#}
-{#                        <a class="btn btn-biodiversity-lightblue btn-lg" style="width:100%"#}
-{#                           href="{% url 'polaaar:export_environment' %}?id={{ id_list }}">Download EXCEL <i#}
-{#                                class="fas fa-file-excel pl-1"></i></a>#}
-{#                    </div>#}
-                    <div class="col-4 col-md-3">
-                        <a class="btn btn-biodiversity-lightblue btn-lg" style="width:100%"
-                           href="{% url 'polaaar:environment-list' %}?id__in={{ id_list }}">Download JSON <i
-                                class="fas fa-file-code pl-1"></i></a>
-                    </div>
+            <div class="row-cols-12">
+                {#                    <div class="col-4 col-md-3">#}
+                {#                        <a class="btn btn-biodiversity-lightblue btn-lg" style="width:100%"#}
+                {#                           href="{% url 'polaaar:export_environment' %}?id={{ id_list }}">Download EXCEL <i#}
+                {#                                class="fas fa-file-excel pl-1"></i></a>#}
+                {#                    </div>#}
+                <div class="col-4 col-md-3">
+                    <a class="btn btn-biodiversity-lightblue btn-lg" style="width:100%"
+                       href="{% url 'polaaar:environment-list' %}?id__in={{ id_list }}">Download JSON <i
+                            class="fas fa-file-code pl-1"></i></a>
                 </div>
+            </div>
 
         {% else %}
             <p>Sorry, no result</p>
