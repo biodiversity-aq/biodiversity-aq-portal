@@ -39,7 +39,7 @@
                         <a href="{% url 'polaaar:GetProjectFiles' project.id %}">source csv</a>
                     </div>
                 </div>
-                <p>{{ project.abstract|truncatechars:300 }}</p>
+                <p>{{ project.abstract|truncatechars:300|default_if_none:"" }}</p>
             {% endfor %}
             <div class="row">
                 <div class="col-4 col-md-3">
