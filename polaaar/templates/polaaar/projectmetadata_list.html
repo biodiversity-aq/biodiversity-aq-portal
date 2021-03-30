@@ -36,7 +36,7 @@
                             {{ project.project_contact }}
                         {% endif %}
                         <i class="fas fa-download ml-4 mr-1" style="color: #0099CC;"></i>
-                        <a href="{% url 'polaaar:GetProjectFiles' project.id %}">Source csv</a>
+                        <a href="{% url 'polaaar:GetProjectFiles' project.id %}">source csv</a>
                     </div>
                 </div>
                 <p>{{ project.abstract|truncatechars:300 }}</p>
