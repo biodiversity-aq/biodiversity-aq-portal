@@ -63,7 +63,7 @@ python-dateutil==2.8.1
 python-dwca-reader==0.14.0
 python3-openid==3.1.0
 pytz==2019.2
-PyYAML==5.3.1
+PyYAML==5.4
 requests==2.22.0
 requests-oauthlib==1.2.0
 six==1.12.0
