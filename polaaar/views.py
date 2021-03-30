@@ -43,14 +43,7 @@ def api_reference(request):
 
 #########################################################
 ### DJANGO Search views
-##########  
-
-def polaaar_search(request):
-    buttondisplay = "Refresh map"
-    viewprojs = False
-    return render(request, 'polaaar/polaaar_search.html',
-                  {'buttondisplay': buttondisplay, 'viewprojs': viewprojs})
-
+##########
 
 class EnvironmentListView(generic.ListView):
     """
@@ -61,7 +54,8 @@ class EnvironmentListView(generic.ListView):
 
     def get_queryset(self):
         form = EnvironmentSearchForm(self.request.GET)
-        qs = Environment.objects.filter(event__event_hierarchy__project_metadata__is_public=True)
+        qs = Environment.objects.filter(event__event_hierarchy__project_metadata__is_public=True)\
+            .prefetch_related('event__sequences').select_related('event', 'env_variable').order_by('env_variable')
         if form.is_valid():
             variable = form.cleaned_data.get('variable')  # required
             text = form.cleaned_data.get('text', '')
@@ -104,7 +98,7 @@ def seq_search(request):
 def spatial_searching(request):
     qs_results = Event.objects.annotate(geom=AsGeoJSON(Centroid('footprintWKT'))).filter(
         Q(event_hierarchy__project_metadata__is_public=True))
-    return render(request, 'polaaar/polaaarsearch/spatial_search.html', {'qs_results': qs_results})
+    return render(request, 'polaaar/spatial_search.html', {'qs_results': qs_results})
 
 
 def spatial_search_table(request):
