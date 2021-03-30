@@ -26,7 +26,6 @@ app_name = 'polaaar'
 urlpatterns = [
 
     url(r'^$', views.home, name='home'),
-    path('search/', views.polaaar_search, name='polaaar_search'),
     path('submit/', views.polaaar_submit, name='polaaar_submit_data'),
 
     ### Path controls for API routers
