@@ -1,5 +1,5 @@
 {% extends "polaaar/base.html" %}
-{% load static humanize url_replace %}
+{% load static humanize url_replace leaflet_tags %}
 
 {% block title %}
     Environmental metadata search
@@ -57,13 +57,15 @@
                     <tbody>
                     {% for env in page_obj.object_list %}
                         <tr>
-                            <td>{{ env.env_variable }}</td>
+                            <td>{{ env.env_variable.name }}</td>
                             <td>{{ env.env_text_value|default_if_none:"" }}</td>
                             <td>{{ env.env_numeric_value|default_if_none:"" }}</td>
                             <td>{{ env.unit|default_if_none:"" }}</td>
                             <td>{{ env.event.sequences.seqData_accessionNumber }}</td>
                             <td>{{ env.event.sequences.seqData_projectNumber }}</td>
-                            <td><a href="{% url 'polaaar:project_metadata_detail' env.event.event_hierarchy.project_metadata.id %}">{{ env.event.event_hierarchy.project_metadata }}</a></td>
+                            <td>
+                                <a href="{% url 'polaaar:project_metadata_detail' env.event.project_metadata_id %}">{{ env.event.project_metadata }}</a>
+                            </td>
                         </tr>
                     {% endfor %}
                     </tbody>
@@ -85,6 +87,15 @@
         {% else %}
             <p>Sorry, no result</p>
         {% endif %}
+        <div class="row justify-content-center mt-5">
+            <div class="col-9" id="env-map" style="height:500px;">
+                {% leaflet_map "landing_map" callback="window.map_init" %}
+
+                <p style="font-size:10pt;color:white">Map attribution: Tiles &copy; Esri &mdash; Source: Esri, DeLorme,
+                    NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand),
+                    TomTom, 2012</p>
+            </div>
+        </div>
     </div>
 
 
@@ -93,36 +104,40 @@
 {% endblock %}
 
 {% block polaaar_js %}
-    {#    <script type="text/javascript">#}
-    {##}
-    {#        $(document).ready(function () {#}
-    {#            $('.selectpicker').selectpicker({#}
-    {#                size: 10,#}
-    {##}
-    {#            });#}
-    {#        });#}
-    {##}
-    {#        function search() {#}
-    {#            var X = $('#Search option:selected');#}
-    {##}
-    {#            var vars = []#}
-    {#            for (var i = 0; i < X.length; i++) {#}
-    {#                vars.push(X[i].getAttribute('value'));#}
-    {#            }#}
-    {#            //var vals = X.split(' ')#}
-    {##}
-    {#            var URL = "{% url 'polaaar:home' %}" + '/data/var/?var='.concat(vars)//.concat('&vartype=').concat(vals[1]);#}
-    {##}
-    {#            $.ajax({#}
-    {#                url: URL,#}
-    {#                dataType: "html",#}
-    {#                success: function (data) {#}
-    {#                    $('#dataholder').html(data);#}
-    {#                }#}
-    {#            })#}
-    {#                        console.log(URL);#}
-    {##}
-    {#        }#}
-    {#    </script>#}
+    <script type="text/javascript">
+        let geojsonFeature = {{ event_geojson|safe }}
 
+            function map_init(map, options) {
+                let geojsonMarkerOptions = {
+                    radius: 3,
+                    fillColor: "#FF0080",
+                    color: "#FF0080",
+                    weight: 1,
+                    opacity: 1,
+                    fillOpacity: 0.3
+                };
+
+                function onEachFeature(feature, layer) {
+                    // does this feature have a property named sample_name?
+                    if (feature.properties && feature.properties.sequences__seqData_accessionNumber) {
+                        layer.bindPopup(feature.properties.sequences__seqData_accessionNumber);
+                    }
+                }
+
+                let tileLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
+                    attribution: ''
+                })
+                tileLayer.addTo(map);
+                L.geoJSON(geojsonFeature, {
+                    pointToLayer: function (feature, latlng) {
+                        return L.circleMarker(latlng, geojsonMarkerOptions);
+                    },
+                    onEachFeature: onEachFeature
+                }).addTo(map);
+
+
+            }
+
+
+    </script>
 {% endblock %}

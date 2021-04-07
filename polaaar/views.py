@@ -1,5 +1,6 @@
 from django.contrib.postgres.search import SearchVector, SearchRank, SearchQuery
 from django.core.cache import cache
+from django.core.serializers import serialize
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.http import HttpResponse
@@ -54,8 +55,10 @@ class EnvironmentListView(generic.ListView):
 
     def get_queryset(self):
         form = EnvironmentSearchForm(self.request.GET)
-        qs = Environment.objects.filter(event__event_hierarchy__project_metadata__is_public=True)\
-            .prefetch_related('event__sequences').select_related('event', 'env_variable').order_by('env_variable')
+        qs = Environment.objects.filter(event__event_hierarchy__project_metadata__is_public=True) \
+            .prefetch_related('event__sequences', 'event__project_metadata') \
+            .select_related('event', 'env_variable')\
+            .order_by('env_variable')
         if form.is_valid():
             variable = form.cleaned_data.get('variable')  # required
             text = form.cleaned_data.get('text', '')
@@ -77,8 +80,8 @@ class EnvironmentListView(generic.ListView):
                          "env_numeric_value__lte": max_value}
             else:  # only var_id
                 query = {"event__event_hierarchy__project_metadata__is_public": True, "env_variable": variable.id}
-            qs = Environment.objects.filter(**query).prefetch_related('event__sequences')\
-                .select_related('event', 'env_variable')
+            qs = Environment.objects.prefetch_related('event__sequences', 'event__project_metadata')\
+                .select_related('event', 'env_variable').filter(**query)
         return qs
 
     def get_context_data(self, *, object_list=None, **kwargs):
@@ -86,6 +89,8 @@ class EnvironmentListView(generic.ListView):
         context['form'] = EnvironmentSearchForm(self.request.GET)
         id_list = self.get_queryset().values_list('id', flat=True)
         context['id_list'] = ','.join(map(str, id_list))
+        events = Event.objects.filter(environment__in=self.get_queryset()).annotate(count=Count('id')).order_by().prefetch_related('sequences')
+        context['event_geojson'] = serialize('geojson', events, geometry_field='footprintWKT', fields=('sequences',))
         return context
 
 
