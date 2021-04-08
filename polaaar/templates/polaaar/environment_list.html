@@ -60,7 +60,7 @@
                             <td>{{ env.env_variable.name }}</td>
                             <td>{{ env.env_text_value|default_if_none:"" }}</td>
                             <td>{{ env.env_numeric_value|default_if_none:"" }}</td>
-                            <td>{{ env.unit|default_if_none:"" }}</td>
+                            <td>{{ env.env_units|default_if_none:"" }}</td>
                             <td>{{ env.event.sequences.seqData_accessionNumber }}</td>
                             <td>{{ env.event.sequences.seqData_projectNumber }}</td>
                             <td>
@@ -72,11 +72,11 @@
                 </table>
             </div>
             <div class="row-cols-12">
-                {#                    <div class="col-4 col-md-3">#}
-                {#                        <a class="btn btn-biodiversity-lightblue btn-lg" style="width:100%"#}
-                {#                           href="{% url 'polaaar:export_environment' %}?id={{ id_list }}">Download EXCEL <i#}
-                {#                                class="fas fa-file-excel pl-1"></i></a>#}
-                {#                    </div>#}
+                <div class="col-4 col-md-3">
+                    <a class="btn btn-biodiversity-lightblue btn-lg" style="width:100%"
+                       href="{% url 'polaaar:export_environment' %}?id={{ id_list }}">Download EXCEL <i
+                            class="fas fa-file-excel pl-1"></i></a>
+                </div>
                 <div class="col-4 col-md-3">
                     <a class="btn btn-biodiversity-lightblue btn-lg" style="width:100%"
                        href="{% url 'polaaar:environment-list' %}?id__in={{ id_list }}">Download JSON <i
@@ -119,8 +119,8 @@
 
                 function onEachFeature(feature, layer) {
                     // does this feature have a property named sample_name?
-                    if (feature.properties && feature.properties.sequences__seqData_accessionNumber) {
-                        layer.bindPopup(feature.properties.sequences__seqData_accessionNumber);
+                    if (feature.properties && feature.properties.project_metadata) {
+                        layer.bindPopup(feature.properties.project_metadata);
                     }
                 }
 
