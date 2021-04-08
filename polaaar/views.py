@@ -46,6 +46,43 @@ def api_reference(request):
 ### DJANGO Search views
 ##########
 
+def get_queryset_from_env_search_form(request):
+    """
+    Return QuerySet for Environment Search
+    :param request: HttpRequest GET object
+    :return: QuerySet of Environment class
+    """
+    form = EnvironmentSearchForm(request)
+    qs = Environment.objects.filter(event__event_hierarchy__project_metadata__is_public=True) \
+        .prefetch_related('event__sequences', 'event__project_metadata') \
+        .select_related('event', 'env_variable') \
+        .order_by('env_variable')
+    if form.is_valid():
+        variable = form.cleaned_data.get('variable')  # required
+        text = form.cleaned_data.get('text', '')
+        min_value = form.cleaned_data.get('min_value')
+        max_value = form.cleaned_data.get('max_value')
+        var_type = variable.var_type
+
+        if var_type == 'TXT':
+            query = {"event__event_hierarchy__project_metadata__is_public": True, "env_variable": variable.id,
+                     "env_text_value__icontains": text}
+        elif var_type == 'NUM' and min_value and max_value:
+            query = {"event__event_hierarchy__project_metadata__is_public": True, "env_variable": variable.id,
+                     "env_numeric_value__gte": min_value, "env_numeric_value__lte": max_value}
+        elif var_type == 'NUM' and min_value:
+            query = {"event__event_hierarchy__project_metadata__is_public": True, "env_variable": variable.id,
+                     "env_numeric_value__gte": min_value}
+        elif var_type == 'NUM' and max_value:
+            query = {"event__event_hierarchy__project_metadata__is_public": True, "env_variable": variable.id,
+                     "env_numeric_value__lte": max_value}
+        else:  # only var_id
+            query = {"event__event_hierarchy__project_metadata__is_public": True, "env_variable": variable.id}
+        qs = Environment.objects.prefetch_related('event__sequences', 'event__project_metadata') \
+            .select_related('event', 'env_variable').filter(**query)
+    return qs
+
+
 class EnvironmentListView(generic.ListView):
     """
     List the search results for Environment instances
@@ -54,42 +91,14 @@ class EnvironmentListView(generic.ListView):
     paginate_by = 20
 
     def get_queryset(self):
-        form = EnvironmentSearchForm(self.request.GET)
-        qs = Environment.objects.filter(event__event_hierarchy__project_metadata__is_public=True) \
-            .prefetch_related('event__sequences', 'event__project_metadata') \
-            .select_related('event', 'env_variable')\
-            .order_by('env_variable')
-        if form.is_valid():
-            variable = form.cleaned_data.get('variable')  # required
-            text = form.cleaned_data.get('text', '')
-            min_value = form.cleaned_data.get('min_value')
-            max_value = form.cleaned_data.get('max_value')
-            var_type = variable.var_type
-
-            if var_type == 'TXT':
-                query = {"event__event_hierarchy__project_metadata__is_public": True, "env_variable": variable.id,
-                         "env_text_value__icontains": text}
-            elif var_type == 'NUM' and min_value and max_value:
-                query = {"event__event_hierarchy__project_metadata__is_public": True, "env_variable": variable.id,
-                         "env_numeric_value__gte": min_value, "env_numeric_value__lte": max_value}
-            elif var_type == 'NUM' and min_value:
-                query = {"event__event_hierarchy__project_metadata__is_public": True, "env_variable": variable.id,
-                         "env_numeric_value__gte": min_value}
-            elif var_type == 'NUM' and max_value:
-                query = {"event__event_hierarchy__project_metadata__is_public": True, "env_variable": variable.id,
-                         "env_numeric_value__lte": max_value}
-            else:  # only var_id
-                query = {"event__event_hierarchy__project_metadata__is_public": True, "env_variable": variable.id}
-            qs = Environment.objects.prefetch_related('event__sequences', 'event__project_metadata')\
-                .select_related('event', 'env_variable').filter(**query)
+        qs = get_queryset_from_env_search_form(self.request.GET)
         return qs
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         context['form'] = EnvironmentSearchForm(self.request.GET)
-        id_list = self.get_queryset().values_list('id', flat=True)
-        context['id_list'] = ','.join(map(str, id_list))
-        events = Event.objects.filter(environment__in=self.get_queryset()).annotate(count=Count('id')).order_by().prefetch_related('sequences')
+        events = Event.objects.filter(environment__in=self.get_queryset()).annotate(count=Count('id')).order_by()\
+            .prefetch_related('sequences')
         context['event_geojson'] = serialize('geojson', events, geometry_field='footprintWKT', fields=('sequences',))
         return context
 
@@ -866,31 +875,27 @@ def export_projects(request):
 
 def export_environment(request):
     if request.method == 'GET':
-        IDS = request.GET.getlist('id')
-        IDS = IDS[0].split(',')
+        env_qs = get_queryset_from_env_search_form(request.GET)
 
         ###########################################################################################################
         #### Authentication checks
 
-        PM = ProjectMetadata.objects.filter(event_hierarchy__event__environment__id__in=IDS).filter(
-            Q(is_public=True)).distinct('project_name')
+        PM = ProjectMetadata.objects.filter(event_hierarchy__event__environment__in=env_qs).filter(
+            Q(is_public=True)).annotate(Count('id')).order_by()
 
-        EH = EventHierarchy.objects.filter(event__environment__id__in=IDS).filter(
-            Q(project_metadata__is_public=True)).distinct('event_hierarchy_name')
+        EH = EventHierarchy.objects.filter(event__environment__in=env_qs).filter(
+            Q(project_metadata__is_public=True)).annotate(Count('event_hierarchy_name')).order_by()
 
-        E = Event.objects.filter(environment__id__in=IDS).filter(Q(
-            event_hierarchy__project_metadata__is_public=True)).order_by('sample_name').distinct('sample_name')
+        E = Event.objects.filter(environment__in=env_qs).filter(Q(
+            event_hierarchy__project_metadata__is_public=True)).annotate(Count('sample_name')).order_by()
 
-        S = Sequences.objects.filter(event__environment__id__in=IDS).filter(Q(
-            event__event_hierarchy__project_metadata__is_public=True)).order_by('sequence_name').distinct(
-            'sequence_name')
+        S = Sequences.objects.filter(event__environment__in=env_qs).filter(Q(
+            event__event_hierarchy__project_metadata__is_public=True)).annotate(Count('sequence_name')).order_by()
 
-        O = Occurrence.objects.filter(event__environment__id__in=IDS).filter(
-            Q(event__event_hierarchy__project_metadata__is_public=True)).order_by('occurrenceID').distinct(
-            'occurrenceID')
+        O = Occurrence.objects.filter(event__environment__in=env_qs).filter(
+            Q(event__event_hierarchy__project_metadata__is_public=True)).annotate(Count('occurrenceID')).order_by()
 
-        Env = Environment.objects.filter(id__in=IDS).filter(
-            Q(event__event_hierarchy__project_metadata__is_public=True))
+        Env = env_qs
         ###########################################################################################################
 
         output = io.BytesIO()
