@@ -72,11 +72,11 @@
                 </table>
             </div>
             <div class="row-cols-12">
-                <div class="col-4 col-md-3">
-                    <a class="btn btn-biodiversity-lightblue btn-lg" style="width:100%"
-                       href="{% url 'polaaar:export_environment' %}?id={{ id_list }}">Download EXCEL <i
-                            class="fas fa-file-excel pl-1"></i></a>
-                </div>
+{#                <div class="col-4 col-md-3">#}
+{#                    <a class="btn btn-biodiversity-lightblue btn-lg" style="width:100%"#}
+{#                       href="{% url 'polaaar:export_environment' %}?id={{ id_list }}">Download EXCEL <i#}
+{#                            class="fas fa-file-excel pl-1"></i></a>#}
+{#                </div>#}
                 <div class="col-4 col-md-3">
                     <a class="btn btn-biodiversity-lightblue btn-lg" style="width:100%"
                        href="{% url 'polaaar:environment-list' %}?id__in={{ id_list }}">Download JSON <i
