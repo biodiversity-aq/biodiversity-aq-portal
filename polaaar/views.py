@@ -55,7 +55,7 @@ def get_queryset_from_env_search_form(request):
     form = EnvironmentSearchForm(request)
     qs = Environment.objects.filter(event__event_hierarchy__project_metadata__is_public=True) \
         .prefetch_related('event__sequences', 'event__project_metadata') \
-        .select_related('event', 'env_variable') \
+        .select_related('event', 'env_variable', 'env_units') \
         .order_by('env_variable')
     if form.is_valid():
         variable = form.cleaned_data.get('variable')  # required
@@ -79,7 +79,7 @@ def get_queryset_from_env_search_form(request):
         else:  # only var_id
             query = {"event__event_hierarchy__project_metadata__is_public": True, "env_variable": variable.id}
         qs = Environment.objects.prefetch_related('event__sequences', 'event__project_metadata') \
-            .select_related('event', 'env_variable').filter(**query)
+            .select_related('event', 'env_variable', 'env_units').filter(**query)
     return qs
 
 
