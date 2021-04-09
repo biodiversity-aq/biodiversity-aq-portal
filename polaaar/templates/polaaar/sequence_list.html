@@ -2,11 +2,12 @@
 {% load static humanize url_replace leaflet_tags %}
 
 {% block title %}
-    Omics search
+    Sequence search
 {% endblock title %}
 
 {% block content %}
     <div class="container mt-4">
+    <h2 class="text-center">Search for sequences</h2>
         <form action="." method="get"
               class="form-inline d-flex justify-content-center md-form form-sm mt-0">
             <i class="fas fa-search" aria-hidden="true"></i>
@@ -22,30 +23,24 @@
                 <table class="table table-striped table-sm">
                     <thead>
                     <tr>
-                        <th scope="col">Multiplex Identifiers</th>
                         <th scope="col">Target gene</th>
                         <th scope="col">Target subfragment</th>
-                        <th scope="col">Type</th>
                         <th scope="col">Run type</th>
-                        <th scope="col">Primer name forward</th>
-                        <th scope="col">Primer name reverse</th>
-                        <th scope="col">Accession number</th>
-                        <th scope="col">ASV</th>
+                        <th scope="col">Forward primer</th>
+                        <th scope="col">Reverse primer</th>
+                        <th scope="col">Accession numbers</th>
                         <th scope="col">Project</th>
                     </tr>
                     </thead>
                     <tbody>
                     {% for sequence in page_obj.object_list %}
                         <tr>
-                            <td>{{ sequence.MID|default_if_none:"" }}</td>
                             <td>{{ sequence.target_gene|default_if_none:"" }}</td>
                             <td>{{ sequence.target_subfragment|default_if_none:"" }}</td>
-                            <td>{{ sequence.type|default_if_none:"" }}</td>
                             <td>{{ sequence.run_type|default_if_none:"" }}</td>
                             <td>{{ sequence.primerName_forward|default_if_none:"" }}</td>
                             <td>{{ sequence.primerName_reverse|default_if_none:"" }}</td>
                             <td>{{ sequence.seqData_accessionNumber|default_if_none:"" }}</td>
-                            <td>{{ sequence.ASV_URL|default_if_none:"" }}</td>
                             <td>
                                 <a href="{% url 'polaaar:project_metadata_detail' sequence.event.project_metadata_id %}">{{ sequence.event.project_metadata }}</a>
                             </td>
