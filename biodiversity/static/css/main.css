@@ -303,3 +303,8 @@ a.waves-effect, a.waves-light {
 table.dataTable th, table.dataTable td {
     white-space: nowrap;
 }
+
+/* so that a is not coloured black */
+table.table a {
+    color: #007bff;
+}
