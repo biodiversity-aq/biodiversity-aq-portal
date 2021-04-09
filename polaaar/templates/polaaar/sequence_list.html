@@ -1,0 +1,98 @@
+{% extends "polaaar/base.html" %}
+{% load static humanize url_replace leaflet_tags %}
+
+{% block title %}
+    Omics search
+{% endblock title %}
+
+{% block content %}
+    <div class="container mt-4">
+        <form action="." method="get"
+              class="form-inline d-flex justify-content-center md-form form-sm mt-0">
+            <i class="fas fa-search" aria-hidden="true"></i>
+            {{ form }}
+        </form>
+        {% if page_obj.object_list %}
+            <p class="mt-5">{{ page_obj.start_index }} - {{ page_obj.end_index }} of {{ page_obj.paginator.count|intcomma }}
+                results</p>
+            {% if is_paginated %}
+                {% include 'polaaar/pagination.html' %}
+            {% endif %}
+            <div class="table-responsive text-nowrap mt-5">
+                <table class="table table-striped table-sm">
+                    <thead>
+                    <tr>
+                        <th scope="col">Multiplex Identifiers</th>
+                        <th scope="col">Target gene</th>
+                        <th scope="col">Target subfragment</th>
+                        <th scope="col">Type</th>
+                        <th scope="col">Run type</th>
+                        <th scope="col">Primer name forward</th>
+                        <th scope="col">Primer name reverse</th>
+                        <th scope="col">Accession number</th>
+                        <th scope="col">ASV</th>
+                        <th scope="col">Project</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for sequence in page_obj.object_list %}
+                        <tr>
+                            <td>{{ sequence.MID|default_if_none:"" }}</td>
+                            <td>{{ sequence.target_gene|default_if_none:"" }}</td>
+                            <td>{{ sequence.target_subfragment|default_if_none:"" }}</td>
+                            <td>{{ sequence.type|default_if_none:"" }}</td>
+                            <td>{{ sequence.run_type|default_if_none:"" }}</td>
+                            <td>{{ sequence.primerName_forward|default_if_none:"" }}</td>
+                            <td>{{ sequence.primerName_reverse|default_if_none:"" }}</td>
+                            <td>{{ sequence.seqData_accessionNumber|default_if_none:"" }}</td>
+                            <td>{{ sequence.ASV_URL|default_if_none:"" }}</td>
+                            <td>
+                                <a href="{% url 'polaaar:project_metadata_detail' sequence.event.project_metadata_id %}">{{ sequence.event.project_metadata }}</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="row">
+                <div class="col-4 col-md-3">
+                    <!-- the page number will not be taken account in the view -->
+{#                    <a class="btn btn-biodiversity-lightblue btn-lg" style="width:100%"#}
+{#                       href="{% url 'polaaar:export_environment' %}?{% url_replace %}">Download EXCEL <i#}
+{#                            class="fas fa-file-excel pl-1"></i></a>#}
+                </div>
+            </div>
+
+        {% else %}
+            <p>Sorry, no result</p>
+        {% endif %}
+        <div class="row justify-content-center mt-5">
+            <div class="col-9" id="env-map" style="height:500px;">
+                {% leaflet_map "landing_map" callback="window.map_init" %}
+
+                <p style="font-size:10pt;color:white">Map attribution: Tiles &copy; Esri &mdash; Source: Esri, DeLorme,
+                    NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand),
+                    TomTom, 2012</p>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
+
+{#<script>#}
+{#    $(document).ready(function () {#}
+{#        var Mytable = $('#myTable').DataTable({#}
+{#			responsive: true,#}
+{#            columnDefs: [#}
+{#                {#}
+{#                    render: function (data, type, full, meta) {#}
+{#                        return "<div class='text-wrap width-200'>" + data + "</div>";#}
+{#                    },#}
+{#                    targets: 0#}
+{#                }#}
+{#             ]#}
+{#		});#}
+{#        Mytable.column(1).visible(false)#}
+{#    });#}
+{#</script>#}

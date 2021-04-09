@@ -47,8 +47,7 @@ class ProjectSearchForm(forms.Form):
 
 class EnvironmentSearchForm(forms.Form):
     variable = forms.ModelChoiceField(
-        queryset=Variable.objects.filter(environment__event__event_hierarchy__project_metadata__is_public=True)
-            .annotate(count=Count('id')).order_by('name'),
+        queryset=Variable.objects.filter(environment__event__event_hierarchy__project_metadata__is_public=True).annotate(count=Count('id')).order_by('name'),
         required=True, label='Environment variable',
         widget=forms.Select(attrs={"class": "browser-default custom-select mb-4"}))
     text = forms.CharField(label='', widget=forms.TextInput(attrs={
@@ -59,4 +58,14 @@ class EnvironmentSearchForm(forms.Form):
 
     def clean(self):
         cleaned_data = super(EnvironmentSearchForm, self).clean()
+        return cleaned_data
+
+
+class SequenceSearchForm(forms.Form):
+    q = forms.CharField(label='', widget=forms.TextInput(attrs={
+        "class": "form-control form-control-sm ml-3 w-75",  "type": "text", "placeholder": "Search",
+        "aria-label": "Search"}), required=False)
+
+    def clean(self):
+        cleaned_data = super(SequenceSearchForm, self).clean()
         return cleaned_data
