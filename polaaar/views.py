@@ -8,7 +8,7 @@ from django.db.models import Q, Count, Min
 from django.contrib.gis.db.models.functions import AsGeoJSON, Centroid
 from django.views import generic
 
-from .forms import EmailForm, ProjectSearchForm, EnvironmentSearchForm, SequenceSearchForm
+from .forms import EmailForm, EnvironmentSearchForm, FreeTextSearchForm
 from django.core.mail import EmailMessage
 from django_filters.rest_framework import DjangoFilterBackend
 
@@ -113,7 +113,7 @@ class SequenceListView(generic.ListView):
     def get_queryset(self):
         qs = Sequences.objects.filter(event__project_metadata__is_public=True)\
             .select_related('event__project_metadata')
-        form = SequenceSearchForm(self.request.GET)
+        form = FreeTextSearchForm(self.request.GET)
         if form.is_valid():
             search_term = form.cleaned_data.get('q')
             if search_term:  # return queryset if there is no search term
@@ -129,7 +129,7 @@ class SequenceListView(generic.ListView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['form'] = SequenceSearchForm(self.request.GET)
+        context['form'] = FreeTextSearchForm(self.request.GET)
         return context
 
 
@@ -2008,7 +2008,7 @@ class ProjectMetadataListView(generic.ListView):
 
     def get_queryset(self):
         qs = ProjectMetadata.objects.filter(is_public=True)
-        form = ProjectSearchForm(self.request.GET)
+        form = FreeTextSearchForm(self.request.GET)
         if form.is_valid():
             search_term = form.cleaned_data.get('q')
             if search_term:  # return queryset if there is no search term
@@ -2022,7 +2022,7 @@ class ProjectMetadataListView(generic.ListView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['form'] = ProjectSearchForm(self.request.GET)
+        context['form'] = FreeTextSearchForm(self.request.GET)
         id_list = self.get_queryset().values_list('id', flat=True)
         context['id_list'] = ','.join(map(str, id_list))
         return context
