@@ -117,7 +117,8 @@ def get_queryset_from_seq_search_form(request):
         search_term = form.cleaned_data.get('q')
         if search_term:  # return queryset if there is no search term
             vector = SearchVector('MID', 'target_gene', 'target_subfragment', 'type', 'primerName_forward',
-                                  'primerName_reverse', 'run_type')
+                                  'primerName_reverse', 'run_type', 'event__project_metadata__abstract',
+                                  'event__project_metadata__project_name')
             query = SearchQuery(search_term)
             # filter for ProjectMetadata which is public AND (fields above which contain search term)
             qs = Sequences.objects.annotate(rank=SearchRank(vector, query)) \
