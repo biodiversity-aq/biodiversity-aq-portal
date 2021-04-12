@@ -49,7 +49,7 @@ def api_reference(request):
 def get_queryset_from_env_search_form(request):
     """
     Return QuerySet for Environment Search
-    :param request: HttpRequest GET object
+    :param request: HttpRequest.GET object
     :return: QuerySet of Environment class
     """
     form = EnvironmentSearchForm(request)
@@ -97,10 +97,33 @@ class EnvironmentListView(generic.ListView):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         context['form'] = EnvironmentSearchForm(self.request.GET)
-        events = Event.objects.filter(environment__in=self.get_queryset()).annotate(count=Count('id')).order_by()\
-            .prefetch_related('sequences')
-        context['event_geojson'] = serialize('geojson', events, geometry_field='footprintWKT', fields=('sequences',))
+        events = Event.objects.exclude(Latitude__isnull=True).exclude(Longitude__isnull=True)\
+            .filter(environment__in=self.get_queryset()).annotate(count=Count('id')).order_by()
+        context['event_geojson'] = serialize('geojson', events, geometry_field='footprintWKT',
+                                             fields=('project_metadata',))
         return context
+
+
+def get_queryset_from_seq_search_form(request):
+    """
+    Return a QuerySet of Sequences search
+    :param request: HttpRequest.GET object
+    :return: QuerySet of Sequences
+    """
+    qs = Sequences.objects.filter(event__project_metadata__is_public=True) \
+        .select_related('event__project_metadata')
+    form = FreeTextSearchForm(request)
+    if form.is_valid():
+        search_term = form.cleaned_data.get('q')
+        if search_term:  # return queryset if there is no search term
+            vector = SearchVector('MID', 'target_gene', 'target_subfragment', 'type', 'primerName_forward',
+                                  'primerName_reverse', 'run_type')
+            query = SearchQuery(search_term)
+            # filter for ProjectMetadata which is public AND (fields above which contain search term)
+            qs = Sequences.objects.annotate(rank=SearchRank(vector, query)) \
+                .filter(event__project_metadata__is_public=True, rank__gte=0.01).order_by('-rank') \
+                .select_related('event__project_metadata')
+    return qs
 
 
 class SequenceListView(generic.ListView):
@@ -111,25 +134,16 @@ class SequenceListView(generic.ListView):
     paginate_by = 20
 
     def get_queryset(self):
-        qs = Sequences.objects.filter(event__project_metadata__is_public=True)\
-            .select_related('event__project_metadata')
-        form = FreeTextSearchForm(self.request.GET)
-        if form.is_valid():
-            search_term = form.cleaned_data.get('q')
-            if search_term:  # return queryset if there is no search term
-                vector = SearchVector('MID', 'target_gene', 'target_subfragment', 'type', 'primerName_forward',
-                                      'primerName_reverse', 'run_type')
-                query = SearchQuery(search_term)
-                # filter for ProjectMetadata which is public AND (project_name contains search term or abstract
-                # contains search term)
-                qs = Sequences.objects.annotate(rank=SearchRank(vector, query)) \
-                    .filter(event__project_metadata__is_public=True, rank__gte=0.01).order_by('-rank')\
-                    .select_related('event__project_metadata')
+        qs = get_queryset_from_seq_search_form(self.request.GET)
         return qs
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         context['form'] = FreeTextSearchForm(self.request.GET)
+        events = Event.objects.exclude(Latitude__isnull=True).exclude(Longitude__isnull=True)\
+            .filter(sequences__in=self.get_queryset()).annotate(count=Count('id')).order_by()
+        context['event_geojson'] = serialize('geojson', events, geometry_field='footprintWKT',
+                                             fields=('id',))
         return context
 
 
