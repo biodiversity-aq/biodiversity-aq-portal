@@ -84,7 +84,7 @@
             <p>Sorry, no result</p>
         {% endif %}
         <div class="row justify-content-center mt-5">
-            <div class="col-9" id="env-map" style="height:500px;">
+            <div class="col-9" id="env-map">
                 {% leaflet_map "landing_map" callback="window.map_init" %}
 
                 <p style="font-size:10pt;color:white">Map attribution: Tiles &copy; Esri &mdash; Source: Esri, DeLorme,
@@ -96,40 +96,6 @@
 {% endblock %}
 
 {% block polaaar_js %}
-    <script type="text/javascript">
-        let geojsonFeature = {{ event_geojson|safe }}
-
-            function map_init(map, options) {
-                let geojsonMarkerOptions = {
-                    radius: 3,
-                    fillColor: "#FF0080",
-                    color: "#FF0080",
-                    weight: 1,
-                    opacity: 1,
-                    fillOpacity: 0.3
-                };
-
-                function onEachFeature(feature, layer) {
-                    // does this feature have a property named sample_name?
-                    if (feature.properties && feature.properties.project_metadata) {
-                        layer.bindPopup(feature.properties.project_metadata);
-                    }
-                }
-
-                let tileLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
-                    attribution: ''
-                })
-                tileLayer.addTo(map);
-                L.geoJSON(geojsonFeature, {
-                    pointToLayer: function (feature, latlng) {
-                        return L.circleMarker(latlng, geojsonMarkerOptions);
-                    },
-                    onEachFeature: onEachFeature
-                }).addTo(map);
-
-
-            }
-
-
-    </script>
+    <script id="geojson-feature" type="application/geo+json">{{ event_geojson|safe }}</script>
+    <script src="{% static 'polaaar/js/plot_map.js' %}"></script>
 {% endblock %}

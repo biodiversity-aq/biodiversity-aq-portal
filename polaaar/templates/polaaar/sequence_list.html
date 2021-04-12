@@ -7,14 +7,15 @@
 
 {% block content %}
     <div class="container mt-4">
-    <h2 class="text-center">Search for sequences</h2>
+        <h2 class="text-center">Search for sequences</h2>
         <form action="." method="get"
               class="form-inline d-flex justify-content-center md-form form-sm mt-0">
             <i class="fas fa-search" aria-hidden="true"></i>
             {{ form }}
         </form>
         {% if page_obj.object_list %}
-            <p class="mt-5">{{ page_obj.start_index }} - {{ page_obj.end_index }} of {{ page_obj.paginator.count|intcomma }}
+            <p class="mt-5">{{ page_obj.start_index }} - {{ page_obj.end_index }}
+                of {{ page_obj.paginator.count|intcomma }}
                 results</p>
             {% if is_paginated %}
                 {% include 'polaaar/pagination.html' %}
@@ -52,9 +53,9 @@
             <div class="row">
                 <div class="col-4 col-md-3">
                     <!-- the page number will not be taken account in the view -->
-{#                    <a class="btn btn-biodiversity-lightblue btn-lg" style="width:100%"#}
-{#                       href="{% url 'polaaar:export_environment' %}?{% url_replace %}">Download EXCEL <i#}
-{#                            class="fas fa-file-excel pl-1"></i></a>#}
+                    {#                    <a class="btn btn-biodiversity-lightblue btn-lg" style="width:100%"#}
+                    {#                       href="{% url 'polaaar:export_environment' %}?{% url_replace %}">Download EXCEL <i#}
+                    {#                            class="fas fa-file-excel pl-1"></i></a>#}
                 </div>
             </div>
 
@@ -62,7 +63,7 @@
             <p>Sorry, no result</p>
         {% endif %}
         <div class="row justify-content-center mt-5">
-            <div class="col-9" id="env-map" style="height:500px;">
+            <div class="col-9" id="seq-map">
                 {% leaflet_map "landing_map" callback="window.map_init" %}
 
                 <p style="font-size:10pt;color:white">Map attribution: Tiles &copy; Esri &mdash; Source: Esri, DeLorme,
@@ -74,20 +75,7 @@
 {% endblock %}
 
 
-
-{#<script>#}
-{#    $(document).ready(function () {#}
-{#        var Mytable = $('#myTable').DataTable({#}
-{#			responsive: true,#}
-{#            columnDefs: [#}
-{#                {#}
-{#                    render: function (data, type, full, meta) {#}
-{#                        return "<div class='text-wrap width-200'>" + data + "</div>";#}
-{#                    },#}
-{#                    targets: 0#}
-{#                }#}
-{#             ]#}
-{#		});#}
-{#        Mytable.column(1).visible(false)#}
-{#    });#}
-{#</script>#}
+{% block polaaar_js %}
+    <script id="geojson-feature" type="application/geo+json">{{ event_geojson|safe }}</script>
+    <script src="{% static 'polaaar/js/plot_map.js' %}"></script>
+{% endblock %}
