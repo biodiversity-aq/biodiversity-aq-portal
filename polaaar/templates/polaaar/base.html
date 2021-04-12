@@ -7,6 +7,16 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/responsive.dataTables.min.css' %}"/>    
     <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap-select.min.css' %}" />   
     {% leaflet_css plugins="draw" %}
+    <style>
+     .leaflet-container {  /* all maps */
+        height: 400px;
+    }
+
+    /* Resize the "display_raw" textbox */
+    .django-leaflet-raw-textarea {
+        width: 100%;
+    }
+    </style>
     {# App specific styles #}
     {% block polaaar_css %}{% endblock %}
 {% endblock %}
