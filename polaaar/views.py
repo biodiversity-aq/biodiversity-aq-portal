@@ -1270,20 +1270,17 @@ def export_environment(request):
 #### View for returning sequence and event data as an EXCEL spreadsheet
 def export_sequences(request):
     if request.method == 'GET':
-        IDS = request.GET.getlist('id')
-        IDS = IDS[0].split(',')
-
-        PM = ProjectMetadata.objects.filter(event_hierarchy__event__sequences__id__in=IDS).filter(
+        qs = get_queryset_from_seq_search_form(request.GET)
+        PM = ProjectMetadata.objects.filter(event_hierarchy__event__sequences__in=qs).filter(
             Q(is_public=True)).order_by('project_name').distinct('project_name')
 
-        EH = EventHierarchy.objects.filter(event__sequences__id__in=IDS).filter(
+        EH = EventHierarchy.objects.filter(event__sequences__in=qs).filter(
             Q(project_metadata__is_public=True)).order_by('event_hierarchy_name').distinct('event_hierarchy_name')
 
-        E = Event.objects.filter(sequences__id__in=IDS).filter(
+        E = Event.objects.filter(sequences__in=qs).filter(
             Q(event_hierarchy__project_metadata__is_public=True)).order_by('sample_name').distinct('sample_name')
 
-        S = Sequences.objects.filter(id__in=IDS).filter(
-            Q(event__event_hierarchy__project_metadata__is_public=True))
+        S = qs
 
         ########################################################################
         output = io.BytesIO()
