@@ -1,0 +1,399 @@
+[
+  {
+    "model": "accounts.UserProfile",
+    "pk": 1,
+    "fields": {
+      "password": "test",
+      "last_login": "2021-01-18T00:00:00Z",
+      "is_superuser": true,
+      "username": "test",
+      "first_name": "test",
+      "last_name": "test",
+      "email": "test@test.be",
+      "is_staff": true,
+      "date_joined": "2020-01-01T00:00:00Z",
+      "full_name": "test",
+      "timezone": "UTC",
+      "is_active": true,
+      "is_verified": true,
+      "position": null,
+      "institution": null,
+      "resident_country": null,
+      "home_country": null,
+      "introduction": null,
+      "gdpr": true,
+      "email_contact": true
+    }
+  },
+  {
+    "model": "polaaar.ProjectMetadata",
+    "pk": 1,
+    "fields": {
+      "resource_url": null,
+      "project_name": "Microorganisms in frost flowers on young Arctic sea ice, comparison between different ice types",
+      "start_date": "2012-01-01",
+      "end_date": null,
+      "EML_URL": "https://ipt.biodiversity.aq/eml.do?r=microorganisms_in_frost_flowers_on_young_arctic_sea_ice&v=1.0",
+      "abstract": "Amplicon sequencing dataset (454 pyrosequencing) of Bacteria in different types of young sea ice and sea ice brines in the Arctic ocean (North-East coast of Greenland)",
+      "geomet": "SRID=4326;POLYGON ((74.468 -20.311, 74.468 -20.311, 74.468 -20.311, 74.468 -20.311, 74.468 -20.311))",
+      "is_public": true,
+      "associated_media": "null",
+      "created_on": "2020-8-19",
+      "updated_on": "2020-8-20",
+      "project_contact": null,
+      "project_creator_id": 1,
+      "project_qaqc": true
+    }
+  },
+  {
+    "model": "polaaar.ProjectMetadata",
+    "pk": 2,
+    "fields": {
+      "resource_url": null,
+      "project_name": "my private data",
+      "start_date": "2012-01-01",
+      "end_date": null,
+      "EML_URL": "https://ipt.biodiversity.aq/eml.do?r=microorganisms_in_frost_flowers_on_young_arctic_sea_ice&v=1.0",
+      "abstract": "The abstract of private data",
+      "geomet": "SRID=4326;POLYGON ((74.468 -20.311, 74.468 -20.311, 74.468 -20.311, 74.468 -20.311, 74.468 -20.311))",
+      "is_public": false,
+      "associated_media": "null",
+      "created_on": "2020-8-19",
+      "updated_on": "2020-8-20",
+      "project_contact": null,
+      "project_creator_id": 1,
+      "project_qaqc": true
+    }
+  },
+  {
+    "model": "polaaar.EventType",
+    "pk": 1,
+    "fields": {
+      "name": "project"
+    }
+  },
+  {
+    "model": "polaaar.EventType",
+    "pk": 2,
+    "fields": {
+      "name": "event"
+    }
+  },
+  {
+    "model": "polaaar.EventHierarchy",
+    "pk": 1,
+    "fields": {
+      "event_hierarchy_name": "PRJNA239386",
+      "event_type_id": 1,
+      "description": "Bioproject",
+      "parent_event_hierarchy_id": null,
+      "event_creator_id": 1,
+      "created_on": "2020-08-19",
+      "updated_on": "2020-08-20",
+      "project_metadata_id": 1
+    }
+  },
+  {
+    "model": "polaaar.EventHierarchy",
+    "pk": 2,
+    "fields": {
+      "event_hierarchy_name": "gr_brine",
+      "event_type_id": 2,
+      "description": "Brine event",
+      "parent_event_hierarchy_id": 1,
+      "event_creator_id": 1,
+      "created_on": "2020-08-19",
+      "updated_on": "2020-08-20",
+      "project_metadata_id": 1
+    }
+  },
+  {
+    "model": "polaaar.EventHierarchy",
+    "pk": 3,
+    "fields": {
+      "event_hierarchy_name": "PRJNA12345",
+      "event_type_id": 1,
+      "description": "Bioproject",
+      "parent_event_hierarchy_id": null,
+      "event_creator_id": 1,
+      "created_on": "2020-04-19",
+      "updated_on": "2020-04-20",
+      "project_metadata_id": 2
+    }
+  },
+  {
+    "model": "polaaar.Event",
+    "pk": 1,
+    "fields": {
+      "footprintWKT": "SRID=4326;POINT (-20.311 74.468)",
+      "Latitude": 74.46800,
+      "Longitude": -20.31100,
+      "eventRemarks": "Event remarks",
+      "sample_name": "gr_brine",
+      "collection_year": 2012,
+      "collection_month": 3,
+      "collection_day": 20,
+      "collection_time": "12:34Z",
+      "event_hierarchy_id": 2,
+      "parent_event_id": 2,
+      "samplingProtocol": null,
+      "event_metadata_id": 1,
+      "metadata_exists": true,
+      "occurrence_exists": true,
+      "environment_exists": true,
+      "sequences_exists": true,
+      "project_metadata_id": 1
+    }
+  },
+  {
+    "model": "polaaar.Event",
+    "pk": 2,
+    "fields": {
+      "footprintWKT": "SRID=4326;POINT (-20.311 74.468)",
+      "Latitude": 74.46800,
+      "Longitude": -20.31100,
+      "eventRemarks": "collected year is 2013",
+      "sample_name": "gr_brine",
+      "collection_year": 2013,
+      "collection_month": 3,
+      "collection_day": 20,
+      "collection_time": "12:34Z",
+      "event_hierarchy_id": 2,
+      "parent_event_id": 2,
+      "samplingProtocol": null,
+      "event_metadata_id": null,
+      "metadata_exists": true,
+      "occurrence_exists": true,
+      "environment_exists": true,
+      "sequences_exists": true,
+      "project_metadata_id": 1
+    }
+  },
+  {
+    "model": "polaaar.Event",
+    "pk": 3,
+    "fields": {
+      "footprintWKT": "SRID=4326;POINT (-40.311 73.468)",
+      "Latitude": 73.46800,
+      "Longitude": -40.31100,
+      "eventRemarks": "Private event. Collected year is 2012",
+      "sample_name": "gr_brine",
+      "collection_year": 2012,
+      "collection_month": 3,
+      "collection_day": 20,
+      "collection_time": "12:34Z",
+      "event_hierarchy_id": 3,
+      "parent_event_id": null,
+      "samplingProtocol": null,
+      "event_metadata_id": null,
+      "metadata_exists": true,
+      "occurrence_exists": true,
+      "environment_exists": true,
+      "sequences_exists": true,
+      "project_metadata_id": 2
+    }
+  },
+  {
+    "model": "polaaar.package",
+    "pk": 1,
+    "fields": {
+      "name": "sediment"
+    }
+  },
+  {
+    "model": "polaaar.SampleMetadata",
+    "pk": 1,
+    "fields": {
+      "metadata_tag": null,
+      "md_created_on": "2020-08-19",
+      "metadata_creator_id": 1,
+      "license": "CC BY 4.0",
+      "geographic_location_id": null,
+      "locality": null,
+      "geo_loc_name": "Chile: Patagonia",
+      "env_biome": "temperate forest",
+      "env_package_id": 1,
+      "env_feature": "lake",
+      "env_material": "sediment",
+      "institutionID": null,
+      "nucl_acid_amp": null,
+      "nucl_acid_ext": null,
+      "ref_biomaterial": null,
+      "rel_to_oxygen": null,
+      "rightsHolder": null,
+      "samp_collect_device": null,
+      "samp_store_dur": null,
+      "samp_store_loc": null,
+      "samp_store_temp": null,
+      "samp_vol_we_dna_ext": null,
+      "samplingProtocol": null,
+      "source_mat_id": null,
+      "submitted_to_insdc": false,
+      "investigation_type": "mimarks-survey",
+      "isol_growth_condt": null,
+      "lib_size": null,
+      "additional_information": null
+    }
+  },
+  {
+    "model": "polaaar.Sequences",
+    "pk": 1,
+    "fields": {
+      "sequence_name": "gr_brine",
+      "MID": null,
+      "subspecf_gen_lin": "Bacteria",
+      "target_gene": "16S ssu rRNA",
+      "target_subfragment": "v3-v5",
+      "type": "metagenomic",
+      "primerName_forward": "357F",
+      "primerName_reverse": "926R",
+      "primer_forward": "CCTACGGGAGGCAGCAG",
+      "primer_reverse": "CCGTCAATTCMTTTRAGT",
+      "run_type": "single",
+      "seqData_url": null,
+      "seqData_accessionNumber": "SRR1176841; SRS561807",
+      "seqData_projectNumber": "PRJNA239386",
+      "seqData_runNumber": "SRR1176841",
+      "seqData_sampleNumber": "SRR1176841; SRS561807",
+      "seqData_numberOfBases": 6964017,
+      "seqData_numberOfSequences": 17273,
+      "ASV_URL": null,
+      "event_id": 1
+    }
+  },
+  {
+    "model": "polaaar.Sequences",
+    "pk": 2,
+    "fields": {
+      "sequence_name": "gr_brine",
+      "MID": null,
+      "subspecf_gen_lin": "Bacteria",
+      "target_gene": "16S ssu rRNA",
+      "target_subfragment": "v3-v5",
+      "type": "metagenomic",
+      "primerName_forward": "357F",
+      "primerName_reverse": "926R",
+      "primer_forward": "CCTACGGGAGGCAGCAG",
+      "primer_reverse": "CCGTCAATTCMTTTRAGT",
+      "run_type": "single",
+      "seqData_url": null,
+      "seqData_accessionNumber": "SRR1176829; SRS561798",
+      "seqData_projectNumber": "PRJNA239387",
+      "seqData_runNumber": "SRR1176829",
+      "seqData_sampleNumber": "SRR1176829; SRS561798",
+      "seqData_numberOfBases": 4065757,
+      "seqData_numberOfSequences": 10168,
+      "ASV_URL": null,
+      "event_id": 1
+    }
+  },
+  {
+    "model": "polaaar.Variable",
+    "pk": 1,
+    "fields": {
+      "name": "has_next_generation_sequence_output_data",
+      "var_type": "TXT"
+    }
+  },
+  {
+    "model": "polaaar.Variable",
+    "pk": 2,
+    "fields": {
+      "name": "org_carb",
+      "var_type": "TXT"
+    }
+  },{
+    "model": "polaaar.Variable",
+    "pk": 3,
+    "fields": {
+      "name": "concentration",
+      "var_type": "NUM"
+    }
+  },
+  {
+    "model": "polaaar.Environment",
+    "pk": 1,
+    "fields": {
+      "env_sample_name": "gr_brine",
+      "created_at": "2020-08-19",
+      "link_climate_info": null,
+      "env_variable_id": 1,
+      "env_method_id": null,
+      "env_units_id": null,
+      "env_numeric_value": null,
+      "env_text_value": "YES",
+      "event_id": 1
+    }
+  },
+  {
+    "model": "polaaar.Environment",
+    "pk": 2,
+    "fields": {
+      "env_sample_name": "gr_brine_pk_2",
+      "created_at": "2020-08-19",
+      "link_climate_info": null,
+      "env_variable_id": 2,
+      "env_method_id": null,
+      "env_units_id": null,
+      "env_numeric_value": null,
+      "env_text_value": "PUBLIC",
+      "event_id": 1
+    }
+  },
+  {
+    "model": "polaaar.Environment",
+    "pk": 3,
+    "fields": {
+      "env_sample_name": "gr_brine_private",
+      "created_at": "2020-04-19",
+      "link_climate_info": null,
+      "env_variable_id": 2,
+      "env_method_id": null,
+      "env_units_id": null,
+      "env_numeric_value": null,
+      "env_text_value": "PRIVATE",
+      "event_id": 3
+    }
+  },
+  {
+    "model": "polaaar.Environment",
+    "pk": 4,
+    "fields": {
+      "env_sample_name": "gr_brine_concentration_12",
+      "created_at": "2020-04-19",
+      "link_climate_info": null,
+      "env_variable_id": 3,
+      "env_method_id": null,
+      "env_units_id": null,
+      "env_numeric_value": 12,
+      "env_text_value": null,
+      "event_id": 1
+    }
+  },
+  {
+    "model": "polaaar.Environment",
+    "pk": 5,
+    "fields": {
+      "env_sample_name": "gr_brine_concentration_20",
+      "created_at": "2020-04-19",
+      "link_climate_info": null,
+      "env_variable_id": 3,
+      "env_method_id": null,
+      "env_units_id": null,
+      "env_numeric_value": 20,
+      "env_text_value": null,
+      "event_id": 1
+    }
+  },
+  {
+    "model": "polaaar.Reference",
+    "pk": 1,
+    "fields": {
+      "full_reference": "my reference.",
+      "year": 2021,
+      "associated_projects": [
+        1
+      ]
+    }
+  }
+]
