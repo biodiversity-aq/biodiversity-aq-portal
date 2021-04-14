@@ -65,7 +65,8 @@ class Taxa(models.Model):
     ### Add constraint to not point to its own rank :) 
 
     def __str__(self):
-        return self.TaxonRank + ': ' + self.name
+        taxon_rank = self.TaxonRank or ''
+        return '{}: {}'.format(taxon_rank, self.name)
 
     class Meta:
         ordering = ['name']
@@ -377,15 +378,6 @@ class Event(models.Model):
         self.Latitude = coords[0]
         self.Longitude = coords[1]
         super(Event, self).save(*args, **kwargs)
-
-    @property
-    def popupContent(self):
-        return '<p style="margin-top:0px;margin-bottom:0px;"><strong>Project name:\
-     {}</strong></p><p style="margin-top:0px;margin-bottom:0px;">Creator: {}</p>\
-     <p style="margin-top:0px;margin-bottom:0px;">Sample name: {}</p>'.format(
-            self.event_hierarchy.project_metadata.project_name,
-            self.event_hierarchy.project_metadata.project_creator.full_name,
-            self.sample_name)
 
     def __str__(self):
         return self.sample_name
