@@ -309,3 +309,83 @@ class EnvironmentListTest(TestCase):
         """Ensure that a message is displayed when there is no search result"""
         response = self.client.get(reverse('polaaar:env_search'), data={'variable': 3, 'text': '12'})
         self.assertContains(response, 'Sorry, no result.', status_code=200, html=True)
+
+
+class SequenceListTest(TestCase):
+    fixtures = ['polaaar/sequence_list.json']
+    maxDiff = None
+
+    def test_search_results_does_not_return_private_data(self):
+        """Ensure Sequences associated with ProjectMetadata is_public=False is not returned"""
+        response = self.client.get(reverse('polaaar:seq_search'), data={'q': 'private'})
+        qs = response.context.get('object_list')
+        self.assertQuerysetEqual(qs, [])
+
+    def test_search_mid(self):
+        """Ensure MID field is searchable"""
+        response = self.client.get(reverse('polaaar:seq_search'), data={'q': 'my public mid'})
+        qs = response.context.get('object_list')
+        self.assertQuerysetEqual(qs, ['<Sequences: my public sequence>'])
+
+    def test_search_target_gene(self):
+        """Ensure target_gene field is searchable"""
+        response = self.client.get(reverse('polaaar:seq_search'), data={'q': '16S ssu rRNA'})
+        qs = response.context.get('object_list')
+        self.assertQuerysetEqual(qs, ['<Sequences: my public sequence>'])
+
+    def test_search_target_subfragment(self):
+        """Ensure target_subfragment field is searchable"""
+        response = self.client.get(reverse('polaaar:seq_search'), data={'q': 'v3-v5'})
+        qs = response.context.get('object_list')
+        self.assertQuerysetEqual(qs, ['<Sequences: my public sequence>'])
+
+    def test_search_type(self):
+        """Ensure type field is searchable"""
+        response = self.client.get(reverse('polaaar:seq_search'), data={'q': 'metagenomic'})
+        qs = response.context.get('object_list')
+        self.assertQuerysetEqual(qs, ['<Sequences: my public sequence>'])
+
+    def test_search_primerName_forward(self):
+        """Ensure primerName_forward field is searchable"""
+        response = self.client.get(reverse('polaaar:seq_search'), data={'q': '357F'})
+        qs = response.context.get('object_list')
+        self.assertQuerysetEqual(qs, ['<Sequences: my public sequence>'])
+
+    def test_search_primerName_reverse(self):
+        """Ensure primerName_reverse field is searchable"""
+        response = self.client.get(reverse('polaaar:seq_search'), data={'q': '926R'})
+        qs = response.context.get('object_list')
+        self.assertQuerysetEqual(qs, ['<Sequences: my public sequence>'])
+
+    def test_search_run_type(self):
+        """Ensure run_type field is searchable"""
+        response = self.client.get(reverse('polaaar:seq_search'), data={'q': 'single'})
+        qs = response.context.get('object_list')
+        self.assertQuerysetEqual(qs, ['<Sequences: my public sequence>'])
+
+    def test_search_project_metadata_abstract(self):
+        """Ensure target_subfragment field is searchable"""
+        response = self.client.get(reverse('polaaar:seq_search'), data={'q': 'Amplicon sequencing dataset (454 pyrosequencing)'})
+        qs = response.context.get('object_list')
+        self.assertQuerysetEqual(qs, ['<Sequences: my public sequence>', '<Sequences: my public sequence 2>'],
+                                 ordered=False)
+
+    def test_search_project_metadata_project_name(self):
+        """Ensure target_subfragment field is searchable"""
+        response = self.client.get(reverse('polaaar:seq_search'), data={'q': 'frost flowers on young Arctic sea ice'})
+        qs = response.context.get('object_list')
+        self.assertQuerysetEqual(qs, ['<Sequences: my public sequence>',
+                                      '<Sequences: my public sequence 2>'], ordered=False)
+
+    def test_return_all_public_projects_without_search_term(self):
+        """Ensure that all Sequence associated with ProjectMetadata which has is_public=True is returned if the
+        search term is not provided"""
+        response = self.client.get(reverse('polaaar:seq_search'), data={'q': ''})
+        qs = response.context.get('object_list')
+        self.assertQuerysetEqual(qs, ['<Sequences: my public sequence>',
+                                      '<Sequences: my public sequence 2>'], ordered=False)
+
+    def test_display_no_results_message(self):
+        """Ensure that a message is returned if no result found."""
+        response = self.client.get(reverse('polaaar:seq_search'), data={'q': 'sadfjhaliusent'})
+        self.assertContains(response, 'Sorry, no result.', status_code=200, html=True)
