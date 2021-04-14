@@ -78,8 +78,11 @@ def get_queryset_from_env_search_form(request):
                      "env_numeric_value__lte": max_value}
         else:  # only var_id
             query = {"event__event_hierarchy__project_metadata__is_public": True, "env_variable": variable.id}
-        qs = Environment.objects.prefetch_related('event__sequences', 'event__project_metadata') \
-            .select_related('event', 'env_variable', 'env_units').filter(**query)
+        if var_type == 'NUM' and text:
+            qs = Environment.objects.none()
+        else:
+            qs = Environment.objects.prefetch_related('event__sequences', 'event__project_metadata') \
+                .select_related('event', 'env_variable', 'env_units').filter(**query).order_by('env_variable')
     return qs
 
 

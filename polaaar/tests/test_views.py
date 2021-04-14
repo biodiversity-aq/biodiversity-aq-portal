@@ -221,8 +221,8 @@ class ProjectMetadataListPaginationTest(TestCase):
         """
         response = self.client.get(reverse('polaaar:project_metadata_list'), data={'q': 'antarctic'})
         self.assertNotContains(response, 'Sorry, no result.', status_code=200, html=True)
-        self.assertNotContains(response, '">Previous</a>', status_code=200, html=True)  # fraction of previous button
-        self.assertNotContains(response, '">Next</a>', status_code=200, html=True)  # fraction of  next button
+        self.assertNotContains(response, 'Previous', status_code=200, html=True)  # fraction of previous button
+        self.assertNotContains(response, 'Next', status_code=200, html=True)  # fraction of  next button
 
     def test_next_button_rendered(self):
         """
@@ -237,7 +237,75 @@ class ProjectMetadataListPaginationTest(TestCase):
         """
         Ensure that Previous and Next button are rendered when the results are paginated
         """
-        response = self.client.get(reverse('polaaar:project_metadata_list'), data={'q': 'test', 'page': 2})  # returns 30 results
+        response = self.client.get(reverse('polaaar:project_metadata_list'),
+                                   data={'q': 'test', 'page': 2})  # returns 30 results
         self.assertNotContains(response, 'Sorry, no result.', status_code=200, html=True)
         self.assertContains(response, 'href="?q=test&page=3">Next</a>', status_code=200)  # fraction of next button
-        self.assertContains(response, 'href="?q=test&page=1">Previous</a>', status_code=200)  # fraction of previous button
+        self.assertContains(response, 'href="?q=test&page=1">Previous</a>',
+                            status_code=200)  # fraction of previous button
+
+
+class EnvironmentListTest(TestCase):
+    """Ensure that Environment search renders correctly."""
+    fixtures = ['polaaar/environment_list.json']
+    maxDiff = None
+
+    def test_search_results_do_not_return_private_data(self):
+        """Ensure that search will not return Environment data associated with ProjectMetadata which has
+        is_public=False."""
+        response = self.client.get(reverse('polaaar:env_search'), data={'variable': 2, 'text': 'PRIVATE'})
+        qs = response.context.get('object_list')
+        self.assertQuerysetEqual(qs, [])
+
+    def test_search_text(self):
+        """Ensure that text search for Environment instance with Variable var_type=TXT"""
+        response = self.client.get(reverse('polaaar:env_search'), data={'variable': 2, 'text': 'PUBLIC'})
+        qs = response.context.get('object_list')
+        self.assertQuerysetEqual(qs, ['<Environment: gr_brine_pk_2>'])
+
+    def test_search_numeric_min(self):
+        """Ensure that min value search for Environment instance with Variable var_type=NUM"""
+        response = self.client.get(reverse('polaaar:env_search'), data={'variable': 3, 'min_value': 12})
+        qs = response.context.get('object_list')
+        self.assertQuerysetEqual(qs, ['<Environment: gr_brine_concentration_12>',
+                                      '<Environment: gr_brine_concentration_20>'], ordered=False)
+
+    def test_search_numeric_max(self):
+        """Ensure that max value search for Environment instance with Variable var_type=NUM"""
+        response = self.client.get(reverse('polaaar:env_search'), data={'variable': 3, 'max_value': 12})
+        qs = response.context.get('object_list')
+        self.assertQuerysetEqual(qs, ['<Environment: gr_brine_concentration_12>'])
+
+    def test_search_numeric_range(self):
+        """Ensure that range search works for Environment instance with Variable var_type=NUM"""
+        response = self.client.get(reverse('polaaar:env_search'), data={'variable': 3, 'min_value': 15,
+                                                                        'max_value': 20})
+        qs = response.context.get('object_list')
+        self.assertQuerysetEqual(qs, ['<Environment: gr_brine_concentration_20>'])
+
+    def test_search_numeric_text(self):
+        """Search for text in numeric field should returns nothing"""
+        response = self.client.get(reverse('polaaar:env_search'), data={'variable': 3, 'text': '12'})
+        qs = response.context.get('object_list')
+        self.assertQuerysetEqual(qs, [])
+
+    def test_search_results_geojson(self):
+        """Ensure geojson of the event is returned"""
+        # should return the geojson of event_id=1 (environment_id=4)
+        response = self.client.get(reverse('polaaar:env_search'), data={'variable': 3, 'max_value': 12})
+        event_geojson = response.context.get('event_geojson')
+        expected_geojson = '{"type": "FeatureCollection", "crs": {"type": "name", "properties": {"name": "EPSG:4326"}}, "features": [{"type": "Feature", "properties": {"project_metadata": 1}, "geometry": {"type": "Point", "coordinates": [-20.311, 74.468]}}]}'
+        self.assertEqual(event_geojson, expected_geojson)
+
+    def test_return_all_public_data_without_query_param(self):
+        """This should represents the environment search page before search was performed."""
+        response = self.client.get(reverse('polaaar:env_search'))
+        qs = response.context.get('object_list')
+        self.assertQuerysetEqual(qs, ['<Environment: gr_brine_concentration_12>',
+                                      '<Environment: gr_brine_concentration_20>',
+                                      '<Environment: gr_brine>', '<Environment: gr_brine_pk_2>'])
+
+    def test_display_no_results_message(self):
+        """Ensure that a message is displayed when there is no search result"""
+        response = self.client.get(reverse('polaaar:env_search'), data={'variable': 3, 'text': '12'})
+        self.assertContains(response, 'Sorry, no result.', status_code=200, html=True)
