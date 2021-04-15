@@ -104,13 +104,13 @@ class EnvironmentListView(generic.ListView):
             .filter(environment__in=self.get_queryset()).annotate(count=Count('id')).order_by()
         target_subfragment_count = Sequences.objects.exclude(target_subfragment__isnull=True)\
             .filter(event__environment__in=self.get_queryset())\
-            .values('target_subfragment').annotate(count=Count('target_subfragment')).order_by()
+            .values('target_subfragment').annotate(count=Count('target_subfragment')).order_by('target_subfragment')
         target_gene_count = Sequences.objects.exclude(target_gene__isnull=True)\
             .filter(event__environment__in=self.get_queryset()).values('target_gene')\
-            .annotate(count=Count('target_gene')).order_by()
+            .annotate(count=Count('target_gene')).order_by('target_gene')
         run_type_count = Sequences.objects.exclude(run_type__isnull=True)\
             .filter(event__environment__in=self.get_queryset()).values('run_type') \
-            .annotate(count=Count('run_type')).order_by()
+            .annotate(count=Count('run_type')).order_by('run_type')
         context['event_geojson'] = serialize('geojson', events, geometry_field='footprintWKT',
                                              fields=('project_metadata',))
         context['event_year'] = events.exclude(collection_year__isnull=True).values('collection_year')\

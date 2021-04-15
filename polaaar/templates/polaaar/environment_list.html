@@ -121,11 +121,11 @@
                     </div>
                 </div>
             {% endif %}
-            <div class="col mb-4">
-                <div class="card">
-                    <div class="card-body">
-                        <h6 class="card-title">Event date</h6>
-                        {% if event_year %}
+            {% if event_year %}
+                <div class="col mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h6 class="card-title">Event year</h6>
                             <table class="table table-borderless table-hover table-sm mt-4 card-text">
                                 <tr>
                                     <th>Year</th>
@@ -138,8 +138,15 @@
                                     </tr>
                                 {% endfor %}
                             </table>
-                        {% endif %}
-                        {% if event_month %}
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+            {% if event_month %}
+                <div class="col mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h6 class="card-title">Event month</h6>
                             <table class="table table-borderless table-hover table-sm mt-4 card-text">
                                 <tr>
                                     <th>Month</th>
@@ -152,10 +159,10 @@
                                     </tr>
                                 {% endfor %}
                             </table>
-                        {% endif %}
+                        </div>
                     </div>
                 </div>
-            </div>
+            {% endif %}
         </div>
         <hr/>
         {% if page_obj.object_list %}
