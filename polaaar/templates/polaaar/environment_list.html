@@ -191,8 +191,11 @@
                             <td>{{ env.env_text_value|default_if_none:"" }}</td>
                             <td>{{ env.env_numeric_value|default_if_none:"" }}</td>
                             <td>{{ env.env_units|default_if_none:"" }}</td>
-                            <td>{{ env.event.sequences.seqData_accessionNumber }}</td>
-                            <td>{{ env.event.sequences.seqData_projectNumber }}</td>
+                            <td>{% for sequence in env.event.sequences.all %}
+                                {{ sequence.seqData_accessionNumber|default_if_none:"" }}{% endfor %}</td>
+                            <td>{% for sequence in env.event.sequences.all %}{% if sequence.seqData_projectNumber %}
+                                <a href="https://www.ncbi.nlm.nih.gov/bioproject/?term={{ sequence.seqData_projectNumber }}">{{ sequence.seqData_projectNumber }}</a>
+                            {% endif %}{% endfor %}</td>
                             <td>
                                 <a href="{% url 'polaaar:project_metadata_detail' env.event.project_metadata_id %}">{{ env.event.project_metadata }}</a>
                             </td>
