@@ -58,12 +58,12 @@
                     </div>
                 </div>
             {% endif %}
-            <div class="col mb-4">
-                <div class="card">
-                    <div class="card-body">
-                        <h6 class="card-title">Target subfragment</h6>
-                        <table class="table table-borderless table-hover table-sm mt-4 card-text">
-                            {% if target_subfragment_count %}
+            {% if target_subfragment_count %}
+                <div class="col mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h6 class="card-title">Target subfragment</h6>
+                            <table class="table table-borderless table-hover table-sm mt-4 card-text">
                                 <tr>
                                     <th>Target subfragment</th>
                                     <th>Count</th>
@@ -74,11 +74,11 @@
                                         <td>{{ record.count }}</td>
                                     </tr>
                                 {% endfor %}
-                            {% endif %}
-                        </table>
+                            </table>
+                        </div>
                     </div>
                 </div>
-            </div>
+            {% endif %}
             {% if run_type_count %}
                 <div class="col mb-4">
                     <div class="card">
