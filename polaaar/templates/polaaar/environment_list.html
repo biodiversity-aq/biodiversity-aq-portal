@@ -35,6 +35,129 @@
 
         </form>
         <hr/>
+        <h4>Summary</h4>
+        <div class="row row-cols-1 row-cols-md-2">
+            {% if target_gene_count %}
+                <div class="col mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h6 class="card-title">Target gene</h6>
+                            <table class="table table-borderless table-hover table-sm mt-4 card-text">
+                                <tr>
+                                    <th>Target gene</th>
+                                    <th>Count</th>
+                                </tr>
+                                {% for record in target_gene_count %}
+                                    <tr>
+                                        <td>{{ record.target_gene }}</td>
+                                        <td>{{ record.count }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+            <div class="col mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h6 class="card-title">Target subfragment</h6>
+                        <table class="table table-borderless table-hover table-sm mt-4 card-text">
+                            {% if target_subfragment_count %}
+                                <tr>
+                                    <th>Target subfragment</th>
+                                    <th>Count</th>
+                                </tr>
+                                {% for record in target_subfragment_count %}
+                                    <tr>
+                                        <td>{{ record.target_subfragment }}</td>
+                                        <td>{{ record.count }}</td>
+                                    </tr>
+                                {% endfor %}
+                            {% endif %}
+                        </table>
+                    </div>
+                </div>
+            </div>
+            {% if run_type_count %}
+                <div class="col mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h6 class="card-title">Run type</h6>
+                            <table class="table table-borderless table-hover table-sm mt-4 card-text">
+                                <tr>
+                                    <th>Run type</th>
+                                    <th>Count</th>
+                                </tr>
+                                {% for record in run_type_count %}
+                                    <tr>
+                                        <td>{{ record.run_type }}</td>
+                                        <td>{{ record.count }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+            {% if event_sampling_protocol %}
+                <div class="col mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h6 class="card-title">Sampling Protocol</h6>
+                            <table class="table table-borderless table-hover table-sm mt-4 card-text">
+                                <tr>
+                                    <th>Sampling protocol</th>
+                                    <th>Count</th>
+                                </tr>
+                                {% for record in event_sampling_protocol %}
+                                    <tr>
+                                        <td>{{ record.samplingProtocol }}</td>
+                                        <td>{{ record.count }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+            <div class="col mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h6 class="card-title">Event date</h6>
+                        {% if event_year %}
+                            <table class="table table-borderless table-hover table-sm mt-4 card-text">
+                                <tr>
+                                    <th>Year</th>
+                                    <th>Count</th>
+                                </tr>
+                                {% for record in event_year %}
+                                    <tr>
+                                        <td>{{ record.collection_year }}</td>
+                                        <td>{{ record.count }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </table>
+                        {% endif %}
+                        {% if event_month %}
+                            <table class="table table-borderless table-hover table-sm mt-4 card-text">
+                                <tr>
+                                    <th>Month</th>
+                                    <th>Count</th>
+                                </tr>
+                                {% for record in event_month %}
+                                    <tr>
+                                        <td>{{ record.collection_month }}</td>
+                                        <td>{{ record.count }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </table>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr/>
         {% if page_obj.object_list %}
             <p>{{ page_obj.start_index }} - {{ page_obj.end_index }} of {{ page_obj.paginator.count|intcomma }}
                 results</p>
@@ -84,16 +207,17 @@
             <p>Sorry, no result.</p>
         {% endif %}
 
-    {% if page_obj.object_list %}
-        <div class="row justify-content-center mt-5">
-            <div class="col-9" id="env-map">
-                {% leaflet_map "landing_map" callback="window.map_init" %}
-                <p style="font-size:10pt;color:white">Map attribution: Tiles &copy; Esri &mdash; Source: Esri, DeLorme,
-                    NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand),
-                    TomTom, 2012</p>
+        {% if page_obj.object_list %}
+            <div class="row justify-content-center mt-5">
+                <div class="col-9" id="env-map">
+                    {% leaflet_map "landing_map" callback="window.map_init" %}
+                    <p style="font-size:10pt;color:white">Map attribution: Tiles &copy; Esri &mdash; Source: Esri,
+                        DeLorme,
+                        NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand),
+                        TomTom, 2012</p>
+                </div>
             </div>
-        </div>
-    {% endif %}
+        {% endif %}
     </div>
 {% endblock %}
 

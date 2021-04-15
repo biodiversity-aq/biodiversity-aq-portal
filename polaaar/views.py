@@ -102,8 +102,26 @@ class EnvironmentListView(generic.ListView):
         context['form'] = EnvironmentSearchForm(self.request.GET)
         events = Event.objects.exclude(Latitude__isnull=True).exclude(Longitude__isnull=True)\
             .filter(environment__in=self.get_queryset()).annotate(count=Count('id')).order_by()
+        target_subfragment_count = Sequences.objects.exclude(target_subfragment__isnull=True)\
+            .filter(event__environment__in=self.get_queryset())\
+            .values('target_subfragment').annotate(count=Count('target_subfragment')).order_by()
+        target_gene_count = Sequences.objects.exclude(target_gene__isnull=True)\
+            .filter(event__environment__in=self.get_queryset()).values('target_gene')\
+            .annotate(count=Count('target_gene')).order_by()
+        run_type_count = Sequences.objects.exclude(run_type__isnull=True)\
+            .filter(event__environment__in=self.get_queryset()).values('run_type') \
+            .annotate(count=Count('run_type')).order_by()
         context['event_geojson'] = serialize('geojson', events, geometry_field='footprintWKT',
                                              fields=('project_metadata',))
+        context['event_year'] = events.exclude(collection_year__isnull=True).values('collection_year')\
+            .annotate(count=Count('collection_year')).order_by('collection_year')
+        context['event_month'] = events.exclude(collection_month__isnull=True).values('collection_month')\
+            .annotate(count=Count('collection_month')).order_by('collection_month')
+        context['event_sampling_protocol'] = events.exclude(samplingProtocol__isnull=True).values('samplingProtocol')\
+            .annotate(count=Count('samplingProtocol')).order_by()
+        context['target_subfragment_count'] = target_subfragment_count
+        context['target_gene_count'] = target_gene_count
+        context['run_type_count'] = run_type_count
         return context
 
 
