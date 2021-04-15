@@ -100,16 +100,17 @@ class EnvironmentListView(generic.ListView):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         context['form'] = EnvironmentSearchForm(self.request.GET)
+        env_qs = self.get_queryset()
         events = Event.objects.exclude(Latitude__isnull=True).exclude(Longitude__isnull=True)\
-            .filter(environment__in=self.get_queryset()).annotate(count=Count('id')).order_by()
+            .filter(environment__in=env_qs).annotate(count=Count('id')).order_by()
         target_subfragment_count = Sequences.objects.exclude(target_subfragment__isnull=True)\
-            .filter(event__environment__in=self.get_queryset())\
+            .filter(event__environment__in=env_qs)\
             .values('target_subfragment').annotate(count=Count('target_subfragment')).order_by('target_subfragment')
         target_gene_count = Sequences.objects.exclude(target_gene__isnull=True)\
-            .filter(event__environment__in=self.get_queryset()).values('target_gene')\
+            .filter(event__environment__in=env_qs).values('target_gene')\
             .annotate(count=Count('target_gene')).order_by('target_gene')
         run_type_count = Sequences.objects.exclude(run_type__isnull=True)\
-            .filter(event__environment__in=self.get_queryset()).values('run_type') \
+            .filter(event__environment__in=env_qs).values('run_type') \
             .annotate(count=Count('run_type')).order_by('run_type')
         context['event_geojson'] = serialize('geojson', events, geometry_field='footprintWKT',
                                              fields=('project_metadata',))
