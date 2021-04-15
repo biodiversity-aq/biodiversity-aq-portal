@@ -254,7 +254,10 @@ class ProjectMetadata(models.Model):
         Get citation from eml
         """
         etree = self.get_eml()
-        citation_ipt = etree.find('./additionalMetadata/metadata/gbif/citation').text
+        try:
+            citation_ipt = etree.find('./additionalMetadata/metadata/gbif/citation').text
+        except AttributeError:
+            citation_ipt = None
         if citation_ipt:
             now = datetime.datetime.now().date()
             pola3r = "(Available: Polar 'Omics Links to Antarctic, Arctic and Alpine Research. Antarctic Biodiversity Portal. Scientific Committee for Antarctic Research. www.biodiversity.aq/pola3r. Accessed: {})".format(
