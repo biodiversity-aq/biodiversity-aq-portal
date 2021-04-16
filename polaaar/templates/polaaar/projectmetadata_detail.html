@@ -200,7 +200,7 @@
                             {% for record in seq_type %}
                                 <tr>
                                     <th scope="row">Study type</th>
-                                    <td>{{ record.seq_type }}</td>
+                                    <td>{{ record.type|title }}</td>
                                     <td>{{ record.count }}</td>
                                 </tr>
                             {% endfor %}
