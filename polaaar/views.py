@@ -2075,26 +2075,27 @@ def project_metadata_detail(request, pk):
     project_cache = cache.get(cache_key)
     if not project_cache:
         context = dict()
-        event = Event.objects.filter(event_hierarchy__project_metadata=project)
-        mof = Variable.objects.filter(environment__event__event_hierarchy__project_metadata=project)
-        sequence = Sequences.objects.filter(event__event_hierarchy__project_metadata=project)
-        sample = SampleMetadata.objects.filter(event_sample_metadata__event_hierarchy__project_metadata=project)
+        event = Event.objects.filter(project_metadata=project)
+        mof = Variable.objects.filter(environment__event__project_metadata=project)
+        sequence = Sequences.objects.filter(event__project_metadata=project)
+        sample = SampleMetadata.objects.filter(event_sample_metadata__project_metadata=project)
         ref = Reference.objects.filter(associated_projects=project)
 
         event_per_year = event.exclude(collection_year__isnull=True).values('collection_year').annotate(
-            count=Count('collection_year')).order_by()
+            count=Count('collection_year')).order_by('collection_year')
         event_per_month = event.exclude(collection_month__isnull=True).values('collection_month').annotate(
-            count=Count('collection_month')).order_by()
+            count=Count('collection_month')).order_by('collection_month')
         sample_geo_loc_name = sample.exclude(geo_loc_name__isnull=True).values('geo_loc_name').annotate(
-            count=Count('geo_loc_name')).order_by()
+            count=Count('geo_loc_name')).order_by('geo_loc_name')
         sample_env_biome = sample.exclude(env_biome__isnull=True).values('env_biome').annotate(
             count=Count('env_biome')).order_by()
-        mof_name = mof.exclude(name__isnull=True).values('name').annotate(count=Count('name')).order_by()
+        mof_name = mof.exclude(name__isnull=True).values('name').annotate(count=Count('name')).order_by('name')
         seq_target_gene = sequence.exclude(target_gene__isnull=True).values('target_gene').annotate(
             count=Count('target_gene')).order_by()
         seq_target_subfg = sequence.exclude(target_subfragment__isnull=True).values('target_subfragment').annotate(
             count=Count('target_subfragment')).order_by()
-        seq_type = sequence.exclude(type__isnull=True).values('type').annotate(count=Count('type')).order_by()
+        seq_type = sequence.exclude(type__isnull=True).values('type').annotate(count=Count('type'))\
+            .order_by()
         seq_run_type = sequence.exclude(run_type__isnull=True).values('run_type').annotate(
             count=Count('run_type')).order_by()
         seq_seqData_projectNumber = sequence.exclude(seqData_projectNumber__isnull=True).values(
