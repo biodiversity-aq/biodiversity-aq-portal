@@ -32,7 +32,7 @@
       "resource_url": null,
       "project_name": "Microorganisms in frost flowers on young Arctic sea ice, comparison between different ice types",
       "start_date": "2012-01-01",
-      "end_date": null,
+      "end_date": "2013-01-01",
       "EML_URL": "https://ipt.biodiversity.aq/eml.do?r=microorganisms_in_frost_flowers_on_young_arctic_sea_ice&v=1.0",
       "abstract": "Amplicon sequencing dataset (454 pyrosequencing) of Bacteria in different types of young sea ice and sea ice brines in the Arctic ocean (North-East coast of Greenland)",
       "geomet": "SRID=4326;POLYGON ((74.468 -20.311, 74.468 -20.311, 74.468 -20.311, 74.468 -20.311, 74.468 -20.311))",
@@ -40,7 +40,7 @@
       "associated_media": "null",
       "created_on": "2020-8-19",
       "updated_on": "2020-8-20",
-      "project_contact": null,
+      "project_contact": "John Doe",
       "project_creator_id": 1,
       "project_qaqc": true
     }
@@ -107,7 +107,8 @@
       "metadata_exists": true,
       "occurrence_exists": true,
       "environment_exists": true,
-      "sequences_exists": true
+      "sequences_exists": true,
+      "project_metadata_id": 1
     }
   },
   {
@@ -130,7 +131,8 @@
       "metadata_exists": true,
       "occurrence_exists": true,
       "environment_exists": true,
-      "sequences_exists": true
+      "sequences_exists": true,
+      "project_metadata_id": 1
     }
   },
   {
