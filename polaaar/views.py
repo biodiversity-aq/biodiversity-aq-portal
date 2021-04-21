@@ -8,7 +8,7 @@ from django.db.models import Q, Count, Min
 from django.contrib.gis.db.models.functions import AsGeoJSON, Centroid
 from django.views import generic
 
-from .forms import EmailForm, EnvironmentSearchForm, FreeTextSearchForm
+from .forms import EmailForm, EnvironmentSearchForm, FreeTextSearchForm, SpatialSearchForm
 from django.core.mail import EmailMessage
 from django_filters.rest_framework import DjangoFilterBackend
 
@@ -170,6 +170,37 @@ class SequenceListView(generic.ListView):
         return context
 
 
+def get_queryset_from_spatial_search(request):
+    qs = Sequences.objects.filter(event__project_metadata__is_public=True) \
+        .select_related('event__project_metadata')
+    form = SpatialSearchForm(request)
+    if form.is_valid():
+        polygon = form.cleaned_data.get('polygon')
+        if polygon:
+            polygon_geos = GEOSGeometry(polygon, srid=4326)
+            qs = Sequences.objects.filter(event__project_metadata__is_public=True, event__footprintWKT__within=polygon_geos)\
+                .select_related('event__project_metadata')
+    return qs
+
+
+class SpatialSearchListView(generic.ListView):
+    template_name = 'polaaar/spatial_search.html'
+    paginate_by = 20
+
+    def get_queryset(self):
+        qs = get_queryset_from_spatial_search(self.request.GET)
+        return qs
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = SpatialSearchForm(self.request.GET)
+        qs_results = Event.objects.exclude(Latitude__isnull=True).exclude(Longitude__isnull=True)\
+            .annotate(count=Count('id')).order_by()
+        context['event_geojson'] = serialize('geojson', qs_results, geometry_field='footprintWKT',
+                                             fields=('id',))
+        return context
+
+
 def spatial_searching(request):
     qs_results = Event.objects.annotate(geom=AsGeoJSON(Centroid('footprintWKT'))).filter(
         Q(event_hierarchy__project_metadata__is_public=True))
@@ -195,7 +226,6 @@ def GetProjectFiles(request, pk):
     if request.method == "GET":
         pf = ProjectFiles.objects.filter(project__id=pk)
         filenames = [x.files.path for x in pf]
-        print(filenames)
         pfnm = ProjectMetadata.objects.filter(id=pk).values_list('project_name')[0][0]
         pfnm = '-'.join(pfnm.split(' '))  # remove spaces in file name
 

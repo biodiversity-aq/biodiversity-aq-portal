@@ -35,7 +35,7 @@ urlpatterns = [
     path('api_reference/', views.api_reference, name='api_reference'),
     path('environment/', views.EnvironmentListView.as_view(), name='env_search'),
     path('sequence/', views.SequenceListView.as_view(), name='seq_search'),
-    path('spatialsearch/', views.spatial_searching, name='spatialsearch'),
+    path('spatial/', views.SpatialSearchListView.as_view(), name='spatialsearch'),
     path('spatial_search_table/', views.spatial_search_table, name='spatial_search_table'),
 
     path('project/', views.ProjectMetadataListView.as_view(), name='project_metadata_list'),

@@ -1,242 +1,239 @@
 {% extends "polaaar/base.html" %}
-{% load static leaflet_tags geojson_tags %}
+{% load static leaflet_tags geojson_tags url_replace humanize %}
 
 
 {% block title %}
-POLA3R data
+    POLA3R data
 {% endblock title %}
 
 
 {% block body_class %}{% endblock %}
 
 {% block content %}
-<div class="container">
-    <div class="row" style="padding-top:20px; border-width:0px;">
-
-        <div class="col-12 col-md-8">
-            <div class="row" style="border-width:0px;">
-                <div class="col-12">
-                    <h3>Search for events by drawing a polygon: </h3>
-                    <p>Use the toolbar on the left (the hexagon will draw a free form polygon, and the square will allow you to create a bounding box).
-                     You can download your selection as a JSON file or data spreadsheet (XLSX format)</p>
+    <div class="container mt-4">
+        <div class="row" style="padding-top:20px; border-width:0px;">
+            <div class="col-12 col-md-8">
+                <div class="row" style="border-width:0px;">
+                    <div class="col-12">
+                        <h3>Search for events by drawing a polygon: </h3>
+                        <p>Use the toolbar on the left (the hexagon will draw a free form polygon, and the square will
+                            allow you to create a bounding box).
+                            You can download your selection as a JSON file or data spreadsheet (XLSX format)</p>
+                    </div>
+                    <div class="col-12">
+                        {% leaflet_map "landing_map" callback="window.map_init" %}
+                        <p style="font-size:10pt;">Map attribution: Tiles &copy; Esri &mdash; Source: Esri, DeLorme,
+                            NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri
+                            (Thailand), TomTom, 2012</p>
+                    </div>
                 </div>
-                <div class="col-12">
-                    {% leaflet_map "landing_map" callback="window.map_init"  %}
-                    <p style="font-size:10pt;">Map attribution: Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012</p>
+            </div>
+
+            <div class="col-12 col-md-4">
+                <div class="row">
+                    <div class="col-12" style="padding-bottom:40px">
+                        <a role="button" href="#" class="btn btn-mdb btn-lg waves-effect" style="width:100%;">
+                            Return to search <i class="fas fa-arrow-left pl-1"></i>
+                        </a>
+                    </div>
+                    <div class="col-12">
+                        <h3>Vertice coordinates: </h3>
+                        <form action="." method="get">
+                            <div class="form-group col-md-12">
+                                {{ form.polygon }}
+                            </div>
+                            <input type="submit" value="Submit" role="button" class="btn btn-biodiversity-lightblue">
+                        </form>
+
+                    </div>
+                    {#                <div class="col-12" style="padding-top:20px">#}
+                    {#                    <button class="btn btn-biodiversity-teal btn-lg waves-effect" style="width:100%;" onclick="showTable()">#}
+                    {#                        Search <i class="fas fa-search pl-1"></i>#}
+                    {#                    </button>#}
+                    {#                </div>#}
+
+                    <!--<div class="col-12" style="padding-top:20px">
+                        <button class="btn btn-biodiversity-teal btn-lg waves-effect" style="width:100%;" onclick="searchEvents('JSON')">
+                            Download JSON <i class="fas fa-file-code pl-1"></i>
+                        </button>
+                    </div>
+                    <div class="col-12" style="padding-top:20px">
+                        <button class="btn btn-biodiversity-teal btn-lg waves-effect" style="width:100%;" onclick="searchEvents('EXCEL')">
+                            Download EXCEL <i class="fas fa-file-excel pl-1"></i>
+                        </button>
+                    </div>-->
                 </div>
             </div>
         </div>
-
-        <div class="col-12 col-md-4">
-            <div class="row">
-                <div class="col-12" style="padding-bottom:40px">
-                    <a role="button" href="#" class="btn btn-mdb btn-lg waves-effect" style="width:100%;">
-                        Return to search <i class="fas fa-arrow-left pl-1"></i>
-                    </a>
+        <div class="container">
+            {% if page_obj.object_list %}
+                <p class="mt-5">{{ page_obj.start_index }} - {{ page_obj.end_index }}
+                    of {{ page_obj.paginator.count|intcomma }}
+                    results</p>
+                {% if is_paginated %}
+                    {% include 'polaaar/pagination.html' %}
+                {% endif %}
+                <div class="table-responsive text-nowrap mt-5">
+                    <table class="table table-striped table-sm">
+                        <thead>
+                        <tr>
+                            <th scope="col">Target gene</th>
+                            <th scope="col">Target subfragment</th>
+                            <th scope="col">Run type</th>
+                            <th scope="col">Forward primer</th>
+                            <th scope="col">Reverse primer</th>
+                            <th scope="col">Accession numbers</th>
+                            <th scope="col">Project</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for sequence in page_obj.object_list %}
+                            <tr>
+                                <td>{{ sequence.target_gene|default_if_none:"" }}</td>
+                                <td>{{ sequence.target_subfragment|default_if_none:"" }}</td>
+                                <td>{{ sequence.run_type|default_if_none:"" }}</td>
+                                <td>{{ sequence.primerName_forward|default_if_none:"" }}</td>
+                                <td>{{ sequence.primerName_reverse|default_if_none:"" }}</td>
+                                <td>{{ sequence.seqData_accessionNumber|default_if_none:"" }}</td>
+                                <td>
+                                    <a href="{% url 'polaaar:project_metadata_detail' sequence.event.project_metadata_id %}">{{ sequence.event.project_metadata }}</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
                 </div>
-                <div class="col-12">
-                    <h3>Vertice coordinates: </h3>
-
-                    <textarea id="coordbox" rows="5" ,cols="80"></textarea>
-
+                <div class="row">
+                    <div class="col-4 col-md-3">
+                        <!-- the page number will not be taken account in the view -->
+                        <a class="btn btn-biodiversity-lightblue btn-lg" style="width:100%"
+                           href="{% url 'polaaar:export_sequences' %}?{% url_replace %}">Download EXCEL <i
+                                class="fas fa-file-excel pl-1"></i></a>
+                    </div>
                 </div>
-                <div class="col-12" style="padding-top:20px">
-                    <button class="btn btn-biodiversity-teal btn-lg waves-effect" style="width:100%;" onclick="showTable()">
-                        Search <i class="fas fa-search pl-1"></i>
-                    </button>
-                </div>
-
-                <!--<div class="col-12" style="padding-top:20px">
-                    <button class="btn btn-biodiversity-teal btn-lg waves-effect" style="width:100%;" onclick="searchEvents('JSON')">
-                        Download JSON <i class="fas fa-file-code pl-1"></i>
-                    </button>
-                </div>
-                <div class="col-12" style="padding-top:20px">
-                    <button class="btn btn-biodiversity-teal btn-lg waves-effect" style="width:100%;" onclick="searchEvents('EXCEL')">
-                        Download EXCEL <i class="fas fa-file-excel pl-1"></i>
-                    </button>
-                </div>-->
-            </div>
+            {% else %}
+                <p>Sorry, no result.</p>
+            {% endif %}
         </div>
-        <div class="col-12"><hr /></div>
-
     </div>
-    
-    <div id="spatialsearched"></div>
-
-</div>
 {% endblock %}
 
 {% block polaaar_js %}
 
-<style>
+    <style>
 
-    .leaflet-container { /* all maps */
-        width: 100%;
-        height: 400px;
-        -webkit-box-shadow: 10px 10px 42px 0px rgba(0,0,0,0.75);
-        -moz-box-shadow: 10px 10px 42px 0px rgba(0,0,0,0.75);
-        box-shadow: 10px 10px 42px 0px rgba(0,0,0,0.75);
-    }
-
-    #specialbigmap {
-        height: 800px;
-    }
-
-    /* Resize the "display_raw" textbox */
-    .django-leaflet-raw-textarea {
-        width: 100%;
-    }
-
-    .leaflet-control-attribution{
-        display:none;
-    }
-</style>
-
-<script type="text/javascript">
-    var collection = {{ qs_results|geojsonfeature:"popupContent"|safe }};
-
-    function map_init(map, options) {
-
-
-        var geojsonMarkerOptions = {
-            radius: 3,
-            fillColor: "#ff7800",
-            color: "#000",
-            weight: 1,
-            opacity: 1,
-            fillOpacity: 0.8
-        };
-
-        var ggJSON = L.geoJson(collection,{
-            pointToLayer: function(feature,latlng){
-                return L.circleMarker(latlng,geojsonMarkerOptions);
-			},
-            onEachFeature: function (feature, layer) {
-                layer.bindPopup(feature.properties.popupContent);
-            }
-        }).addTo(map);
-
-        L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
-            attribution: ''
-        }).addTo(map);
-
-        var drawnItems = L.featureGroup().addTo(map)
-
-        
-        var drawControl = new L.Control.Draw({
-            edit: {
-                featureGroup: drawnItems,
-                poly: {
-                    allowIntersection: false
-                }
-            },
-            draw: {
-                marker: false,
-                circle: false, 
-                polyline: false,
-                circlemarker: false,
-                polygon: {
-                    allowIntersection: false,
-                    showArea: true
-                }
-            }
-        });
-        map.addControl(drawControl);
-    
-
-
-        L.Polygon.include({
-            contains: function (latLng) {
-                return turf.inside(new L.circleMarker(latLng).toGeoJSON(), this.toGeoJSON());
-            } 
-        });
-
-        L.Rectangle.include({
-            contains: function (latLng) {
-                return this.getBounds().contains(latLng);
-            }
-        });
-
-
-
-        map.on("draw:created", function (e) {
-            var layer = e.layer;
-            //window.layer = layer
-            drawnItems.addLayer(layer);
-
-            
-            var pgoncoordinates = layer.getLatLngs().toString()
-            pcoords = pgoncoordinates.replace(/LatLng/g,"")
-            pcoords = pcoords.replace(/\),/g,")\n")
-
-            document.getElementById("coordbox").value = pcoords
-
-            IDvals = []
-            ggJSON.eachLayer(function (marker) {                
-                if (layer.contains(marker.getLatLng())) {
-                    IDvals.push(marker.feature.id)
-                    marker.setStyle({fillColor:'#ba1111'})
-                }
-            });
-            window.IDvals=IDvals
-
-
-            drawControl.setDrawingOptions({
-                polygon:false,
-                rectangle:false
-            });
-            map.removeControl(drawControl);
-            map.addControl(drawControl);
-        });
-
-        map.on("draw:deleted", function (e) {
-
-            ggJSON.eachLayer(function (marker) {                
-                marker.setStyle({fillColor:'#ff7800'})
-            });
-
-            document.getElementById("coordbox").value = ""
-            drawControl.setDrawingOptions({
-                polygon:true,
-                rectangle:true
-            });
-            map.removeControl(drawControl);
-            map.addControl(drawControl);
-        });
-
-  
-
-    }
-
-    
-	function showTable() {
-
-        if (window.IDvals == ''){
-            $("#spatialsearched").html("<h1 style='text-align:center'>No results found in query</h1>")
-        }else {
-            URL = '{% url 'polaaar:spatial_search_table' %}?id='.concat(window.IDvals)
-    
-		    $("#spatialsearched").load(URL)
-		    setTimeout(function () {
-                document.getElementById('spatialsearched').scrollIntoView();
-		    },500)
+        .leaflet-container { /* all maps */
+            width: 100%;
+            height: 400px;
+            -webkit-box-shadow: 10px 10px 42px 0px rgba(0, 0, 0, 0.75);
+            -moz-box-shadow: 10px 10px 42px 0px rgba(0, 0, 0, 0.75);
+            box-shadow: 10px 10px 42px 0px rgba(0, 0, 0, 0.75);
         }
-                    
-    };
 
-
-    function searchEvents(FORMAT) {
-        if (FORMAT == 'JSON') {
-            srcURL = "{% url 'polaaar:events-list' %}?id__in=".concat(window.IDvals)
-            window.open(srcURL)
-        } else if (FORMAT == 'EXCEL') {
-            srcURL = '{% url 'polaaar:export_events' %}?id='.concat(window.IDvals)
-            window.open(srcURL,'_parent')
+        #specialbigmap {
+            height: 800px;
         }
-    }
+
+        /* Resize the "display_raw" textbox */
+        .django-leaflet-raw-textarea {
+            width: 100%;
+        }
+
+        .leaflet-control-attribution {
+            display: none;
+        }
+    </style>
+    <script id="geojson-feature" type="application/geo+json">{{ event_geojson|safe }}</script>
+    <script type="text/javascript">
+        let collection = JSON.parse(document.getElementById('geojson-feature').textContent)
+
+        function map_init(map, options) {
+            let geojsonMarkerOptions = {
+                radius: 3,
+                fillColor: "#FF0080",
+                color: "#FF0080",
+                weight: 1,
+                opacity: 1,
+                fillOpacity: 0.3
+            };
+
+            let ggJSON = L.geoJson(collection, {
+                pointToLayer: function (feature, latlng) {
+                    return L.circleMarker(latlng, geojsonMarkerOptions);
+                },
+            }).addTo(map);
+
+            L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
+                attribution: ''
+            }).addTo(map);
+
+            let drawnItems = L.featureGroup().addTo(map)
+
+            let drawControl = new L.Control.Draw({
+                edit: {
+                    featureGroup: drawnItems,
+                    poly: {
+                        allowIntersection: false
+                    }
+                },
+                draw: {
+                    marker: false,
+                    circle: false,
+                    polyline: false,
+                    circlemarker: false,
+                    polygon: {
+                        allowIntersection: false,
+                        showArea: true
+                    }
+                }
+            });
+            map.addControl(drawControl);
 
 
+            L.Polygon.include({
+                contains: function (latLng) {
+                    return turf.inside(new L.circleMarker(latLng).toGeoJSON(), this.toGeoJSON());
+                }
+            });
 
-</script>
+            L.Rectangle.include({
+                contains: function (latLng) {
+                    return this.getBounds().contains(latLng);
+                }
+            });
+
+
+            map.on("draw:created", function (e) {
+                var layer = e.layer;
+                //window.layer = layer
+                drawnItems.addLayer(layer);
+
+
+                var pgoncoordinates = layer.getLatLngs().toString()
+                pcoords = pgoncoordinates.replace(/LatLng/g, "")
+
+                document.getElementById("id_polygon").value = pcoords
+                drawControl.setDrawingOptions({
+                    polygon: false,
+                    rectangle: false
+                });
+                map.removeControl(drawControl);
+                map.addControl(drawControl);
+            });
+
+            map.on("draw:deleted", function (e) {
+                ggJSON.eachLayer(function (marker) {
+                    marker.setStyle({fillColor: '#ff7800'})
+                });
+
+                document.getElementById("id_polygon").value = ""
+                drawControl.setDrawingOptions({
+                    polygon: true,
+                    rectangle: true
+                });
+                map.removeControl(drawControl);
+                map.addControl(drawControl);
+            });
+        }
+    </script>
 {% endblock %}

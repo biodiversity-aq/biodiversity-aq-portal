@@ -60,3 +60,30 @@ class EnvironmentSearchForm(forms.Form):
         cleaned_data = super(EnvironmentSearchForm, self).clean()
         return cleaned_data
 
+
+class SpatialSearchForm(forms.Form):
+    polygon = forms.CharField(required=True, widget=forms.Textarea(attrs={"class": "form-control rounded-0"}))
+
+    def clean(self):
+        cleaned_data = super(SpatialSearchForm, self).clean()
+        return cleaned_data
+
+    def clean_polygon(self):
+        polygon_str = self.cleaned_data['polygon']
+        polygon_wkt = 'POLYGON (('
+        first_lat_lon = None
+        # polygon is a string of coordinates but the polygon is not closed.
+        # polygon = '(1.827819, -106.875),(-50.019032, 183.515625),(-78.40607, 33.046875)'
+        polygon = polygon_str.split('),(')
+        for i, j in enumerate(polygon):
+            if i == 0:
+                first_lat_lon = polygon[i].replace('(', '').split(', ')
+                polygon_wkt += '{} {}, '.format(first_lat_lon[1], first_lat_lon[0])
+            elif i == len(polygon) - 1:
+                last_lat_lon = polygon[i].replace(')', '').split(', ')
+                polygon_wkt += '{} {}, '.format(last_lat_lon[1], last_lat_lon[0])
+                polygon_wkt += '{} {}))'.format(first_lat_lon[1], first_lat_lon[0])
+            else:
+                lat_lon = polygon[i].split(', ')
+                polygon_wkt += '{} {}, '.format(lat_lon[1], lat_lon[0])
+        return polygon_wkt
