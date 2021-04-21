@@ -101,24 +101,24 @@ class EnvironmentListView(generic.ListView):
         context = super().get_context_data(**kwargs)
         context['form'] = EnvironmentSearchForm(self.request.GET)
         env_qs = self.get_queryset()
-        events = Event.objects.exclude(Latitude__isnull=True).exclude(Longitude__isnull=True)\
+        events = Event.objects.exclude(Latitude__isnull=True).exclude(Longitude__isnull=True) \
             .filter(environment__in=env_qs).annotate(count=Count('id')).order_by()
-        target_subfragment_count = Sequences.objects.exclude(target_subfragment__isnull=True)\
-            .filter(event__environment__in=env_qs)\
+        target_subfragment_count = Sequences.objects.exclude(target_subfragment__isnull=True) \
+            .filter(event__environment__in=env_qs) \
             .values('target_subfragment').annotate(count=Count('target_subfragment')).order_by('target_subfragment')
-        target_gene_count = Sequences.objects.exclude(target_gene__isnull=True)\
-            .filter(event__environment__in=env_qs).values('target_gene')\
+        target_gene_count = Sequences.objects.exclude(target_gene__isnull=True) \
+            .filter(event__environment__in=env_qs).values('target_gene') \
             .annotate(count=Count('target_gene')).order_by('target_gene')
-        run_type_count = Sequences.objects.exclude(run_type__isnull=True)\
+        run_type_count = Sequences.objects.exclude(run_type__isnull=True) \
             .filter(event__environment__in=env_qs).values('run_type') \
             .annotate(count=Count('run_type')).order_by('run_type')
         context['event_geojson'] = serialize('geojson', events, geometry_field='footprintWKT',
                                              fields=('project_metadata',))
-        context['event_year'] = events.exclude(collection_year__isnull=True).values('collection_year')\
+        context['event_year'] = events.exclude(collection_year__isnull=True).values('collection_year') \
             .annotate(count=Count('collection_year')).order_by('collection_year')
-        context['event_month'] = events.exclude(collection_month__isnull=True).values('collection_month')\
+        context['event_month'] = events.exclude(collection_month__isnull=True).values('collection_month') \
             .annotate(count=Count('collection_month')).order_by('collection_month')
-        context['event_sampling_protocol'] = events.exclude(samplingProtocol__isnull=True).values('samplingProtocol')\
+        context['event_sampling_protocol'] = events.exclude(samplingProtocol__isnull=True).values('samplingProtocol') \
             .annotate(count=Count('samplingProtocol')).order_by()
         context['target_subfragment_count'] = target_subfragment_count
         context['target_gene_count'] = target_gene_count
@@ -163,7 +163,7 @@ class SequenceListView(generic.ListView):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         context['form'] = FreeTextSearchForm(self.request.GET)
-        events = Event.objects.exclude(Latitude__isnull=True).exclude(Longitude__isnull=True)\
+        events = Event.objects.exclude(Latitude__isnull=True).exclude(Longitude__isnull=True) \
             .filter(sequences__in=self.get_queryset()).annotate(count=Count('id')).order_by()
         context['event_geojson'] = serialize('geojson', events, geometry_field='footprintWKT',
                                              fields=('id',))
@@ -171,14 +171,15 @@ class SequenceListView(generic.ListView):
 
 
 def get_queryset_from_spatial_search(request):
-    qs = Sequences.objects.filter(event__project_metadata__is_public=True) \
-        .select_related('event__project_metadata')
+    qs = Sequences.objects.filter(event__project_metadata__is_public=True).exclude(event__Latitude__isnull=True) \
+        .exclude(event__Longitude__isnull=True).select_related('event__project_metadata')
     form = SpatialSearchForm(request)
     if form.is_valid():
         polygon = form.cleaned_data.get('polygon')
         if polygon:
             polygon_geos = GEOSGeometry(polygon, srid=4326)
-            qs = Sequences.objects.filter(event__project_metadata__is_public=True, event__footprintWKT__within=polygon_geos)\
+            qs = Sequences.objects.filter(event__project_metadata__is_public=True,
+                                          event__footprintWKT__within=polygon_geos) \
                 .select_related('event__project_metadata')
     return qs
 
@@ -194,27 +195,11 @@ class SpatialSearchListView(generic.ListView):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         context['form'] = SpatialSearchForm(self.request.GET)
-        qs_results = Event.objects.exclude(Latitude__isnull=True).exclude(Longitude__isnull=True)\
-            .annotate(count=Count('id')).order_by()
+        qs_results = Event.objects.exclude(Latitude__isnull=True).exclude(Longitude__isnull=True) \
+            .filter(sequences__in=self.get_queryset()).annotate(count=Count('id')).order_by()
         context['event_geojson'] = serialize('geojson', qs_results, geometry_field='footprintWKT',
                                              fields=('id',))
         return context
-
-
-def spatial_searching(request):
-    qs_results = Event.objects.annotate(geom=AsGeoJSON(Centroid('footprintWKT'))).filter(
-        Q(event_hierarchy__project_metadata__is_public=True))
-    return render(request, 'polaaar/spatial_search.html', {'qs_results': qs_results})
-
-
-def spatial_search_table(request):
-    if request.method == "GET":
-        IDS = request.GET.getlist('id')
-        IDS = IDS[0].split(',')
-        qs_results = Event.objects.annotate(geom=AsGeoJSON(Centroid('footprintWKT'))).filter(
-            Q(event_hierarchy__project_metadata__is_public=True)).filter(pk__in=IDS)
-
-    return render(request, 'polaaar/polaaarsearch/spatial_search_table.html', {'qs_results': qs_results})
 
 
 #########################################################
@@ -2124,7 +2109,7 @@ def project_metadata_detail(request, pk):
             count=Count('target_gene')).order_by()
         seq_target_subfg = sequence.exclude(target_subfragment__isnull=True).values('target_subfragment').annotate(
             count=Count('target_subfragment')).order_by()
-        seq_type = sequence.exclude(type__isnull=True).values('type').annotate(count=Count('type'))\
+        seq_type = sequence.exclude(type__isnull=True).values('type').annotate(count=Count('type')) \
             .order_by()
         seq_run_type = sequence.exclude(run_type__isnull=True).values('run_type').annotate(
             count=Count('run_type')).order_by()
