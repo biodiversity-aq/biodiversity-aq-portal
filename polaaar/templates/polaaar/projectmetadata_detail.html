@@ -1,14 +1,9 @@
 {% extends "polaaar/base.html" %}
-{% load static %}
+{% load static leaflet_tags %}
 
 {% block title %}
     POLA3R
 {% endblock title %}
-
-{% block extra_css %}
-    <link rel="stylesheet"
-          href="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.5.0/css/ol.css">
-{% endblock %}
 
 
 {% block body_class %}{% endblock %}
@@ -17,10 +12,10 @@
     <section class="container mt-4">
         <h2>{{ project.project_name }}</h2>
         <a class="btn btn-md btn-biodiversity-lightblue" type="button" style="display: inline-block;"
-                                   href="{% url 'polaaar:GetProjectFiles' project.id %}">Download source csv</a>
-    <a class="btn btn-md btn-biodiversity-lightblue" type="button" style="display: inline-block;"
-                                   href="{% url 'polaaar:export_projects' %}?id={{ project.id }}">
-        Download POLA3R formatted archive</a>
+           href="{% url 'polaaar:GetProjectFiles' project.id %}">Download source csv</a>
+        <a class="btn btn-md btn-biodiversity-lightblue" type="button" style="display: inline-block;"
+           href="{% url 'polaaar:export_projects' %}?id={{ project.id }}">
+            Download POLA3R formatted archive</a>
 
         <table class="table table-borderless table-striped table-responsive-sm mt-4">
             {% if project.resource_url %}
@@ -80,7 +75,14 @@
             {% endif %}
         </table>
         <!-- Map -->
-        <div class="my-4 container" id="mapid" style="height: 400px;"></div>
+        {#        <div class="my-4 container" id="mapid" style="height: 400px;"></div>#}
+        <div class="my-4 container">
+            {% leaflet_map "landing_map" callback="window.map_init" %}
+            <p style="font-size:10pt;color:white">Map attribution: Tiles &copy; Esri &mdash; Source: Esri,
+                DeLorme,
+                NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand),
+                TomTom, 2012</p>
+        </div>
     </section>
     <!-- Cards -->
     <section class="container">
@@ -241,51 +243,21 @@
 {% endblock %}
 
 {% block polaaar_js %}
-    <script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.5.0/build/ol.js"></script>
     <script>
+        function map_init(map, options) {
 
-        let layer = 'antabif:polaaar_event';
-
-        let baseLayer = new ol.layer.Tile({
-            source: new ol.source.XYZ({
-                attributions:
-                    'Tiles © <a href="https://services.arcgisonline.com/ArcGIS/' +
-                    'rest/services/World_Light_Gray_Base/MapServer">ArcGIS</a>',
-                url:
-                    'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}',
-            }),
-            minZoom: 1,
-            maxZoom: 19,
-            projection: 'EPSG:4326',
-            tileSize: 512,
-        })
-
-        let projectLayer = new ol.layer.Image({
-            source: new ol.source.ImageWMS({
-                params: {
-                    'SERVICE': 'WMS',
-                    'VERSION': '1.1.1',
-                    'SRS': 'EPSG:4326',
-                    'LAYERS': layer,
-                    'FORMAT': 'image/png',
-                    'TILED': true,
-                    'BUFFER': 0,
-                    'CQL_FILTER': 'project_metadata_id={{ project.id }}',
-                },
-                url: '{{ geoserver_host }}/antabif/wms?'
-
+            let tileLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
+                attribution: ''
             })
-        })
+            tileLayer.addTo(map);
 
-        let map = new ol.Map({
-            target: 'mapid',
-            view: new ol.View({
-                center: new ol.proj.fromLonLat([0, {{ min_lat }}]),
-                zoom: 1,
-                minZoom: 1,
-                maxZoom: 19
-            }),
-            layers: [baseLayer, projectLayer]
-        });
+            let projectLayer = L.tileLayer.wms('{{ geoserver_host }}/antabif/wms?', {
+                layers: 'antabif:polaaar_event',
+                format: 'image/png',
+                transparent: true,
+                cql_filter: 'project_metadata_id={{ project.id }}'
+            })
+            projectLayer.addTo(map);
+        }
     </script>
 {% endblock %}
