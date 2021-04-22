@@ -75,13 +75,14 @@
             {% endif %}
         </table>
         <!-- Map -->
-        {#        <div class="my-4 container" id="mapid" style="height: 400px;"></div>#}
         <div class="my-4 container">
-            {% leaflet_map "landing_map" callback="window.map_init" %}
-            <p style="font-size:10pt;color:white">Map attribution: Tiles &copy; Esri &mdash; Source: Esri,
-                DeLorme,
-                NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand),
-                TomTom, 2012</p>
+            <div class="col-9 center">
+                {% leaflet_map "landing_map" callback="window.map_init" %}
+                <p style="font-size:10pt;color:white">Map attribution: Tiles &copy; Esri &mdash; Source: Esri,
+                    DeLorme,
+                    NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand),
+                    TomTom, 2012</p>
+            </div>
         </div>
     </section>
     <!-- Cards -->
