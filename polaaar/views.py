@@ -1576,39 +1576,39 @@ def export_sequences(request):
 #### This view is to return the spreadsheet when searching by events in the spatial search  - emulates project_metadata 
 
 def export_events(request):
+    """Export events from spatial search"""
     if request.method == 'GET':
-        IDS = request.GET.getlist('id')
-        IDS = IDS[0].split(',')
-
+        seq_qs = get_queryset_from_spatial_search(request.GET)
+        events = Event.objects.filter(sequences__in=seq_qs)
         ##################################################################################################################
         ##### Authentication checks
 
-        PM = ProjectMetadata.objects.filter(event_hierarchy__event__id__in=IDS).filter(Q(is_public=True)).order_by(
-            'project_name').distinct('project_name')
+        PM = ProjectMetadata.objects.filter(event_hierarchy__event__in=events).filter(Q(is_public=True))\
+            .annotate(count=Count('id')).order_by('project_name')
 
-        EH = EventHierarchy.objects.filter(event__id__in=IDS).filter(Q(
-            project_metadata__is_public=True)).order_by('event_hierarchy_name').distinct('event_hierarchy_name')
+        EH = EventHierarchy.objects.filter(event__in=events).filter(Q(
+            project_metadata__is_public=True)).annotate(count=Count('id')).order_by('event_hierarchy_name')
 
-        E = Event.objects.filter(id__in=IDS).filter(Q(event_hierarchy__project_metadata__is_public=True))
+        E = events.filter(Q(event_hierarchy__project_metadata__is_public=True))
 
-        S = Sequences.objects.filter(event__id__in=IDS).filter(
+        S = seq_qs
+
+        O = Occurrence.objects.filter(event__in=events).filter(
             Q(event__event_hierarchy__project_metadata__is_public=True))
 
-        O = Occurrence.objects.filter(event__id__in=IDS).filter(
+        Env = Environment.objects.filter(event__in=events).filter(
             Q(event__event_hierarchy__project_metadata__is_public=True))
 
-        Env = Environment.objects.filter(event__id__in=IDS).filter(
-            Q(event__event_hierarchy__project_metadata__is_public=True))
+        G = Geog_Location.objects.filter(sample_metadata__event_sample_metadata__id__in=events).filter(Q(
+            sample_metadata__event_sample_metadata__event_hierarchy__project_metadata__is_public=True))\
+            .annotate(count=Count('id')).order_by('name')
 
-        G = Geog_Location.objects.filter(sample_metadata__event_sample_metadata__id__in=IDS).filter(Q(
-            sample_metadata__event_sample_metadata__event_hierarchy__project_metadata__is_public=True)).order_by(
-            'name').distinct('name')
+        R = Reference.objects.filter(associated_projects__event_hierarchy__event__in=events).filter(Q(
+            associated_projects__is_public=True)).annotate(count=Count('id')).order_by('full_reference')
 
-        R = Reference.objects.filter(associated_projects__event_hierarchy__event__id__in=IDS).filter(Q(
-            associated_projects__is_public=True)).order_by('full_reference').distinct('full_reference')
-
-        T = Taxa.objects.filter(occurrence__event__id__in=IDS).filter(Q(
-            occurrence__event__event_hierarchy__project_metadata__is_public=True)).order_by('name').distinct('name')
+        T = Taxa.objects.filter(occurrence__event__in=events).filter(Q(
+            occurrence__event__event_hierarchy__project_metadata__is_public=True)).annotate(count=Count('id'))\
+            .order_by('name')
         #####################################################################################################################
 
         output = io.BytesIO()
