@@ -27,8 +27,6 @@
                         <th scope="col">Target gene</th>
                         <th scope="col">Target subfragment</th>
                         <th scope="col">Run type</th>
-                        <th scope="col">Forward primer</th>
-                        <th scope="col">Reverse primer</th>
                         <th scope="col">Accession numbers</th>
                         <th scope="col">Project</th>
                     </tr>
@@ -39,8 +37,6 @@
                             <td>{{ sequence.target_gene|default_if_none:"" }}</td>
                             <td>{{ sequence.target_subfragment|default_if_none:"" }}</td>
                             <td>{{ sequence.run_type|default_if_none:"" }}</td>
-                            <td>{{ sequence.primerName_forward|default_if_none:"" }}</td>
-                            <td>{{ sequence.primerName_reverse|default_if_none:"" }}</td>
                             <td>{{ sequence.seqData_accessionNumber|default_if_none:"" }}</td>
                             <td>
                                 <a href="{% url 'polaaar:project_metadata_detail' sequence.event.project_metadata_id %}">{{ sequence.event.project_metadata }}</a>
