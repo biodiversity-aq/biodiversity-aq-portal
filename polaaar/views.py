@@ -39,11 +39,6 @@ def home(request):
     return render(request, 'polaaar/polaaar_home.html',
                   {'geoserver_host': settings.GEOSERVER_HOST, 'amplicon_img': amplicon_img})
 
-
-def api_reference(request):
-    return render(request, 'polaaar/api_reference.html')
-
-
 #########################################################
 ### DJANGO Search views
 ##########

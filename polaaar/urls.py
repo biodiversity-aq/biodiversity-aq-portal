@@ -1,6 +1,6 @@
 from __future__ import unicode_literals
 
-from django.urls import path
+from django.urls import path, re_path
 from django.conf.urls import include, url
 from . import views
 
@@ -42,7 +42,6 @@ urlpatterns = [
     # path('environment/',views.EnvironmentViewSet,name='environment'),
     # path('events/',views.EventViewSet,name='events'),
 
-    path('api_reference/', views.api_reference, name='api_reference'),
     path('environment/', views.EnvironmentListView.as_view(), name='env_search'),
     path('sequence/', views.SequenceListView.as_view(), name='seq_search'),
     path('spatial/', views.SpatialSearchListView.as_view(), name='spatialsearch'),
@@ -63,11 +62,10 @@ urlpatterns = [
     path('export_raw_data/<int:pk>', views.GetProjectFiles, name='GetProjectFiles'),
 
     #### REST API URLS
-    url(r'^api_reference/', views.api_reference, name='api_reference'),
     path('api/', include(router.urls)),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 
     ## Swagger urls
-    url(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
-    url(r'^swagger/$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+    re_path(r'^api/swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
+    re_path(r'^api/swagger/$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
 ]
