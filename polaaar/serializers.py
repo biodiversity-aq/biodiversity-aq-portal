@@ -1,3 +1,6 @@
+from drf_yasg.utils import swagger_auto_schema
+from rest_framework.decorators import api_view
+
 from accounts.models import *
 from .models import *
 from rest_framework import serializers
@@ -355,6 +358,8 @@ class SeqEventSerializer(serializers.ModelSerializer):
             'event_hierarchy']
 
 
+@swagger_auto_schema(methods=['get'], auto_schema=None)
+@api_view(['GET'])
 class SequencesSerializer2(serializers.ModelSerializer):
     event = SeqEventSerializer(many=False, read_only=True)
 
@@ -385,7 +390,8 @@ class SequencesSerializer2(serializers.ModelSerializer):
 
 ######################################################################################
 ## Special serializers for looking up environmental data
-
+@swagger_auto_schema(methods=['get'], auto_schema=None)
+@api_view(['GET'])
 class EnvironmentSerializer2(serializers.ModelSerializer):
     env_variable = serializers.StringRelatedField(many=False)
     env_method = serializers.StringRelatedField(many=False)

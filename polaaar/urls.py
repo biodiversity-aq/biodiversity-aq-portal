@@ -1,26 +1,36 @@
 from __future__ import unicode_literals
 
-from django.conf import settings
-from django.conf.urls.static import static
 from django.urls import path
 from django.conf.urls import include, url
 from . import views
 
 from rest_framework import routers
+from rest_framework import permissions
+from drf_yasg.views import get_schema_view
+from drf_yasg import openapi
+
+schema_view = get_schema_view(
+    openapi.Info(
+        title="POLA3R API",
+        default_version='v1',
+        description="API endpoints of Polar 'Omics Links to Antarctic, Arctic and Alpine Research (POLA3R)",
+        license=openapi.License(name="CC BY 4.0", url="https://creativecommons.org/licenses/by/4.0/"),
+    ),
+    public=True,
+    permission_classes=(permissions.AllowAny,),
+)
 
 router = routers.DefaultRouter()
 router.register(r'occurrence', views.OccurrenceViewSet, basename='occurrence')
 router.register(r'events', views.EventViewSet, basename='events')
 router.register(r'eventhierarchy', views.EventHierarchyViewSet, basename='eventhierarchy')
 router.register(r'project_metadata', views.ProjectMetadataViewSet, basename='projectmetadata')
-router.register(r'sequence', views.SequenceViewSet, basename='sequence')
 router.register(r'reference', views.ReferenceViewSet, basename='reference')
 router.register(r'geog_location', views.GeogViewSet, basename='geoglocation')
-router.register(r'environment', views.EnvironmentViewSet, basename='environment')
 
 ### Special routers for sequences and environments
-router.register(r'sequences', views.SequencesViewSet, basename='sequences')
-router.register(r'environmental_variables', views.EnvironmentVariablesViewSet, basename='environmentalvariables')
+router.register(r'sequence', views.SequencesViewSet, basename='sequences')
+router.register(r'environment', views.EnvironmentVariablesViewSet, basename='environmentalvariables')
 
 app_name = 'polaaar'
 urlpatterns = [
@@ -52,9 +62,12 @@ urlpatterns = [
     ###  View to export raw data files
     path('export_raw_data/<int:pk>', views.GetProjectFiles, name='GetProjectFiles'),
 
-    #### REST API URLS    
+    #### REST API URLS
     url(r'^api_reference/', views.api_reference, name='api_reference'),
     path('api/', include(router.urls)),
-    path('api-auth/', include('rest_framework.urls', namespace='rest_framework'))
+    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 
+    ## Swagger urls
+    url(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
+    url(r'^swagger/$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
 ]

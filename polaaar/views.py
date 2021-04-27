@@ -6,7 +6,9 @@ from django.urls import reverse
 from django.http import HttpResponse
 from django.db.models import Q, Count, Min
 from django.contrib.gis.db.models.functions import AsGeoJSON, Centroid
+from django.utils.decorators import method_decorator
 from django.views import generic
+from drf_yasg.inspectors import CoreAPICompatInspector, NotHandled
 
 from .forms import EmailForm, EnvironmentSearchForm, FreeTextSearchForm, SpatialSearchForm
 from django.core.mail import EmailMessage
@@ -86,12 +88,26 @@ def get_queryset_from_env_search_form(request):
     return qs
 
 
+class DjangoFilterDescriptionInspector(CoreAPICompatInspector):
+    """Inspector to populate the description of parameters in swagger"""
+
+    def get_filter_parameters(self, filter_backend):
+        if isinstance(filter_backend, DjangoFilterBackend):
+            result = super(DjangoFilterDescriptionInspector, self).get_filter_parameters(filter_backend)
+            for param in result:
+                if not param.get('description', ''):
+                    param.description = "Filter the returned list by {field_name}".format(field_name=param.name)
+            return result
+        return NotHandled
+
+
 class EnvironmentListView(generic.ListView):
     """
     List the search results for Environment instances
     """
     template_name = 'polaaar/environment_list.html'
     paginate_by = 20
+    swagger_schema = None  # do not list in swagger because this view is dedicated for web GUI
 
     def get_queryset(self):
         qs = get_queryset_from_env_search_form(self.request.GET)
@@ -155,6 +171,7 @@ class SequenceListView(generic.ListView):
     """
     template_name = 'polaaar/sequence_list.html'
     paginate_by = 20
+    swagger_schema = None  # do not list in swagger because this view is dedicated for web GUI
 
     def get_queryset(self):
         qs = get_queryset_from_seq_search_form(self.request.GET)
@@ -293,7 +310,19 @@ def submit_success(request):
 #### REST API views
 #### These views are instantiated with viewsets to keep the query calls simple and avoid us having to write custom CRUD calls. 
 
+@method_decorator(name='list', decorator=swagger_auto_schema(
+   filter_inspectors=[DjangoFilterDescriptionInspector]
+))
 class ReferenceViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    API endpoint for Reference instances.
+
+    list:
+    Return a list of References
+
+    retrieve:
+    Return the Reference with the ID provided
+    """
     serializer_class = ReferenceSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['full_reference', 'year']
@@ -305,25 +334,19 @@ class ReferenceViewSet(viewsets.ReadOnlyModelViewSet):
         return queryset
 
 
-class SequenceViewSet(viewsets.ReadOnlyModelViewSet):
-    serializer_class = SequencesSerializer
-    filter_backends = [DjangoFilterBackend]
-    filterset_fields = {
-        'sequence_name': ['exact', 'icontains'],
-        'target_gene': ['exact', 'icontains'],
-        'primerName_forward': ['exact', 'icontains'],
-        'primerName_reverse': ['exact', 'icontains'],
-        'seqData_numberOfBases': ['gte', 'lte', 'exact'],
-        'seqData_numberOfSequences': ['gte', 'lte', 'exact'],
-        'id': ['in']
-    }
-
-    def get_queryset(self):
-        queryset = Sequences.objects.filter(Q(event__event_hierarchy__project_metadata__is_public=True))
-        return queryset
-
-
+@method_decorator(name='list', decorator=swagger_auto_schema(
+   filter_inspectors=[DjangoFilterDescriptionInspector]
+))
 class ProjectMetadataViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    API endpoint for `ProjectMetadata` instances.
+
+    list:
+    Return a list of ProjectMetadata.<br/>`icontains`: Case-insensitive containment test.<br/>`gte`: Greater than or equal to.<br/>`gte`: Greater than or equal to<br/>`lte`: Less than or equal to<br/>Otherwise implies exact match.
+
+    retrieve:
+    Return the ProjectMetadata with the ID provided
+    """
     serializer_class = ProjectMetadataSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = {
@@ -361,7 +384,19 @@ class ProjectMetadataViewSet(viewsets.ReadOnlyModelViewSet):
         return queryset
 
 
+@method_decorator(name='list', decorator=swagger_auto_schema(
+   filter_inspectors=[DjangoFilterDescriptionInspector]
+))
 class EventHierarchyViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    API endpoint for `EventHierarchy` instances.
+
+    list:
+    Return a list of EventHierarchy.<br/>`icontains`: Case-insensitive containment test.<br/>`gte`: Greater than or equal to.<br/>`gte`: Greater than or equal to<br/>`lte`: Less than or equal to<br/>Otherwise implies exact match.
+
+    retrieve:
+    Return the EventHierarchy with the ID provided
+    """
     serializer_class = EventHierarchySerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = {
@@ -375,7 +410,19 @@ class EventHierarchyViewSet(viewsets.ReadOnlyModelViewSet):
         return queryset
 
 
+@method_decorator(name='list', decorator=swagger_auto_schema(
+   filter_inspectors=[DjangoFilterDescriptionInspector]
+))
 class OccurrenceViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    API endpoint for `Occurrence` instances.
+
+    list:
+    Return a list of Occurrence.<br/>`icontains`: Case-insensitive containment test.<br/>`gte`: Greater than or equal to.<br/>`gte`: Greater than or equal to<br/>`lte`: Less than or equal to<br/>Otherwise implies exact match.
+
+    retrieve:
+    Return the Occurrence with the ID provided
+    """
     serializer_class = OccurrenceSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = {
@@ -387,7 +434,19 @@ class OccurrenceViewSet(viewsets.ReadOnlyModelViewSet):
         return queryset
 
 
+@method_decorator(name='list', decorator=swagger_auto_schema(
+   filter_inspectors=[DjangoFilterDescriptionInspector]
+))
 class EventViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    API endpoint for `Event` instances.
+
+    list:
+    Return a list of Event.<br/>`istartswith`: Case-insensitive Case-insensitive starts-with.<br/>`in`: In a given iterable.<br/>`gte`: Greater than or equal to.<br/>`gte`: Greater than or equal to<br/>`lte`: Less than or equal to<br/>Otherwise implies exact match.
+
+    retrieve:
+    Return the Event with the ID provided
+    """
     serializer_class = EventSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = {
@@ -401,7 +460,19 @@ class EventViewSet(viewsets.ReadOnlyModelViewSet):
         return queryset
 
 
+@method_decorator(name='list', decorator=swagger_auto_schema(
+   filter_inspectors=[DjangoFilterDescriptionInspector]
+))
 class GeogViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    API endpoint for `Geog_Location` instances.
+
+    list:
+    Return a list of Geog_Location.
+
+    retrieve:
+    Return the Geog_Location with the ID provided
+    """
     serializer_class = GeogSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = {
@@ -415,24 +486,19 @@ class GeogViewSet(viewsets.ReadOnlyModelViewSet):
         return queryset
 
 
-class EnvironmentViewSet(viewsets.ReadOnlyModelViewSet):
-    serializer_class = EnvironmentSerializer
-    filter_backends = [DjangoFilterBackend]
-    filterset_fields = {
-        'id': ['exact', 'in'],
-    }
-
-    def get_queryset(self):
-        queryset = Environment.objects.filter(Q(event__event_hierarchy__project_metadata__is_public=True))
-        return queryset
-
-
-###########################################################################
-
-### Special views for the sequence download
-
-
+@method_decorator(name='list', decorator=swagger_auto_schema(
+   filter_inspectors=[DjangoFilterDescriptionInspector]
+))
 class SequencesViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    API endpoint for `Sequence` instances.
+
+    list:
+    Return a list of Sequences.<br/>`icontains`: Case-insensitive containment test.<br/>`gte`: Greater than or equal to.<br/>`gte`: Greater than or equal to<br/>`lte`: Less than or equal to<br/>`in`: In a given iterable<br/>Otherwise implies exact match.
+
+    retrieve:
+    Return the Sequence with the ID provided
+    """
     serializer_class = SequencesSerializer2
     filter_backends = [DjangoFilterBackend]
     filterset_fields = {
@@ -450,9 +516,19 @@ class SequencesViewSet(viewsets.ReadOnlyModelViewSet):
         return queryset
 
 
-### Special view for the Environment download
-
+@method_decorator(name='list', decorator=swagger_auto_schema(
+   filter_inspectors=[DjangoFilterDescriptionInspector]
+))
 class EnvironmentVariablesViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    API endpoint for `Environment` instances.
+
+    list:
+    Return a list of Environment.<br/>`icontains`: Case-insensitive containment test.<br/>`gte`: Greater than or equal to.<br/>`gte`: Greater than or equal to<br/>`lte`: Less than or equal to<br/>`in`: In a given iterable<br/>Otherwise implies exact match.
+
+    retrieve:
+    Return the Environment with the ID provided
+    """
     serializer_class = EnvironmentSerializer2
     filter_backends = [DjangoFilterBackend]
     filterset_fields = {
@@ -1583,7 +1659,7 @@ def export_events(request):
         ##################################################################################################################
         ##### Authentication checks
 
-        PM = ProjectMetadata.objects.filter(event_hierarchy__event__in=events).filter(Q(is_public=True))\
+        PM = ProjectMetadata.objects.filter(event_hierarchy__event__in=events).filter(Q(is_public=True)) \
             .annotate(count=Count('id')).order_by('project_name')
 
         EH = EventHierarchy.objects.filter(event__in=events).filter(Q(
@@ -1600,14 +1676,14 @@ def export_events(request):
             Q(event__event_hierarchy__project_metadata__is_public=True))
 
         G = Geog_Location.objects.filter(sample_metadata__event_sample_metadata__id__in=events).filter(Q(
-            sample_metadata__event_sample_metadata__event_hierarchy__project_metadata__is_public=True))\
+            sample_metadata__event_sample_metadata__event_hierarchy__project_metadata__is_public=True)) \
             .annotate(count=Count('id')).order_by('name')
 
         R = Reference.objects.filter(associated_projects__event_hierarchy__event__in=events).filter(Q(
             associated_projects__is_public=True)).annotate(count=Count('id')).order_by('full_reference')
 
         T = Taxa.objects.filter(occurrence__event__in=events).filter(Q(
-            occurrence__event__event_hierarchy__project_metadata__is_public=True)).annotate(count=Count('id'))\
+            occurrence__event__event_hierarchy__project_metadata__is_public=True)).annotate(count=Count('id')) \
             .order_by('name')
         #####################################################################################################################
 
@@ -2054,6 +2130,7 @@ class ProjectMetadataListView(generic.ListView):
     """
     template_name = 'polaaar/projectmetadata_list.html'
     paginate_by = 10
+    swagger_schema = None  # do not list in swagger because this view is dedicated for web GUI
 
     def get_queryset(self):
         qs = ProjectMetadata.objects.filter(is_public=True)

@@ -71,7 +71,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.humanize',
     'accounts.apps.AccountsConfig',
-
+    'drf_yasg',
     'gunicorn',
     'captcha',
     'storages',
