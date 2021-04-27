@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.urls import reverse
 from django.test import TestCase
 
@@ -66,7 +68,7 @@ class ProjectMetadataDetailTest(TestCase):
 
     def test_citation(self):
         """Ensure EML citation is rendered"""
-        citation = '''Barber D, Ehn J, Pucko M, Rysgaard S, Deming J, Bowman J, Papakyriakou T, Galley R, Sogaard D (2019): Microorganisms in frost flowers on young Arctic sea ice, comparison between different ice types. v1.0. SCAR - Microbial Antarctic Resource System. Dataset/Metadata. <a href="https://ipt.biodiversity.aq/resource?r=microorganisms_in_frost_flowers_on_young_arctic_sea_ice&amp;v=1.0" rel="nofollow">https://ipt.biodiversity.aq/resource?r=microorganisms_in_frost_flowers_on_young_arctic_sea_ice&amp;v=1.0</a> (Available: Polar &#39;Omics Links to Antarctic, Arctic and Alpine Research. Antarctic Biodiversity Portal. Scientific Committee for Antarctic Research. <a href="http://www.biodiversity.aq/pola3r" rel="nofollow">www.biodiversity.aq/pola3r</a>. Accessed: 2021-04-16)'''
+        citation = '''Barber D, Ehn J, Pucko M, Rysgaard S, Deming J, Bowman J, Papakyriakou T, Galley R, Sogaard D (2019): Microorganisms in frost flowers on young Arctic sea ice, comparison between different ice types. v1.0. SCAR - Microbial Antarctic Resource System. Dataset/Metadata. <a href="https://ipt.biodiversity.aq/resource?r=microorganisms_in_frost_flowers_on_young_arctic_sea_ice&amp;v=1.0" rel="nofollow">https://ipt.biodiversity.aq/resource?r=microorganisms_in_frost_flowers_on_young_arctic_sea_ice&amp;v=1.0</a> (Available: Polar &#39;Omics Links to Antarctic, Arctic and Alpine Research. Antarctic Biodiversity Portal. Scientific Committee for Antarctic Research. <a href="http://www.biodiversity.aq/pola3r" rel="nofollow">www.biodiversity.aq/pola3r</a>. Accessed: {})'''.format(datetime.now().date())
         self.assertContains(self.response, citation)
 
     def test_sampling_event_count(self):
