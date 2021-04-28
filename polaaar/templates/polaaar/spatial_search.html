@@ -83,8 +83,14 @@
                     <div class="col-4 col-md-3">
                         <!-- the page number will not be taken account in the view -->
                         <a class="btn btn-biodiversity-lightblue btn-lg" style="width:100%"
-                       href="{% url 'polaaar:export_events' %}?{% url_replace %}">Download EXCEL <i
-                            class="fas fa-file-excel pl-1"></i></a>
+                           href="{% url 'polaaar:export_events' %}?{% url_replace %}">Download EXCEL <i
+                                class="fas fa-file-excel pl-1"></i></a>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <small class="text-muted">Definition of fields in download file is available
+                            <a href="{% static 'polaaar/files/terms_map.txt' %}">here</a></small>
                     </div>
                 </div>
             {% else %}
