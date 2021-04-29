@@ -19,7 +19,8 @@ venv
 biodiversity/settings/local.py
 biodiversity/settings/secrets.py
 
-
+# logs
+log/
 
 # media directories
 media

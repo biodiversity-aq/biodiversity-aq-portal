@@ -1,0 +1,70 @@
+{% extends "polaaar/base.html" %}
+{% load static humanize url_replace %}
+
+{% block title %}
+    Project search
+{% endblock title %}
+
+
+{% block body_class %}{% endblock %}
+
+{% block content %}
+    <div class="container mt-4">
+        <h2 class="text-center">Search for projects</h2>
+        <form action="." method="get"
+              class="form-inline d-flex justify-content-center md-form form-sm mt-0">
+            <i class="fas fa-search" aria-hidden="true"></i>
+            {{ form }}
+        </form>
+
+        {% if page_obj.object_list %}
+            <p>{{ page_obj.start_index }} - {{ page_obj.end_index }} of {{ page_obj.paginator.count|intcomma }}
+                results</p>
+            {% if is_paginated %}
+                {% include 'polaaar/pagination.html' %}
+            {% endif %}
+            {% for project in page_obj.object_list %}
+                <a href="{% url 'polaaar:project_metadata_detail' project.pk %}" style="color:#0099CC"><h5
+                        class="mt-5">{{ project.project_name }}</h5></a>
+                <div class="row">
+                    <div class="col">
+                        {% if project.start_date %}
+                            <i class="fas fa-calendar mr-1" style="color: #0099CC;"></i>
+                            {{ project.start_date|date:'Y-m-d' }}
+                        {% endif %}
+                        {% if project.project_contact %}
+                            <i class="fas fa-user ml-4 mr-1" style="color: #0099CC;"></i>
+                            {{ project.project_contact }}
+                        {% endif %}
+                        <i class="fas fa-download ml-4 mr-1" style="color: #0099CC;"></i>
+                        <a href="{% url 'polaaar:GetProjectFiles' project.id %}">source csv</a>
+                    </div>
+                </div>
+                <p>{{ project.abstract|truncatechars:300|default_if_none:"" }}</p>
+            {% endfor %}
+            <div class="row">
+                <div class="col-4 col-md-3">
+                    <a class="btn btn-biodiversity-lightblue btn-lg" style="width:100%"
+                       href="{% url 'polaaar:export_projects' %}?id={{ id_list }}">Download EXCEL <i
+                            class="fas fa-file-excel pl-1"></i></a>
+                </div>
+                <div class="col-4 col-md-3">
+                    <a class="btn btn-biodiversity-lightblue btn-lg" style="width:100%"
+                       href="{% url 'polaaar:projectmetadata-list' %}?id__in={{ id_list }}">Download JSON <i
+                            class="fas fa-file-code pl-1"></i></a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <small class="text-muted">Definition of fields in download file is available
+                        <a href="{% static 'polaaar/files/terms_map.txt' %}">here</a></small>
+                </div>
+            </div>
+        {% else %}
+            <p>Sorry, no result.</p>
+        {% endif %}
+
+
+    </div>
+
+{% endblock %}

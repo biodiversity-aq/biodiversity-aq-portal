@@ -1,7 +1,6 @@
 import os, socket
 from os import environ
 
-
 ######################################################################################################################
 ## Settings that need changing for running in production
 
@@ -11,10 +10,7 @@ from os import environ
 
 SITE_ID = 2
 
-
 ###################################################################################################################
-
-
 
 
 PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -30,9 +26,6 @@ SECRET_KEY = '!OVERRIDE ME! somekey !OVERRIDE ME!'  # nosec
 
 # SECURITY WARNING: define the correct hosts in production!
 ALLOWED_HOSTS = ['*']
-
-
-
 
 #### GEO Libraries
 GEOS_LIBRARY_PATH = environ.get('GEOS_LIBRARY_PATH')
@@ -76,8 +69,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
     'accounts.apps.AccountsConfig',
-
+    'drf_yasg',
     'gunicorn',
     'captcha',
     'storages',
@@ -100,7 +94,6 @@ INSTALLED_APPS = [
     'polaaar'
 ]
 
-
 MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -114,10 +107,7 @@ MIDDLEWARE = [
     'wagtail.contrib.redirects.middleware.RedirectMiddleware',
 ]
 
-
 ROOT_URLCONF = 'biodiversity.urls'
-
-
 
 TEMPLATES = [
     {
@@ -146,7 +136,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'biodiversity.wsgi.application'
 
-
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
 
@@ -169,8 +158,6 @@ PASSWORD_HASHERS = [
     'django.contrib.auth.hashers.MD5PasswordHasher',
 ]
 
-
-
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
 
@@ -183,7 +170,6 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
@@ -210,10 +196,9 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
 FILE_UPLOAD_HANDLERS = [
- "django.core.files.uploadhandler.MemoryFileUploadHandler",
- "django.core.files.uploadhandler.TemporaryFileUploadHandler"
+    "django.core.files.uploadhandler.MemoryFileUploadHandler",
+    "django.core.files.uploadhandler.TemporaryFileUploadHandler"
 ]
-
 
 # Wagtail settings
 
@@ -242,9 +227,7 @@ WAGTAILMENUS_FLAT_MENUS_HANDLE_CHOICES = (
     ('polaaar', 'POLA3R'),
 )
 
-
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
-
 
 LOGGING = {
     'version': 1,
@@ -269,52 +252,77 @@ LOGGING = {
             'level': 'DEBUG',
             'class': 'logging.StreamHandler',
             'formatter': 'verbose'
-        }
+        },
+        'home': {
+            'level': 'WARNING',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'maxBytes': 1 * 1024 * 1024,
+            'backupCount': 2,
+            'filename': r'log/home.log',
+            'formatter': 'verbose',
+        },
+        'polaaar': {
+            'level': 'WARNING',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'maxBytes': 1 * 1024 * 1024,
+            'backupCount': 2,
+            'filename': r'log/polaaar.log',
+            'formatter': 'verbose',
+        },
     },
     'loggers': {
         'testlogger': {
             'handlers': ['console'],
             'level': 'INFO',
+        },
+        'home': {
+            'level': 'WARNING',
+            'handlers': ['console', 'home']
+        },
+        'polaaar': {
+            'handlers': ['console', 'polaaar'],
+            'level': 'WARNING',
         }
     }
 }
 
 DEBUG_PROPAGATE_EXCEPTIONS = True
 
-
 FORMS_EXTRA_FIELDS = (
-    (100, "captcha.fields.ReCaptchaField","ReCaptcha"),
-    )
+    (100, "captcha.fields.ReCaptchaField", "ReCaptcha"),
+)
 
-
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+        'LOCATION': 'biodiversityaq_cache_table'
+    }
+}
 
 #########################################################################################
 #### Django Leaflet settings
 
 LEAFLET_CONFIG = {
-    'DEFAULT_CENTER':(0,0),
-    'DEFAULT_ZOOM':1,
-    'NO_GLOBALS':False,
+    'DEFAULT_CENTER': (0, 0),
+    'DEFAULT_ZOOM': 1,
+    'NO_GLOBALS': False,
     'PLUGINS': {
         'draw': {
             'css': 'https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css',
             'js': 'https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js',
-        'auto-include': True,
-    },
-}
-
+            'auto-include': True,
+        },
     }
+
+}
 
 #############################################
 #### Requirement for Puput blog app
 PUPUT_AS_PLUGIN = True
 
-
 ##############################################
 #### This is set to eliminate a simple_server.py error related to: https://github.com/wagtail/wagtail/issues/4254
 DATA_UPLOAD_MAX_NUMBER_FIELDS = 10000
-
-
 
 ############################################
 #### DJANGO AUTH SETTINGS
@@ -326,23 +334,22 @@ LOGIN_URL = 'accounts/login/?next=/'
 
 SENDER_MAIL = 'biodiversity.aq <no-reply@biodiversity.aq>'
 
-FIXTURE_DIRS = ['fixtures',]
+FIXTURE_DIRS = ['fixtures', ]
 
 ############################################################################################
 ## Email settings
 
-#SENDGRID_API_KEY = secrets.SENDGRID_API_KEY
+# SENDGRID_API_KEY = secrets.SENDGRID_API_KEY
 
 EMAIL_HOST = 'smtp.sendgrid.net'
 EMAIL_HOST_USER = 'apikey'
-EMAIL_HOST_PASSWORD = '!OVERRIDE ME! SENDGRID_API_KEY !OVERRIDE ME!'   # nosec
+EMAIL_HOST_PASSWORD = '!OVERRIDE ME! SENDGRID_API_KEY !OVERRIDE ME!'  # nosec
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
-
 ####################################
 ### Google recaptcha SETTINGS
-RECAPTCHA_PRIVATE_KEY = '!OVERRIDE ME! GOOGLE_SECRET_KEY !OVERRIDE ME!'   # nosec
+RECAPTCHA_PRIVATE_KEY = '!OVERRIDE ME! GOOGLE_SECRET_KEY !OVERRIDE ME!'  # nosec
 
 RECAPTCHA_SITE_KEY = ''
 
@@ -357,7 +364,7 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.NamespaceVersioning',
     'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',),
-    'PAGE_SIZE': 10
+    'PAGE_SIZE': 20
 }
 
 # POLAAAR SETTINGS
@@ -367,3 +374,5 @@ POLAAAR_MAIL_FILE_DIR = 'polaaar/mail_file/'  # has to be relative path to MEDIA
 
 # serves as the recipient list for data submission
 POLAAAR_ADMIN_LIST = ['data.biodiversity.aq@gmail.com', 'msweetlove@naturalsciences.be']
+
+GEOSERVER_HOST = 'https://sandbox.bebif.be/geoserver'

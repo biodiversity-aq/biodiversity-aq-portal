@@ -1,165 +1,217 @@
-from django.shortcuts import render, redirect
+from django.contrib.postgres.search import SearchVector, SearchRank, SearchQuery
+from django.core.cache import cache
+from django.core.serializers import serialize
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.http import HttpResponse
-from django.db.models import Q
+from django.db.models import Q, Count, Min
 from django.contrib.gis.db.models.functions import AsGeoJSON, Centroid
-from .forms import EmailForm
+from django.utils.decorators import method_decorator
+from django.views import generic
+from drf_yasg.inspectors import CoreAPICompatInspector, NotHandled
+
+from .forms import EmailForm, EnvironmentSearchForm, FreeTextSearchForm, SpatialSearchForm
 from django.core.mail import EmailMessage
 from django_filters.rest_framework import DjangoFilterBackend
 
-from rest_framework import viewsets
+from rest_framework import viewsets, generics
 from biodiversity.decorators import verify_recaptcha
 from polaaar.serializers import *
 from polaaar.models import Reference
 
 import xlsxwriter
 import io
+import logging
 import datetime
 import zipfile
 import os
 
+# Get an instance of a logger
+logger = logging.getLogger(__name__)
+
 
 def home(request):
-    qs_results = Event.objects.annotate(geom=AsGeoJSON(Centroid('footprintWKT')))
     file_path = os.path.join(settings.MEDIA_ROOT, 'polaaar', 'amplicon_image.png')
     if os.path.isfile(file_path):
         amplicon_img = os.path.join(settings.MEDIA_URL, 'polaaar', 'amplicon_image.png')
     else:
         amplicon_img = False
-    return render(request, 'polaaar/polaaar_home.html', {'qs_results': qs_results, 'amplicon_img': amplicon_img})
-
-
-def api_reference(request):
-    return render(request, 'polaaar/api_reference.html')
+    return render(request, 'polaaar/polaaar_home.html',
+                  {'geoserver_host': settings.GEOSERVER_HOST, 'amplicon_img': amplicon_img})
 
 #########################################################
 ### DJANGO Search views
-##########  
+##########
 
-def polaaar_search(request):
-    user = request.user
+def get_queryset_from_env_search_form(request):
+    """
+    Return QuerySet for Environment Search
+    :param request: HttpRequest.GET object
+    :return: QuerySet of Environment class
+    """
+    form = EnvironmentSearchForm(request)
+    qs = Environment.objects.filter(event__event_hierarchy__project_metadata__is_public=True) \
+        .prefetch_related('event__sequences', 'event__project_metadata') \
+        .select_related('event', 'env_variable', 'env_units') \
+        .order_by('env_variable')
+    if form.is_valid():
+        variable = form.cleaned_data.get('variable')  # required
+        text = form.cleaned_data.get('text', '')
+        min_value = form.cleaned_data.get('min_value')
+        max_value = form.cleaned_data.get('max_value')
+        var_type = variable.var_type
 
-    #### This is used to generate the links back to the project search page. If there is a ?pid search string 
-    #### Then the user is directed to the project search page with data filtered by that specific project.
-
-    if len(request.GET.get('pid', '')):
-        proj = request.GET.get('pid', '')
-
-        if user.is_authenticated and user.is_superuser:
-            qs = ProjectMetadata.objects.filter(id=proj)
-
-        elif user.is_authenticated:
-            qs = ProjectMetadata.objects.filter(Q(is_public=True) | Q(
-                project_creator__username=user.username)).filter(id=proj)
-
+        if var_type == 'TXT':
+            query = {"event__event_hierarchy__project_metadata__is_public": True, "env_variable": variable.id,
+                     "env_text_value__icontains": text}
+        elif var_type == 'NUM' and min_value and max_value:
+            query = {"event__event_hierarchy__project_metadata__is_public": True, "env_variable": variable.id,
+                     "env_numeric_value__gte": min_value, "env_numeric_value__lte": max_value}
+        elif var_type == 'NUM' and min_value:
+            query = {"event__event_hierarchy__project_metadata__is_public": True, "env_variable": variable.id,
+                     "env_numeric_value__gte": min_value}
+        elif var_type == 'NUM' and max_value:
+            query = {"event__event_hierarchy__project_metadata__is_public": True, "env_variable": variable.id,
+                     "env_numeric_value__lte": max_value}
+        else:  # only var_id
+            query = {"event__event_hierarchy__project_metadata__is_public": True, "env_variable": variable.id}
+        if var_type == 'NUM' and text:
+            qs = Environment.objects.none()
         else:
-            qs = ProjectMetadata.objects.filter(Q(is_public=True)).filter(id=proj)
-
-        buttondisplay = "Display events"
-        ## This triggers a refresh button to appear in the project search tool if the user is looking at filtered project data
-        viewprojs = True
-
-    else:
-
-        if user.is_authenticated and user.is_superuser:
-            qs = ProjectMetadata.objects.all()
-
-        elif user.is_authenticated:
-            qs = ProjectMetadata.objects.filter(Q(is_public=True) | Q(
-                project_creator__username=user.username))
-
-        else:
-            qs = ProjectMetadata.objects.filter(Q(is_public=True))
-
-        buttondisplay = "Refresh map"
-        viewprojs = False
-    return render(request, 'polaaar/polaaar_search.html',
-                  {'qs': qs, 'buttondisplay': buttondisplay, 'viewprojs': viewprojs})
+            qs = Environment.objects.prefetch_related('event__sequences', 'event__project_metadata') \
+                .select_related('event', 'env_variable', 'env_units').filter(**query).order_by('env_variable')
+    return qs
 
 
-def env_search(request):
-    qs = Variable.objects.all()
-    return render(request, 'polaaar/polaaarsearch/environment.html', {'qs': qs})
+class DjangoFilterDescriptionInspector(CoreAPICompatInspector):
+    """Inspector to populate the description of parameters in swagger"""
+
+    def get_filter_parameters(self, filter_backend):
+        if isinstance(filter_backend, DjangoFilterBackend):
+            result = super(DjangoFilterDescriptionInspector, self).get_filter_parameters(filter_backend)
+            for param in result:
+                if not param.get('description', ''):
+                    param.description = "Filter the returned list by {field_name}".format(field_name=param.name)
+            return result
+        return NotHandled
 
 
-def env_searched(request):
-    user = request.user
-    if request.method == 'GET':
-        var = request.GET.get('var', '')
-        vars = var.split(',')
+class EnvironmentListView(generic.ListView):
+    """
+    List the search results for Environment instances
+    """
+    template_name = 'polaaar/environment_list.html'
+    paginate_by = 20
+    swagger_schema = None  # do not list in swagger because this view is dedicated for web GUI
 
-        # vartype = request.GET.get('vartype','')
-        if user.is_authenticated and user.is_superuser:
+    def get_queryset(self):
+        qs = get_queryset_from_env_search_form(self.request.GET)
+        return qs
 
-            qsenv = Environment.objects.filter(env_variable__name__in=vars)
-
-        elif user.is_authenticated:
-
-            qsenv = Environment.objects.filter(env_variable__name__in=vars).filter(
-                Q(event__event_hierarchy__project_metadata__is_public=True) | Q(
-                    event__event_hierarchy__project_metadata__project_creator__username=user.username))
-
-        else:
-
-            qsenv = Environment.objects.filter(env_variable__name__in=vars).filter(
-                Q(event__event_hierarchy__project_metadata__is_public=True))
-
-        Y = qsenv.values_list('env_variable__var_type')
-
-        try:
-            x = list(Y).index(('NUM',))
-            x = True
-        except:
-            x = False
-
-        return render(request, 'polaaar/polaaarsearch/env_searched.html', {'qsenv': qsenv, 'test': x})  # ,'vartype':vartype
-
-
-def seq_search(request):
-    user = request.user
-    if user.is_authenticated and user.is_superuser:
-        qs = Sequences.objects.all().select_related()
-    elif user.is_authenticated:
-        qs = Sequences.objects.filter(
-            Q(event__event_hierarchy__project_metadata__is_public=True) | Q(
-                event__event_hierarchy__project_metadata__project_creator__username=user.username)).select_related()
-    else:
-        qs = Sequences.objects.filter(
-            Q(event__event_hierarchy__project_metadata__is_public=True)).select_related()
-    return render(request, 'polaaar/polaaarsearch/sequences.html', {'qs': qs})
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = EnvironmentSearchForm(self.request.GET)
+        env_qs = self.get_queryset()
+        events = Event.objects.exclude(Latitude__isnull=True).exclude(Longitude__isnull=True) \
+            .filter(environment__in=env_qs).annotate(count=Count('id')).order_by()
+        target_subfragment_count = Sequences.objects.exclude(target_subfragment__isnull=True) \
+            .filter(event__environment__in=env_qs) \
+            .values('target_subfragment').annotate(count=Count('target_subfragment')).order_by('target_subfragment')
+        target_gene_count = Sequences.objects.exclude(target_gene__isnull=True) \
+            .filter(event__environment__in=env_qs).values('target_gene') \
+            .annotate(count=Count('target_gene')).order_by('target_gene')
+        run_type_count = Sequences.objects.exclude(run_type__isnull=True) \
+            .filter(event__environment__in=env_qs).values('run_type') \
+            .annotate(count=Count('run_type')).order_by('run_type')
+        context['event_geojson'] = serialize('geojson', events, geometry_field='footprintWKT',
+                                             fields=('project_metadata',))
+        context['event_year'] = events.exclude(collection_year__isnull=True).values('collection_year') \
+            .annotate(count=Count('collection_year')).order_by('collection_year')
+        context['event_month'] = events.exclude(collection_month__isnull=True).values('collection_month') \
+            .annotate(count=Count('collection_month')).order_by('collection_month')
+        context['event_sampling_protocol'] = events.exclude(samplingProtocol__isnull=True).values('samplingProtocol') \
+            .annotate(count=Count('samplingProtocol')).order_by()
+        context['target_subfragment_count'] = target_subfragment_count
+        context['target_gene_count'] = target_gene_count
+        context['run_type_count'] = run_type_count
+        return context
 
 
-def spatial_searching(request):
-    user = request.user
-    if user.is_authenticated and user.is_superuser:
-        qs_results = Event.objects.annotate(geom=AsGeoJSON(Centroid('footprintWKT'))).all().select_related()
-    if user.is_authenticated:
-        qs_results = Event.objects.annotate(geom=AsGeoJSON(Centroid('footprintWKT'))).filter(
-            Q(event_hierarchy__project_metadata__is_public=True) | Q(
-                event_hierarchy__project_metadata__project_creator__username=user.username))
-    else:
-        qs_results = Event.objects.annotate(geom=AsGeoJSON(Centroid('footprintWKT'))).filter(
-            Q(event_hierarchy__project_metadata__is_public=True))
-    return render(request, 'polaaar/polaaarsearch/spatial_search.html', {'qs_results': qs_results})
+def get_queryset_from_seq_search_form(request):
+    """
+    Return a QuerySet of Sequences search
+    :param request: HttpRequest.GET object
+    :return: QuerySet of Sequences
+    """
+    qs = Sequences.objects.filter(event__project_metadata__is_public=True) \
+        .select_related('event__project_metadata')
+    form = FreeTextSearchForm(request)
+    if form.is_valid():
+        search_term = form.cleaned_data.get('q')
+        if search_term:  # return queryset if there is no search term
+            vector = SearchVector('MID', 'target_gene', 'target_subfragment', 'type', 'primerName_forward',
+                                  'primerName_reverse', 'run_type', 'event__project_metadata__abstract',
+                                  'event__project_metadata__project_name')
+            query = SearchQuery(search_term)
+            # filter for ProjectMetadata which is public AND (fields above which contain search term)
+            qs = Sequences.objects.annotate(rank=SearchRank(vector, query)) \
+                .filter(event__project_metadata__is_public=True, rank__gte=0.01).order_by('-rank') \
+                .select_related('event__project_metadata')
+    return qs
 
 
-def spatial_search_table(request):
-    user = request.user
-    if request.method == "GET":
-        IDS = request.GET.getlist('id')
-        IDS = IDS[0].split(',')
-        if user.is_authenticated and user.is_superuser:
-            qs_results = Event.objects.annotate(geom=AsGeoJSON(Centroid('footprintWKT'))).filter(
-                pk__in=IDS).select_related()
-        if user.is_authenticated:
-            qs_results = Event.objects.annotate(geom=AsGeoJSON(Centroid('footprintWKT'))).filter(
-                Q(event_hierarchy__project_metadata__is_public=True) | Q(
-                    event_hierarchy__project_metadata__project_creator__username=user.username)).filter(pk__in=IDS)
-        else:
-            qs_results = Event.objects.annotate(geom=AsGeoJSON(Centroid('footprintWKT'))).filter(
-                Q(event_hierarchy__project_metadata__is_public=True)).filter(pk__in=IDS)
+class SequenceListView(generic.ListView):
+    """
+    List the search results for Sequence instances
+    """
+    template_name = 'polaaar/sequence_list.html'
+    paginate_by = 20
+    swagger_schema = None  # do not list in swagger because this view is dedicated for web GUI
 
-    return render(request, 'polaaar/polaaarsearch/spatial_search_table.html', {'qs_results': qs_results})
+    def get_queryset(self):
+        qs = get_queryset_from_seq_search_form(self.request.GET)
+        return qs
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = FreeTextSearchForm(self.request.GET)
+        events = Event.objects.exclude(Latitude__isnull=True).exclude(Longitude__isnull=True) \
+            .filter(sequences__in=self.get_queryset()).annotate(count=Count('id')).order_by()
+        context['event_geojson'] = serialize('geojson', events, geometry_field='footprintWKT',
+                                             fields=('id',))
+        return context
+
+
+def get_queryset_from_spatial_search(request):
+    qs = Sequences.objects.filter(event__project_metadata__is_public=True).exclude(event__Latitude__isnull=True) \
+        .exclude(event__Longitude__isnull=True).select_related('event__project_metadata')
+    form = SpatialSearchForm(request)
+    if form.is_valid():
+        polygon = form.cleaned_data.get('polygon')
+        if polygon:
+            polygon_geos = GEOSGeometry(polygon, srid=4326)
+            qs = Sequences.objects.filter(event__project_metadata__is_public=True,
+                                          event__footprintWKT__within=polygon_geos) \
+                .select_related('event__project_metadata')
+    return qs
+
+
+class SpatialSearchListView(generic.ListView):
+    template_name = 'polaaar/spatial_search.html'
+    paginate_by = 20
+
+    def get_queryset(self):
+        qs = get_queryset_from_spatial_search(self.request.GET)
+        return qs
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = SpatialSearchForm(self.request.GET)
+        qs_results = Event.objects.exclude(Latitude__isnull=True).exclude(Longitude__isnull=True) \
+            .filter(sequences__in=self.get_queryset()).annotate(count=Count('id')).order_by()
+        context['event_geojson'] = serialize('geojson', qs_results, geometry_field='footprintWKT',
+                                             fields=('id',))
+        return context
 
 
 #########################################################
@@ -192,16 +244,15 @@ def GetProjectFiles(request, pk):
 
             # Add file, at correct path
             zf.write(fpath, zip_path)
-
-        # Must close zip for all contents to be written
-        zf.close()
-
+            # Must close zip for all contents to be written
+            zf.close()
         # Grab ZIP file from in-memory, make response with correct MIME-type
         resp = HttpResponse(s.getvalue(), content_type="application/x-zip-compressed")
         # ..and correct content-disposition
         resp['Content-Disposition'] = 'attachment; filename=%s' % zip_filename
-
         return resp
+
+    pass
 
 
 #########################################################
@@ -254,54 +305,43 @@ def submit_success(request):
 #### REST API views
 #### These views are instantiated with viewsets to keep the query calls simple and avoid us having to write custom CRUD calls. 
 
+@method_decorator(name='list', decorator=swagger_auto_schema(
+   filter_inspectors=[DjangoFilterDescriptionInspector]
+))
 class ReferenceViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    API endpoint for Reference instances.
+
+    list:
+    Return a list of References
+
+    retrieve:
+    Return the Reference with the ID provided
+    """
     serializer_class = ReferenceSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['full_reference', 'year']
 
     def get_queryset(self):
-        user = self.request.user
-        if user.is_authenticated and user.is_superuser:
-            queryset = Reference.objects.all()
-        elif user.is_authenticated:
-            queryset = Reference.objects.filter(
-                Q(associated_projects__project_metadata__is_public=True) | Q(
-                    associated_projects__project_metadata__project_creator__username=user.username)).order_by(
-                'full_reference').distinct('full_reference')
-        else:
-            queryset = Reference.objects.filter(Q(
-                associated_projects__project_metadata__is_public=True)).order_by('full_reference').distinct(
-                'full_reference')
+        queryset = Reference.objects.filter(Q(
+            associated_projects__project_metadata__is_public=True)).order_by('full_reference').distinct(
+            'full_reference')
         return queryset
 
 
-class SequenceViewSet(viewsets.ReadOnlyModelViewSet):
-    serializer_class = SequencesSerializer
-    filter_backends = [DjangoFilterBackend]
-    filterset_fields = {
-        'sequence_name': ['exact', 'icontains'],
-        'target_gene': ['exact', 'icontains'],
-        'primerName_forward': ['exact', 'icontains'],
-        'primerName_reverse': ['exact', 'icontains'],
-        'seqData_numberOfBases': ['gte', 'lte', 'exact'],
-        'seqData_numberOfSequences': ['gte', 'lte', 'exact'],
-        'id': ['in']
-    }
-
-    def get_queryset(self):
-        user = self.request.user
-        if user.is_authenticated and user.is_superuser:
-            queryset = Sequences.objects.all()
-        elif user.is_authenticated:
-            queryset = Sequences.objects.filter(
-                Q(event__event_hierarchy__project_metadata__is_public=True) | Q(
-                    event__event_hierarchy__project_metadata__project_creator__username=user.username))
-        else:
-            queryset = Sequences.objects.filter(Q(event__event_hierarchy__project_metadata__is_public=True))
-        return queryset
-
-
+@method_decorator(name='list', decorator=swagger_auto_schema(
+   filter_inspectors=[DjangoFilterDescriptionInspector]
+))
 class ProjectMetadataViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    API endpoint for `ProjectMetadata` instances.
+
+    list:
+    Return a list of ProjectMetadata.<br/>`icontains`: Case-insensitive containment test.<br/>`gte`: Greater than or equal to.<br/>`gte`: Greater than or equal to<br/>`lte`: Less than or equal to<br/>Otherwise implies exact match.
+
+    retrieve:
+    Return the ProjectMetadata with the ID provided
+    """
     serializer_class = ProjectMetadataSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = {
@@ -335,18 +375,23 @@ class ProjectMetadataViewSet(viewsets.ReadOnlyModelViewSet):
     }
 
     def get_queryset(self):
-        user = self.request.user
-        if user.is_authenticated and user.is_superuser:
-            queryset = ProjectMetadata.objects.all().prefetch_related('event_hierarchy')
-        elif user.is_authenticated:
-            queryset = ProjectMetadata.objects.filter(Q(is_public=True) | Q(
-                project_creator__username=user.username)).prefetch_related('event_hierarchy')
-        else:
-            queryset = ProjectMetadata.objects.filter(Q(is_public=True)).prefetch_related('event_hierarchy')
+        queryset = ProjectMetadata.objects.filter(Q(is_public=True)).prefetch_related('event_hierarchy')
         return queryset
 
 
+@method_decorator(name='list', decorator=swagger_auto_schema(
+   filter_inspectors=[DjangoFilterDescriptionInspector]
+))
 class EventHierarchyViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    API endpoint for `EventHierarchy` instances.
+
+    list:
+    Return a list of EventHierarchy.<br/>`icontains`: Case-insensitive containment test.<br/>`gte`: Greater than or equal to.<br/>`gte`: Greater than or equal to<br/>`lte`: Less than or equal to<br/>Otherwise implies exact match.
+
+    retrieve:
+    Return the EventHierarchy with the ID provided
+    """
     serializer_class = EventHierarchySerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = {
@@ -356,18 +401,23 @@ class EventHierarchyViewSet(viewsets.ReadOnlyModelViewSet):
     }
 
     def get_queryset(self):
-        user = self.request.user
-        if user.is_authenticated and user.is_superuser:
-            queryset = EventHierarchy.objects.all()
-        elif user.is_authenticated:
-            queryset = EventHierarchy.objects.filter(
-                Q(project_metadata__is_public=True) | Q(project_metadata__project_creator__username=user.username))
-        else:
-            queryset = EventHierarchy.objects.filter(Q(project_metadata__is_public=True))
+        queryset = EventHierarchy.objects.filter(Q(project_metadata__is_public=True))
         return queryset
 
 
+@method_decorator(name='list', decorator=swagger_auto_schema(
+   filter_inspectors=[DjangoFilterDescriptionInspector]
+))
 class OccurrenceViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    API endpoint for `Occurrence` instances.
+
+    list:
+    Return a list of Occurrence.<br/>`icontains`: Case-insensitive containment test.<br/>`gte`: Greater than or equal to.<br/>`gte`: Greater than or equal to<br/>`lte`: Less than or equal to<br/>Otherwise implies exact match.
+
+    retrieve:
+    Return the Occurrence with the ID provided
+    """
     serializer_class = OccurrenceSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = {
@@ -375,19 +425,23 @@ class OccurrenceViewSet(viewsets.ReadOnlyModelViewSet):
     }
 
     def get_queryset(self):
-        user = self.request.user
-        if user.is_authenticated and user.is_superuser:
-            queryset = Occurrence.objects.all()
-        elif user.is_authenticated:
-            queryset = Occurrence.objects.filter(
-                Q(event__event_hierarchy__project_metadata__is_public=True) | Q(
-                    event__event_hierarchy__project_metadata__project_creator__username=user.username))
-        else:
-            queryset = Occurrence.objects.filter(Q(event__event_hierarchy__project_metadata__is_public=True))
+        queryset = Occurrence.objects.filter(Q(event__event_hierarchy__project_metadata__is_public=True))
         return queryset
 
 
+@method_decorator(name='list', decorator=swagger_auto_schema(
+   filter_inspectors=[DjangoFilterDescriptionInspector]
+))
 class EventViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    API endpoint for `Event` instances.
+
+    list:
+    Return a list of Event.<br/>`istartswith`: Case-insensitive Case-insensitive starts-with.<br/>`in`: In a given iterable.<br/>`gte`: Greater than or equal to.<br/>`gte`: Greater than or equal to<br/>`lte`: Less than or equal to<br/>Otherwise implies exact match.
+
+    retrieve:
+    Return the Event with the ID provided
+    """
     serializer_class = EventSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = {
@@ -397,19 +451,23 @@ class EventViewSet(viewsets.ReadOnlyModelViewSet):
     }
 
     def get_queryset(self):
-        user = self.request.user
-        if user.is_authenticated and user.is_superuser:
-            queryset = Event.objects.all()
-        elif user.is_authenticated:
-            queryset = Event.objects.filter(
-                Q(event_hierarchy__project_metadata__is_public=True) | Q(
-                    event_hierarchy__project_metadata__project_creator__username=user.username))
-        else:
-            queryset = Event.objects.filter(Q(event_hierarchy__project_metadata__is_public=True))
+        queryset = Event.objects.filter(Q(event_hierarchy__project_metadata__is_public=True))
         return queryset
 
 
+@method_decorator(name='list', decorator=swagger_auto_schema(
+   filter_inspectors=[DjangoFilterDescriptionInspector]
+))
 class GeogViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    API endpoint for `Geog_Location` instances.
+
+    list:
+    Return a list of Geog_Location.
+
+    retrieve:
+    Return the Geog_Location with the ID provided
+    """
     serializer_class = GeogSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = {
@@ -417,45 +475,25 @@ class GeogViewSet(viewsets.ReadOnlyModelViewSet):
     }
 
     def get_queryset(self):
-        user = self.request.user
-        if user.is_authenticated and user.is_superuser:
-            queryset = Geog_Location.objects.all()
-        elif user.is_authenticated:
-            queryset = Geog_Location.objects.filter(
-                Q(sample_metadata__event_sample_metadata__event_hierarchy__project_metadata__is_public=True) | Q(
-                    sample_metadata__event_sample_metadata__event_hierarchy__project_metadata__project_creator__username=user.username)).order_by(
-                'name').distinct('name')
-        else:
-            queryset = Geog_Location.objects.filter(Q(
-                sample_metadata__event_sample_metadata__event_hierarchy__project_metadata__is_public=True)).order_by(
-                'name').distinct('name')
+        queryset = Geog_Location.objects.filter(Q(
+            sample_metadata__event_sample_metadata__event_hierarchy__project_metadata__is_public=True)).order_by(
+            'name').distinct('name')
         return queryset
 
 
-class EnvironmentViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Environment.objects.all()
-    serializer_class = EnvironmentSerializer
-    filter_backends = [DjangoFilterBackend]
-
-    def get_queryset(self):
-        user = self.request.user
-        if user.is_authenticated and user.is_superuser:
-            queryset = Environment.objects.all()
-        elif user.is_authenticated:
-            queryset = Environment.objects.filter(
-                Q(event__event_hierarchy__project_metadata__is_public=True) | Q(
-                    event__event_hierarchy__project_metadata__project_creator__username=user.username))
-        else:
-            queryset = Environment.objects.filter(Q(event__event_hierarchy__project_metadata__is_public=True))
-        return queryset
-
-
-###########################################################################
-
-### Special views for the sequence download
-
-
+@method_decorator(name='list', decorator=swagger_auto_schema(
+   filter_inspectors=[DjangoFilterDescriptionInspector]
+))
 class SequencesViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    API endpoint for `Sequence` instances.
+
+    list:
+    Return a list of Sequences.<br/>`icontains`: Case-insensitive containment test.<br/>`gte`: Greater than or equal to.<br/>`gte`: Greater than or equal to<br/>`lte`: Less than or equal to<br/>`in`: In a given iterable<br/>Otherwise implies exact match.
+
+    retrieve:
+    Return the Sequence with the ID provided
+    """
     serializer_class = SequencesSerializer2
     filter_backends = [DjangoFilterBackend]
     filterset_fields = {
@@ -469,21 +507,23 @@ class SequencesViewSet(viewsets.ReadOnlyModelViewSet):
     }
 
     def get_queryset(self):
-        user = self.request.user
-        if user.is_authenticated and user.is_superuser:
-            queryset = Sequences.objects.all()
-        elif user.is_authenticated:
-            queryset = Sequences.objects.filter(
-                Q(event__event_hierarchy__project_metadata__is_public=True) | Q(
-                    event__event_hierarchy__project_metadata__project_creator__username=user.username))
-        else:
-            queryset = Sequences.objects.filter(Q(event__event_hierarchy__project_metadata__is_public=True))
+        queryset = Sequences.objects.filter(Q(event__event_hierarchy__project_metadata__is_public=True))
         return queryset
 
 
-### Special view for the Environment download
-
+@method_decorator(name='list', decorator=swagger_auto_schema(
+   filter_inspectors=[DjangoFilterDescriptionInspector]
+))
 class EnvironmentVariablesViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    API endpoint for `Environment` instances.
+
+    list:
+    Return a list of Environment.<br/>`icontains`: Case-insensitive containment test.<br/>`gte`: Greater than or equal to.<br/>`gte`: Greater than or equal to<br/>`lte`: Less than or equal to<br/>`in`: In a given iterable<br/>Otherwise implies exact match.
+
+    retrieve:
+    Return the Environment with the ID provided
+    """
     serializer_class = EnvironmentSerializer2
     filter_backends = [DjangoFilterBackend]
     filterset_fields = {
@@ -498,15 +538,7 @@ class EnvironmentVariablesViewSet(viewsets.ReadOnlyModelViewSet):
     }
 
     def get_queryset(self):
-        user = self.request.user
-        if user.is_authenticated and user.is_superuser:
-            queryset = Environment.objects.all()
-        elif user.is_authenticated:
-            queryset = Environment.objects.filter(
-                Q(event__event_hierarchy__project_metadata__is_public=True) | Q(
-                    event__event_hierarchy__project_metadata__project_creator__username=user.username))
-        else:
-            queryset = Environment.objects.filter(Q(event__event_hierarchy__project_metadata__is_public=True))
+        queryset = Environment.objects.filter(Q(event__event_hierarchy__project_metadata__is_public=True))
         return queryset
 
 
@@ -519,97 +551,34 @@ class EnvironmentVariablesViewSet(viewsets.ReadOnlyModelViewSet):
 #########################################################################################################################################
 
 def export_projects(request):
-    user = request.user
     if request.method == 'GET':
         IDS = request.GET.getlist('id')
         IDS = IDS[0].split(',')
 
-        ###########################################################
-        ## Authentication checks and queries
-        if user.is_authenticated and user.is_superuser:
+        PM = ProjectMetadata.objects.filter(id__in=IDS).filter(Q(is_public=True))
 
-            PM = ProjectMetadata.objects.filter(id__in=IDS)
+        EH = EventHierarchy.objects.filter(project_metadata__id__in=IDS).filter(Q(project_metadata__is_public=True))
 
-            EH = EventHierarchy.objects.filter(project_metadata__id__in=IDS)
+        E = Event.objects.filter(event_hierarchy__project_metadata__id__in=IDS).filter(
+            Q(event_hierarchy__project_metadata__is_public=True))
 
-            E = Event.objects.filter(event_hierarchy__project_metadata__id__in=IDS)
+        S = Sequences.objects.filter(event__event_hierarchy__project_metadata__id__in=IDS).filter(
+            Q(event__event_hierarchy__project_metadata__is_public=True))
 
-            S = Sequences.objects.filter(event__event_hierarchy__project_metadata__id__in=IDS)
+        O = Occurrence.objects.filter(event__event_hierarchy__project_metadata__id__in=IDS).filter(
+            Q(event__event_hierarchy__project_metadata__is_public=True))
 
-            O = Occurrence.objects.filter(event__event_hierarchy__project_metadata__id__in=IDS)
+        Env = Environment.objects.filter(event__event_hierarchy__project_metadata__id__in=IDS).filter(
+            Q(event__event_hierarchy__project_metadata__is_public=True))
 
-            Env = Environment.objects.filter(event__event_hierarchy__project_metadata__id__in=IDS)
+        G = Geog_Location.objects.filter(
+            sample_metadata__event_sample_metadata__event_hierarchy__project_metadata__id__in=IDS).filter(Q(
+            sample_metadata__event_sample_metadata__event_hierarchy__project_metadata__is_public=True))
 
-            G = Geog_Location.objects.filter(
-                sample_metadata__event_sample_metadata__event_hierarchy__project_metadata__id__in=IDS)
+        R = Reference.objects.filter(associated_projects__id__in=IDS).filter(Q(associated_projects__is_public=True))
 
-            R = Reference.objects.filter(associated_projects__id__in=IDS)
-
-            T = Taxa.objects.filter(occurrence__event__event_hierarchy__project_metadata__id__in=IDS)
-
-        elif user.is_authenticated:
-
-            PM = ProjectMetadata.objects.filter(id__in=IDS).filter(
-                Q(is_public=True) | Q(project_creator__username=user.username))
-
-            EH = EventHierarchy.objects.filter(project_metadata__id__in=IDS).filter(
-                Q(project_metadata__is_public=True) | Q(project_metadata__project_creator__username=user.username))
-
-            E = Event.objects.filter(event_hierarchy__project_metadata__id__in=IDS).filter(
-                Q(event_hierarchy__project_metadata__is_public=True) | Q(
-                    event_hierarchy__project_metadata__project_creator__username=user.username))
-
-            S = Sequences.objects.filter(event__event_hierarchy__project_metadata__id__in=IDS).filter(
-                Q(event__event_hierarchy__project_metadata__is_public=True) | Q(
-                    event__event_hierarchy__project_metadata__project_creator__username=user.username))
-
-            O = Occurrence.objects.filter(event__event_hierarchy__project_metadata__id__in=IDS).filter(
-                Q(event__event_hierarchy__project_metadata__is_public=True) | Q(
-                    event__event_hierarchy__project_metadata__project_creator__username=user.username))
-
-            Env = Environment.objects.filter(event__event_hierarchy__project_metadata__id__in=IDS).filter(
-                Q(event__event_hierarchy__project_metadata__is_public=True) | Q(
-                    event__event_hierarchy__project_metadata__project_creator__username=user.username))
-
-            G = Geog_Location.objects.filter(
-                sample_metadata__event_sample_metadata__event_hierarchy__project_metadata__id__in=IDS).filter(
-                Q(sample_metadata__event_sample_metadata__event_hierarchy__project_metadata__is_public=True) | Q(
-                    sample_metadata__event_sample_metadata__event_hierarchy__project_metadata__project_creator__username=user.username))
-
-            R = Reference.objects.filter(associated_projects__id__in=IDS).filter(
-                Q(associated_projects__is_public=True) | Q(
-                    associated_projects__project_creator__username=user.username))
-
-            T = Taxa.objects.filter(occurrence__event__event_hierarchy__project_metadata__id__in=IDS).filter(Q(
-                occurrence__event__event_hierarchy__project_metadata__is_public=True) | Q(
-                occurrence__event__event_hierarchy__project_metadata__project_creator__username=user.username))
-        else:
-
-            PM = ProjectMetadata.objects.filter(id__in=IDS).filter(Q(is_public=True))
-
-            EH = EventHierarchy.objects.filter(project_metadata__id__in=IDS).filter(Q(project_metadata__is_public=True))
-
-            E = Event.objects.filter(event_hierarchy__project_metadata__id__in=IDS).filter(
-                Q(event_hierarchy__project_metadata__is_public=True))
-
-            S = Sequences.objects.filter(event__event_hierarchy__project_metadata__id__in=IDS).filter(
-                Q(event__event_hierarchy__project_metadata__is_public=True))
-
-            O = Occurrence.objects.filter(event__event_hierarchy__project_metadata__id__in=IDS).filter(
-                Q(event__event_hierarchy__project_metadata__is_public=True))
-
-            Env = Environment.objects.filter(event__event_hierarchy__project_metadata__id__in=IDS).filter(
-                Q(event__event_hierarchy__project_metadata__is_public=True))
-
-            G = Geog_Location.objects.filter(
-                sample_metadata__event_sample_metadata__event_hierarchy__project_metadata__id__in=IDS).filter(Q(
-                sample_metadata__event_sample_metadata__event_hierarchy__project_metadata__is_public=True))
-
-            R = Reference.objects.filter(associated_projects__id__in=IDS).filter(Q(associated_projects__is_public=True))
-
-            T = Taxa.objects.filter(occurrence__event__event_hierarchy__project_metadata__id__in=IDS).filter(Q(
-                occurrence__event__event_hierarchy__project_metadata__is_public=True))
-        ##########################################################
+        T = Taxa.objects.filter(occurrence__event__event_hierarchy__project_metadata__id__in=IDS).filter(Q(
+            occurrence__event__event_hierarchy__project_metadata__is_public=True))
 
         output = io.BytesIO()
         workbook = xlsxwriter.Workbook(output)
@@ -1052,81 +1021,28 @@ def export_projects(request):
 #### Returns an excel spreadsheet for the environmental data
 
 def export_environment(request):
-    user = request.user
     if request.method == 'GET':
-        IDS = request.GET.getlist('id')
-        IDS = IDS[0].split(',')
+        env_qs = get_queryset_from_env_search_form(request.GET)
 
         ###########################################################################################################
         #### Authentication checks
 
-        if user.is_authenticated and user.is_superuser:
+        PM = ProjectMetadata.objects.filter(event_hierarchy__event__environment__in=env_qs).filter(
+            Q(is_public=True)).annotate(Count('id')).order_by()
 
-            PM = ProjectMetadata.objects.filter(event_hierarchy__event__environment__id__in=IDS).distinct(
-                'project_name')
+        EH = EventHierarchy.objects.filter(event__environment__in=env_qs).filter(
+            Q(project_metadata__is_public=True)).annotate(Count('event_hierarchy_name')).order_by()
 
-            EH = EventHierarchy.objects.filter(event__environment__id__in=IDS).distinct('event_hierarchy_name')
+        E = Event.objects.filter(environment__in=env_qs).filter(Q(
+            event_hierarchy__project_metadata__is_public=True)).annotate(Count('sample_name')).order_by()
 
-            E = Event.objects.filter(environment__id__in=IDS).order_by('sample_name').distinct('sample_name')
+        S = Sequences.objects.filter(event__environment__in=env_qs).filter(Q(
+            event__event_hierarchy__project_metadata__is_public=True)).annotate(Count('sequence_name')).order_by()
 
-            S = Sequences.objects.filter(event__environment__id__in=IDS).order_by('sequence_name').distinct(
-                'sequence_name')
+        O = Occurrence.objects.filter(event__environment__in=env_qs).filter(
+            Q(event__event_hierarchy__project_metadata__is_public=True)).annotate(Count('occurrenceID')).order_by()
 
-            O = Occurrence.objects.filter(event__environment__id__in=IDS).order_by('occurrenceID').distinct(
-                'occurrenceID')
-
-            Env = Environment.objects.filter(id__in=IDS)
-
-        elif user.is_authenticated:
-
-            PM = ProjectMetadata.objects.filter(
-                event_hierarchy__event__environment__id__in=IDS).filter(Q(
-                is_public=True) | Q(project_creator__username=user.username)).distinct('project_name')
-
-            EH = EventHierarchy.objects.filter(event__environment__id__in=IDS).filter(
-                Q(project_metadata__is_public=True) | Q(
-                    project_metadata__project_creator__username=user.username)).distinct('event_hierarchy_name')
-
-            E = Event.objects.filter(environment__id__in=IDS).filter(
-                Q(event_hierarchy__project_metadata__is_public=True) | Q(
-                    event_hierarchy__project_metadata__project_creator__username=user.username)).order_by(
-                'sample_name').distinct('sample_name')
-
-            S = Sequences.objects.filter(event__environment__id__in=IDS).filter(
-                Q(event__event_hierarchy__project_metadata__is_public=True) | Q(
-                    event__event_hierarchy__project_metadata__project_creator__username=user.username)).order_by(
-                'sequence_name').distinct('sequence_name')
-
-            O = Occurrence.objects.filter(event__environment__id__in=IDS).filter(
-                Q(event__event_hierarchy__project_metadata__is_public=True) | Q(
-                    event__event_hierarchy__project_metadata__project_creator__username=user.username)).order_by(
-                'occurrenceID').distinct('occurrenceID')
-
-            Env = Environment.objects.filter(id__in=IDS).filter(
-                Q(event__event_hierarchy__project_metadata__is_public=True) | Q(
-                    event__event_hierarchy__project_metadata__project_creator__username=user.username))
-
-        else:
-
-            PM = ProjectMetadata.objects.filter(event_hierarchy__event__environment__id__in=IDS).filter(
-                Q(is_public=True)).distinct('project_name')
-
-            EH = EventHierarchy.objects.filter(event__environment__id__in=IDS).filter(
-                Q(project_metadata__is_public=True)).distinct('event_hierarchy_name')
-
-            E = Event.objects.filter(environment__id__in=IDS).filter(Q(
-                event_hierarchy__project_metadata__is_public=True)).order_by('sample_name').distinct('sample_name')
-
-            S = Sequences.objects.filter(event__environment__id__in=IDS).filter(Q(
-                event__event_hierarchy__project_metadata__is_public=True)).order_by('sequence_name').distinct(
-                'sequence_name')
-
-            O = Occurrence.objects.filter(event__environment__id__in=IDS).filter(
-                Q(event__event_hierarchy__project_metadata__is_public=True)).order_by('occurrenceID').distinct(
-                'occurrenceID')
-
-            Env = Environment.objects.filter(id__in=IDS).filter(
-                Q(event__event_hierarchy__project_metadata__is_public=True))
+        Env = env_qs
         ###########################################################################################################
 
         output = io.BytesIO()
@@ -1461,59 +1377,18 @@ def export_environment(request):
 ###################################################################################################################################################
 #### View for returning sequence and event data as an EXCEL spreadsheet
 def export_sequences(request):
-    user = request.user
     if request.method == 'GET':
-        IDS = request.GET.getlist('id')
-        IDS = IDS[0].split(',')
+        qs = get_queryset_from_seq_search_form(request.GET)
+        PM = ProjectMetadata.objects.filter(event_hierarchy__event__sequences__in=qs).filter(
+            Q(is_public=True)).order_by('project_name').distinct('project_name')
 
-        ########################################################################
-        ### Authentication checks 
+        EH = EventHierarchy.objects.filter(event__sequences__in=qs).filter(
+            Q(project_metadata__is_public=True)).order_by('event_hierarchy_name').distinct('event_hierarchy_name')
 
-        if user.is_authenticated and user.is_superuser:
+        E = Event.objects.filter(sequences__in=qs).filter(
+            Q(event_hierarchy__project_metadata__is_public=True)).order_by('sample_name').distinct('sample_name')
 
-            PM = ProjectMetadata.objects.filter(event_hierarchy__event__sequences__id__in=IDS).order_by(
-                'project_name').distinct('project_name')
-
-            EH = EventHierarchy.objects.filter(event__sequences__id__in=IDS).order_by('event_hierarchy_name').distinct(
-                'event_hierarchy_name')
-
-            E = Event.objects.filter(sequences__id__in=IDS).order_by('sample_name').distinct('sample_name')
-
-            S = Sequences.objects.filter(id__in=IDS)
-
-        elif user.is_authenticated:
-
-            PM = ProjectMetadata.objects.filter(event_hierarchy__event__sequences__id__in=IDS).filter(Q(
-                is_public=True) | Q(project_creator__username=user.username)).order_by('project_name').distinct(
-                'project_name')
-
-            EH = EventHierarchy.objects.filter(event__sequences__id__in=IDS).filter(
-                Q(project_metadata__is_public=True) | Q(
-                    project_metadata__project_creator__username=user.username)).order_by(
-                'event_hierarchy_name').distinct('event_hierarchy_name')
-
-            E = Event.objects.filter(sequences__id__in=IDS).filter(
-                Q(event_hierarchy__project_metadata__is_public=True) | Q(
-                    event_hierarchy__project_metadata__project_creator__username=user.username)).order_by(
-                'sample_name').distinct('sample_name')
-
-            S = Sequences.objects.filter(id__in=IDS).filter(
-                Q(event__event_hierarchy__project_metadata__is_public=True) | Q(
-                    event__event_hierarchy__project_metadata__project_creator__username=user.username))
-
-        else:
-
-            PM = ProjectMetadata.objects.filter(event_hierarchy__event__sequences__id__in=IDS).filter(
-                Q(is_public=True)).order_by('project_name').distinct('project_name')
-
-            EH = EventHierarchy.objects.filter(event__sequences__id__in=IDS).filter(
-                Q(project_metadata__is_public=True)).order_by('event_hierarchy_name').distinct('event_hierarchy_name')
-
-            E = Event.objects.filter(sequences__id__in=IDS).filter(
-                Q(event_hierarchy__project_metadata__is_public=True)).order_by('sample_name').distinct('sample_name')
-
-            S = Sequences.objects.filter(id__in=IDS).filter(
-                Q(event__event_hierarchy__project_metadata__is_public=True))
+        S = qs
 
         ########################################################################
         output = io.BytesIO()
@@ -1765,115 +1640,46 @@ def export_sequences(request):
         )
         response['Content-Disposition'] = 'attachment; filename=%s' % filename
         output.close()
-        return (response)
+        return response
 
 
 ##########################################################################################################################################################
 #### This view is to return the spreadsheet when searching by events in the spatial search  - emulates project_metadata 
 
 def export_events(request):
-    user = request.user
+    """Export events from spatial search"""
     if request.method == 'GET':
-        IDS = request.GET.getlist('id')
-        IDS = IDS[0].split(',')
-
+        seq_qs = get_queryset_from_spatial_search(request.GET)
+        events = Event.objects.filter(sequences__in=seq_qs)
         ##################################################################################################################
         ##### Authentication checks
 
-        if user.is_authenticated and user.is_superuser:
+        PM = ProjectMetadata.objects.filter(event_hierarchy__event__in=events).filter(Q(is_public=True)) \
+            .annotate(count=Count('id')).order_by('project_name')
 
-            PM = ProjectMetadata.objects.filter(event_hierarchy__event__id__in=IDS).order_by('project_name').distinct(
-                'project_name')
+        EH = EventHierarchy.objects.filter(event__in=events).filter(Q(
+            project_metadata__is_public=True)).annotate(count=Count('id')).order_by('event_hierarchy_name')
 
-            EH = EventHierarchy.objects.filter(event__id__in=IDS).order_by('event_hierarchy_name').distinct(
-                'event_hierarchy_name')
+        E = events.filter(Q(event_hierarchy__project_metadata__is_public=True))
 
-            E = Event.objects.filter(id__in=IDS)
+        S = seq_qs
 
-            S = Sequences.objects.filter(event__id__in=IDS)
+        O = Occurrence.objects.filter(event__in=events).filter(
+            Q(event__event_hierarchy__project_metadata__is_public=True))
 
-            O = Occurrence.objects.filter(event__id__in=IDS)
+        Env = Environment.objects.filter(event__in=events).filter(
+            Q(event__event_hierarchy__project_metadata__is_public=True))
 
-            Env = Environment.objects.filter(event__id__in=IDS)
+        G = Geog_Location.objects.filter(sample_metadata__event_sample_metadata__id__in=events).filter(Q(
+            sample_metadata__event_sample_metadata__event_hierarchy__project_metadata__is_public=True)) \
+            .annotate(count=Count('id')).order_by('name')
 
-            G = Geog_Location.objects.filter(sample_metadata__event_sample_metadata__id__in=IDS).order_by(
-                'name').distinct('name')
+        R = Reference.objects.filter(associated_projects__event_hierarchy__event__in=events).filter(Q(
+            associated_projects__is_public=True)).annotate(count=Count('id')).order_by('full_reference')
 
-            R = Reference.objects.filter(associated_projects__event_hierarchy__event__id__in=IDS).order_by(
-                'full_reference').distinct('full_reference')
-
-            T = Taxa.objects.filter(occurrence__event__id__in=IDS).order_by('name').distinct('name')
-
-        elif user.is_authenticated:
-
-            PM = ProjectMetadata.objects.filter(event_hierarchy__event__id__in=IDS).filter(Q(
-                is_public=True) | Q(project_creator__username=user.username)).order_by('project_name').distinct(
-                'project_name')
-
-            EH = EventHierarchy.objects.filter(event__id__in=IDS).filter(
-                Q(project_metadata__is_public=True) | Q(
-                    project_metadata__project_creator__username=user.username)).order_by(
-                'event_hierarchy_name').distinct('event_hierarchy_name')
-
-            E = Event.objects.filter(id__in=IDS).filter(
-                Q(event_hierarchy__project_metadata__is_public=True) | Q(
-                    event_hierarchy__project_metadata__project_creator__username=user.username))
-
-            S = Sequences.objects.filter(event__id__in=IDS).filter(
-                Q(event__event_hierarchy__project_metadata__is_public=True) | Q(
-                    event__event_hierarchy__project_metadata__project_creator__username=user.username))
-
-            O = Occurrence.objects.filter(event__id__in=IDS).filter(
-                Q(event__event_hierarchy__project_metadata__is_public=True) | Q(
-                    event__event_hierarchy__project_metadata__project_creator__username=user.username))
-
-            Env = Environment.objects.filter(event__id__in=IDS).filter(
-                Q(event__event_hierarchy__project_metadata__is_public=True) | Q(
-                    event__event_hierarchy__project_metadata__project_creator__username=user.username))
-
-            G = Geog_Location.objects.filter(sample_metadata__event_sample_metadata__id__in=IDS).filter(
-                Q(sample_metadata__event_sample_metadata__event_hierarchy__project_metadata__is_public=True) | Q(
-                    sample_metadata__event_sample_metadata__event_hierarchy__project_metadata__project_creator__username=user.username)).order_by(
-                'name').distinct('name')
-
-            R = Reference.objects.filter(associated_projects__event_hierarchy__event__id__in=IDS).filter(
-                Q(associated_projects__is_public=True) | Q(
-                    associated_projects__project_creator__username=user.username)).order_by('full_reference').distinct(
-                'full_reference')
-
-            T = Taxa.objects.filter(occurrence__event__id__in=IDS).filter(Q(
-                occurrence__event__event_hierarchy__project_metadata__is_public=True) | Q(
-                occurrence__event__event_hierarchy__project_metadata__project_creator__username=user.username)).order_by(
-                'name').distinct('name')
-
-        else:
-
-            PM = ProjectMetadata.objects.filter(event_hierarchy__event__id__in=IDS).filter(Q(is_public=True)).order_by(
-                'project_name').distinct('project_name')
-
-            EH = EventHierarchy.objects.filter(event__id__in=IDS).filter(Q(
-                project_metadata__is_public=True)).order_by('event_hierarchy_name').distinct('event_hierarchy_name')
-
-            E = Event.objects.filter(id__in=IDS).filter(Q(event_hierarchy__project_metadata__is_public=True))
-
-            S = Sequences.objects.filter(event__id__in=IDS).filter(
-                Q(event__event_hierarchy__project_metadata__is_public=True))
-
-            O = Occurrence.objects.filter(event__id__in=IDS).filter(
-                Q(event__event_hierarchy__project_metadata__is_public=True))
-
-            Env = Environment.objects.filter(event__id__in=IDS).filter(
-                Q(event__event_hierarchy__project_metadata__is_public=True))
-
-            G = Geog_Location.objects.filter(sample_metadata__event_sample_metadata__id__in=IDS).filter(Q(
-                sample_metadata__event_sample_metadata__event_hierarchy__project_metadata__is_public=True)).order_by(
-                'name').distinct('name')
-
-            R = Reference.objects.filter(associated_projects__event_hierarchy__event__id__in=IDS).filter(Q(
-                associated_projects__is_public=True)).order_by('full_reference').distinct('full_reference')
-
-            T = Taxa.objects.filter(occurrence__event__id__in=IDS).filter(Q(
-                occurrence__event__event_hierarchy__project_metadata__is_public=True)).order_by('name').distinct('name')
+        T = Taxa.objects.filter(occurrence__event__in=events).filter(Q(
+            occurrence__event__event_hierarchy__project_metadata__is_public=True)).annotate(count=Count('id')) \
+            .order_by('name')
         #####################################################################################################################
 
         output = io.BytesIO()
@@ -2310,6 +2116,103 @@ def export_events(request):
         )
         response['Content-Disposition'] = 'attachment; filename=%s' % filename
         output.close()
-        return (response)
+        return response
 
 
+class ProjectMetadataListView(generic.ListView):
+    """
+    List the search results for ProjectMetadata instances
+    """
+    template_name = 'polaaar/projectmetadata_list.html'
+    paginate_by = 10
+    swagger_schema = None  # do not list in swagger because this view is dedicated for web GUI
+
+    def get_queryset(self):
+        qs = ProjectMetadata.objects.filter(is_public=True)
+        form = FreeTextSearchForm(self.request.GET)
+        if form.is_valid():
+            search_term = form.cleaned_data.get('q')
+            if search_term:  # return queryset if there is no search term
+                vector = SearchVector('project_name', 'abstract')
+                query = SearchQuery(search_term)
+                # filter for ProjectMetadata which is public AND (project_name contains search term or abstract
+                # contains search term)
+                qs = ProjectMetadata.objects.annotate(rank=SearchRank(vector, query)) \
+                    .filter(is_public=True, rank__gte=0.01).order_by('-rank')
+        return qs
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = FreeTextSearchForm(self.request.GET)
+        id_list = self.get_queryset().values_list('id', flat=True)
+        context['id_list'] = ','.join(map(str, id_list))
+        return context
+
+
+def project_metadata_detail(request, pk):
+    """
+    ProjectMetadata detail page, displays statistics of various variables related to project.
+    :param request: http GET request
+    :param pk: pk of the ProjectMetadata object
+    :return: HttpResponse of the ProjectMetadata with statistics in the context
+    """
+    get_object_or_404(ProjectMetadata, pk=pk)
+    project = ProjectMetadata.objects.get(pk=pk)
+    cache_key = 'project{}_{}'.format(project.id, project.updated_on)
+    project_cache = cache.get(cache_key)
+    if not project_cache:
+        context = dict()
+        event = Event.objects.filter(project_metadata=project)
+        mof = Variable.objects.filter(environment__event__project_metadata=project)
+        sequence = Sequences.objects.filter(event__project_metadata=project)
+        sample = SampleMetadata.objects.filter(event_sample_metadata__project_metadata=project)
+        ref = Reference.objects.filter(associated_projects=project)
+
+        event_per_year = event.exclude(collection_year__isnull=True).values('collection_year').annotate(
+            count=Count('collection_year')).order_by('collection_year')
+        event_per_month = event.exclude(collection_month__isnull=True).values('collection_month').annotate(
+            count=Count('collection_month')).order_by('collection_month')
+        sample_geo_loc_name = sample.exclude(geo_loc_name__isnull=True).values('geo_loc_name').annotate(
+            count=Count('geo_loc_name')).order_by('geo_loc_name')
+        sample_env_biome = sample.exclude(env_biome__isnull=True).values('env_biome').annotate(
+            count=Count('env_biome')).order_by()
+        mof_name = mof.exclude(name__isnull=True).values('name').annotate(count=Count('name')).order_by('name')
+        seq_target_gene = sequence.exclude(target_gene__isnull=True).values('target_gene').annotate(
+            count=Count('target_gene')).order_by()
+        seq_target_subfg = sequence.exclude(target_subfragment__isnull=True).values('target_subfragment').annotate(
+            count=Count('target_subfragment')).order_by()
+        seq_type = sequence.exclude(type__isnull=True).values('type').annotate(count=Count('type')) \
+            .order_by()
+        seq_run_type = sequence.exclude(run_type__isnull=True).values('run_type').annotate(
+            count=Count('run_type')).order_by()
+        seq_seqData_projectNumber = sequence.exclude(seqData_projectNumber__isnull=True).values(
+            'seqData_projectNumber').annotate(count=Count('seqData_projectNumber')).order_by()
+        try:
+            min_lat = event.values('Latitude').annotate(min=Min('Latitude')).order_by().values('min')[0].get('min')
+        except IndexError:
+            min_lat = 0
+        context['project'] = project
+        context['license'] = project.get_license()
+        context['citation'] = project.get_citation()
+        context['event_count'] = event.count()
+        context['event_per_year'] = event_per_year
+        context['event_per_month'] = event_per_month
+        context['sample_count'] = sample.count()
+        context['sample_geo_loc_name'] = sample_geo_loc_name
+        context['sample_env_biome'] = sample_env_biome
+        context['mof_count'] = mof.count()
+        context['mof_name'] = mof_name
+        context['seq_count'] = sequence.count()
+        context['seq_target_gene'] = seq_target_gene
+        context['seq_target_subfg'] = seq_target_subfg
+        context['seq_type'] = seq_type
+        context['seq_run_type'] = seq_run_type
+        context['seq_seqData_projectNumber'] = seq_seqData_projectNumber
+        context['min_lat'] = min_lat
+        context['ref'] = ref
+        context['geoserver_host'] = settings.GEOSERVER_HOST
+        cache.set(cache_key, context)  # cache the context if not found
+    else:
+        context = project_cache
+    response = render(request, template_name='polaaar/projectmetadata_detail.html', context=context)
+    return response

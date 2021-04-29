@@ -1,6 +1,10 @@
 from __future__ import unicode_literals
 
+import datetime
 import json
+
+import requests
+import defusedxml.ElementTree as ET
 from django.utils.translation import gettext as _
 from django.conf import settings
 from django.contrib.gis.gdal import *
@@ -61,7 +65,8 @@ class Taxa(models.Model):
     ### Add constraint to not point to its own rank :) 
 
     def __str__(self):
-        return self.TaxonRank + ': ' + self.name
+        taxon_rank = self.TaxonRank or ''
+        return '{}: {}'.format(taxon_rank, self.name)
 
     class Meta:
         ordering = ['name']
@@ -230,8 +235,40 @@ class ProjectMetadata(models.Model):
     def __str__(self):
         return self.project_name
 
+    def get_eml(self):
+        r = requests.get(self.EML_URL).content
+        etree = ET.fromstring(r)
+        return etree
+
+    def get_license(self):
+        """
+        Get license from eml
+        """
+        etree = self.get_eml()
+        project_license_dict = etree.find('.//intellectualRights/para/ulink')
+        project_license = project_license_dict.get('url')
+        return project_license
+
+    def get_citation(self):
+        """
+        Get citation from eml
+        """
+        etree = self.get_eml()
+        try:
+            citation_ipt = etree.find('./additionalMetadata/metadata/gbif/citation').text
+        except AttributeError:
+            citation_ipt = None
+        if citation_ipt:
+            now = datetime.datetime.now().date()
+            pola3r = "(Available: Polar 'Omics Links to Antarctic, Arctic and Alpine Research. Antarctic Biodiversity Portal. Scientific Committee for Antarctic Research. www.biodiversity.aq/pola3r. Accessed: {})".format(
+                now)
+            citation = "{} {}".format(citation_ipt, pola3r)
+        else:
+            citation = None
+        return citation
+
     class Meta:
-        ordering = ['project_name']
+        ordering = ['-start_date']
         verbose_name = 'Project metadata'
         verbose_name_plural = 'Project metadata'
 
@@ -263,7 +300,7 @@ class EventHierarchy(models.Model):
                                          on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.event_type.name + ': ' + self.event_hierarchy_name
+        return '{}: {}'.format(self.event_type.name, self.event_hierarchy_name)
 
     class Meta:
         ordering = ['event_hierarchy_name']
@@ -335,21 +372,15 @@ class Event(models.Model):
                                              help_text="Whether or not there is Environment associated to this Event record")
     sequences_exists = models.BooleanField(blank=True, null=True,
                                            help_text="Whether or not there is Sequence associated to this Event record")
+    # add ProjectMetadata here because it is easier to query for the map
+    project_metadata = models.ForeignKey(ProjectMetadata, blank=True, null=True, on_delete=models.CASCADE,
+                                         help_text='Foreign key to ProjectMetadata record')
 
     def save(self, *args, **kwargs):
         coords = json.loads(GEOSGeometry(self.footprintWKT).centroid.json)["coordinates"]
         self.Latitude = coords[0]
         self.Longitude = coords[1]
         super(Event, self).save(*args, **kwargs)
-
-    @property
-    def popupContent(self):
-        return '<p style="margin-top:0px;margin-bottom:0px;"><strong>Project name:\
-     {}</strong></p><p style="margin-top:0px;margin-bottom:0px;">Creator: {}</p>\
-     <p style="margin-top:0px;margin-bottom:0px;">Sample name: {}</p>'.format(
-            self.event_hierarchy.project_metadata.project_name,
-            self.event_hierarchy.project_metadata.project_creator.full_name,
-            self.sample_name)
 
     def __str__(self):
         return self.sample_name
@@ -387,7 +418,7 @@ class Occurrence(models.Model):
                               help_text="Foreign key to Event table")
 
     def __str__(self):
-        return self.occurrenceID + ': ' + self.taxon.name
+        return '{}: {}'.format(self.occurrenceID, self.taxon.name)
 
 
 ### End of occurrences model block
@@ -410,7 +441,8 @@ class SampleMetadata(models.Model):
     geographic_location = models.ForeignKey(_("Geog_Location"), related_name='sample_metadata',
                                             on_delete=models.DO_NOTHING, blank=True, null=True,
                                             help_text="Foreign key to Geog_Location table")
-    locality = models.CharField(max_length=500, blank=True, null=True, help_text="http://rs.tdwg.org/dwc/terms/locality")
+    locality = models.CharField(max_length=500, blank=True, null=True,
+                                help_text="http://rs.tdwg.org/dwc/terms/locality")
 
     geo_loc_name = models.CharField(max_length=500, blank=True, null=True,
                                     help_text="The geographical origin of the sample as defined by the country or sea name followed by specific region name. Country or sea names should be chosen from the INSDC country list (http://insdc.org/country.html); or the GAZ ontology (v 1.512) (http://purl.bioontology.org/ontology/GAZ)")  ## MIxS field
@@ -466,7 +498,7 @@ class SampleMetadata(models.Model):
                                               help_text="http://rs.tdwg.org/dwc/terms/eventRemarks")
 
     def __str__(self):
-        return self.metadata_tag
+        return self.metadata_tag or ''
 
     class Meta:
         verbose_name_plural = 'Metadata'
@@ -500,17 +532,17 @@ class Sequences(models.Model):
                                 help_text="The type of sequencing run performed. E.g. Illumina MiSeq 250bp paired-end")
     seqData_url = models.URLField(blank=True, null=True, help_text="relevant electronic resources")
     seqData_accessionNumber = models.CharField(max_length=500, blank=True, null=True,
-                                               help_text="An assocated INSDC GenBank accession number.")
+                                               help_text="An associated INSDC GenBank accession number.")
     seqData_projectNumber = models.CharField(max_length=500, blank=True, null=True,
-                                             help_text="An assocated INSDC BioProject number.")
+                                             help_text="An associated INSDC BioProject number.")
     seqData_runNumber = models.CharField(max_length=500, blank=True, null=True,
-                                         help_text="An assocated INSDC run accession number. (ERR number)")
+                                         help_text="An associated INSDC run accession number. (ERR number)")
     seqData_sampleNumber = models.CharField(max_length=500, blank=True, null=True,
-                                            help_text="An assocated INSDC BioSample number.")
-    seqData_numberOfBases = models.IntegerField(blank=True, null=True,
-                                                help_text="The number of bases predicted in a sequenced sample")
-    seqData_numberOfSequences = models.IntegerField(blank=True, null=True,
-                                                    help_text="the number of sequences in a sample or folder")
+                                            help_text="An associated INSDC BioSample number.")
+    seqData_numberOfBases = models.BigIntegerField(blank=True, null=True,
+                                                   help_text="The number of bases predicted in a sequenced sample")
+    seqData_numberOfSequences = models.BigIntegerField(blank=True, null=True,
+                                                       help_text="the number of sequences in a sample or folder")
     ASV_URL = models.URLField(blank=True, null=True,
                               help_text="the url to the table with Operational Taxonomic Unit (OTU) or Alternative Sequence Variants (ASV) occurrences")  ## a URL to the Alternative Sequencing Variants
     event = models.ForeignKey(_("Event"), related_name='sequences', blank=True, null=True, on_delete=models.DO_NOTHING,
@@ -567,7 +599,7 @@ class Variable(models.Model):
                                 help_text="http://rs.tdwg.org/dwc/terms/measurementType")
 
     def __str__(self):
-        return self.name
+        return '{} ({})'.format(self.name, self.var_type.lower())
 
     class Meta:
         ordering = ['name']
@@ -601,7 +633,7 @@ class Environment(models.Model):
     ## if env_variable.var_type is 'Numeric', then users input value for env_numeric_value
     env_numeric_value = models.DecimalField(decimal_places=5, max_digits=25, blank=True, null=True,
                                             help_text="http://rs.tdwg.org/dwc/terms/measurementValue")
-    env_text_value = models.CharField(max_length=100, blank=True, null=True,
+    env_text_value = models.CharField(max_length=300, blank=True, null=True,
                                       help_text="http://rs.tdwg.org/dwc/terms/measurementValue")
 
     event = models.ForeignKey(_("Event"), related_name='environment', blank=True, null=True,

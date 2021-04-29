@@ -1,0 +1,270 @@
+{% extends "polaaar/base.html" %}
+{% load static leaflet_tags %}
+
+{% block title %}
+    POLA3R
+{% endblock title %}
+
+
+{% block body_class %}{% endblock %}
+
+{% block content %}
+    <section class="container mt-4">
+        <h2>{{ project.project_name }}</h2>
+        <a class="btn btn-md btn-biodiversity-lightblue" type="button" style="display: inline-block;"
+           href="{% url 'polaaar:GetProjectFiles' project.id %}">Download source csv</a>
+        <a class="btn btn-md btn-biodiversity-lightblue" type="button" style="display: inline-block;"
+           href="{% url 'polaaar:export_projects' %}?id={{ project.id }}">
+            Download POLA3R formatted archive</a>
+        <div class="row">
+            <div class="col-12">
+                <small class="text-muted">Definition of fields in POLA3R formatted archive is available
+                    <a href="{% static 'polaaar/files/terms_map.txt' %}">here</a></small>
+            </div>
+        </div>
+
+        <table class="table table-borderless table-striped table-responsive-sm mt-4">
+            {% if project.resource_url %}
+                <tr>
+                    <th scope="row">Resource URL</th>
+                    <td><a href="{{ project.resource_url }}">{{ project.resource_url }}</a></td>
+                </tr>
+            {% endif %}
+            <tr>
+                <th scope="row">Last updated</th>
+                <td>{{ project.updated_on }}</td>
+            </tr>
+            {% if project.start_date %}
+                <tr>
+                    <th scope="row">Time range</th>
+                    <td>{{ project.start_date }}{% if project.end_date %} - {{ project.end_date }}{% endif %}</td>
+                </tr>
+            {% endif %}
+            <tr>
+                <th scope="row">Project contact</th>
+                <td>{{ project.project_contact|default_if_none:"Not provided" }}</td>
+            </tr>
+            <tr>
+                <th scope="row">Abstract</th>
+                <td>{{ project.abstract|urlize }}</td>
+            </tr>
+            <tr>
+                <th scope="row">Rights</th>
+                <td><a href="{{ license }}">{{ license }}</a></td>
+            </tr>
+            {% if seq_seqData_projectNumber %}
+                <tr>
+                    <th scope="row">Sequence data</th>
+                    <td>
+                        {% for record in seq_seqData_projectNumber %}
+                            <a href="https://www.ncbi.nlm.nih.gov/bioproject/?term={{ record.seqData_projectNumber }}">{{ record.seqData_projectNumber }}</a>
+                            <br/>
+                        {% endfor %}
+                    </td>
+                </tr>
+            {% endif %}
+            <tr>
+                <th scope="row">Citation</th>
+                <td>{{ citation|urlize }}</td>
+            </tr>
+            {% if ref %}
+                <tr>
+                    <th scope="row">References</th>
+                    <td>
+                        <ol>
+                            {% for reference in ref %}
+                                <li>{{ reference.full_reference }}</li>
+                            {% endfor %}
+                        </ol>
+                    </td>
+                </tr>
+            {% endif %}
+        </table>
+        <!-- Map -->
+        <div class="my-4 container">
+            <div class="col-9 center">
+                {% leaflet_map "landing_map" callback="window.map_init" %}
+                <p style="font-size:10pt;color:white">Map attribution: Tiles &copy; Esri &mdash; Source: Esri,
+                    DeLorme,
+                    NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand),
+                    TomTom, 2012</p>
+            </div>
+        </div>
+    </section>
+    <!-- Cards -->
+    <section class="container">
+        <div class="row row-cols-1 row-cols-md-2">
+            <div class="col mb-4">
+                <div class="card" id="statistics">
+                    <div class="card-body">
+                        <h5 class="card-title">Summary statistics</h5>
+                        <table class="table table-sm mt-4 card-text">
+                            <tr>
+                                <th scope="row">Sampling event records</th>
+                                <td>{{ event_count }}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Sample records</th>
+                                <td>{{ sample_count }}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Sequence metadata records</th>
+                                <td>{{ seq_count }}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Environmental metadata records</th>
+                                <td>{{ mof_count }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col mb-4">
+                <div class="card">
+                    <div class="card-body" id="events">
+                        <h5 class="card-title">Sampling events</h5>
+                        <table class="table table-sm mt-4 card-text">
+                            <tr>
+                                <th>Year</th>
+                                <th>Records</th>
+                            </tr>
+                            {% for record in event_per_year %}
+                                <tr>
+                                    <td>{{ record.collection_year }}</td>
+                                    <td>{{ record.count }}</td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                        {% if event_per_month %}
+                            <table class="table table-sm mt-4 card-text">
+                                <tr>
+                                    <th>Month</th>
+                                    <th>Records</th>
+                                </tr>
+                                {% for record in event_per_month %}
+                                    <tr>
+                                        <td>{{ record.collection_month }}</td>
+                                        <td>{{ record.count }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </table>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% if sample_geo_loc_name %}
+                <div class="col mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Sample metadata</h5>
+                            <table class="table table-sm mt-4 card-text">
+                                <tr>
+                                    <th></th>
+                                    <th>Sample Metadata</th>
+                                    <th>Records</th>
+                                </tr>
+                                {% for record in sample_geo_loc_name %}
+                                    <tr>
+                                        <th scope="row">Location</th>
+                                        <td>{{ record.geo_loc_name }}</td>
+                                        <td>{{ record.count }}</td>
+                                    </tr>
+                                {% endfor %}
+                                {% for record in sample_env_biome %}
+                                    <tr>
+                                        <th scope="row">Environmental biome</th>
+                                        <td>{{ record.env_biome }}</td>
+                                        <td>{{ record.count }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+            <div class="col mb-4">
+                <div class="card" id="sequence">
+                    <div class="card-body">
+                        <h5 class="card-title">Sequence metadata</h5>
+                        <table class="table table-sm mt-4 card-text">
+                            <tr>
+                                <th></th>
+                                <th>Sequence metadata</th>
+                                <th>Records</th>
+                            </tr>
+                            {% for record in seq_target_gene %}
+                                <tr>
+                                    <th scope="row">Target gene</th>
+                                    <td>{{ record.target_gene }}</td>
+                                    <td>{{ record.count }}</td>
+                                </tr>
+                            {% endfor %}
+                            {% for record in seq_target_subfg %}
+                                <tr>
+                                    <th scope="row">Target subfragment</th>
+                                    <td>{{ record.target_subfragment }}</td>
+                                    <td>{{ record.count }}</td>
+                                </tr>
+                            {% endfor %}
+                            {% for record in seq_type %}
+                                <tr>
+                                    <th scope="row">Study type</th>
+                                    <td>{{ record.type|title }}</td>
+                                    <td>{{ record.count }}</td>
+                                </tr>
+                            {% endfor %}
+                            {% for record in seq_run_type %}
+                                <tr>
+                                    <th scope="row">Run type</th>
+                                    <td>{{ record.run_type }}</td>
+                                    <td>{{ record.count }}</td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+                </div>
+            </div>
+            {% if mof_name %}
+                <div class="col mb-4">
+                    <div class="card" id="environment">
+                        <div class="card-body">
+                            <h5 class="card-title">Additional metadata</h5>
+                            <table class="table table-sm mt-4 card-text">
+                                <tr>
+                                    <th>Variable</th>
+                                    <th>Records</th>
+                                </tr>
+                                {% for record in mof_name %}
+                                    <tr>
+                                        <td>{{ record.name }}</td>
+                                        <td>{{ record.count }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </section>
+{% endblock %}
+
+{% block polaaar_js %}
+    <script>
+        function map_init(map, options) {
+
+            let tileLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
+                attribution: ''
+            })
+            tileLayer.addTo(map);
+
+            let projectLayer = L.tileLayer.wms('{{ geoserver_host }}/antabif/wms?', {
+                layers: 'antabif:polaaar_event',
+                format: 'image/png',
+                transparent: true,
+                cql_filter: 'project_metadata_id={{ project.id }}'
+            })
+            projectLayer.addTo(map);
+        }
+    </script>
+{% endblock %}

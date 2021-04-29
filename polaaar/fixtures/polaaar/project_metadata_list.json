@@ -1,0 +1,59 @@
+[
+  {
+    "model": "polaaar.ProjectMetadata",
+    "pk": 1,
+    "fields": {
+      "resource_url": null,
+      "project_name": "arctic project",
+      "start_date": "2012-01-01",
+      "end_date": null,
+      "EML_URL": "https://ipt.biodiversity.aq/eml.do?r=microorganisms_in_frost_flowers_on_young_arctic_sea_ice&v=1.0",
+      "abstract": "Amplicon sequencing dataset (454 pyrosequencing) of Bacteria in different types of young sea ice and sea ice brines in the Arctic ocean (North-East coast of Greenland)",
+      "geomet": "SRID=4326;POLYGON ((74.468 -20.311, 74.468 -20.311, 74.468 -20.311, 74.468 -20.311, 74.468 -20.311))",
+      "is_public": true,
+      "associated_media": "null",
+      "created_on": "2020-8-19",
+      "updated_on": "2020-8-20",
+      "project_contact": null,
+      "project_qaqc": true
+    }
+  },
+   {
+    "model": "polaaar.ProjectMetadata",
+    "pk": 2,
+    "fields": {
+      "resource_url": null,
+      "project_name": "private antarctic dataset",
+      "start_date": "2012-01-01",
+      "end_date": null,
+      "EML_URL": "https://ipt.biodiversity.aq/eml.do?r=microorganisms_in_frost_flowers_on_young_arctic_sea_ice&v=1.0",
+      "abstract": "private antarctic dataset abstract",
+      "geomet": "SRID=4326;POLYGON ((74.468 -20.311, 74.468 -20.311, 74.468 -20.311, 74.468 -20.311, 74.468 -20.311))",
+      "is_public": false,
+      "associated_media": "null",
+      "created_on": "2020-8-19",
+      "updated_on": "2020-8-20",
+      "project_contact": null,
+      "project_qaqc": true
+    }
+  },
+  {
+    "model": "polaaar.ProjectMetadata",
+    "pk": 3,
+    "fields": {
+      "resource_url": null,
+      "project_name": "a public belgian antarctic dataset",
+      "start_date": "2012-01-01",
+      "end_date": null,
+      "EML_URL": "",
+      "abstract": "a public belgian dataset abstract about random research project",
+      "geomet": "SRID=4326;POLYGON ((74.468 -20.311, 74.468 -20.311, 74.468 -20.311, 74.468 -20.311, 74.468 -20.311))",
+      "is_public": true,
+      "associated_media": "null",
+      "created_on": "2020-8-19",
+      "updated_on": "2020-8-20",
+      "project_contact": null,
+      "project_qaqc": true
+    }
+  }
+]
