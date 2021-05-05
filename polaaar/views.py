@@ -628,7 +628,7 @@ def export_projects(request):
             'project_qaqc',
             'project_contact',
         ]
-        PMlist = PM.annotate(geome=AsGeoJSON('geomet')).values_list(*project_query_row).iterator(chunk_size=10)
+        PMlist = PM.annotate(geome=AsGeoJSON('geomet')).values_list(*project_query_row).iterator(chunk_size=100)
 
         for col_num, data in enumerate(project_header_row):
             projectsheet.write(0, col_num, data)
@@ -658,7 +658,7 @@ def export_projects(request):
             'created_on',
             'project_metadata__project_name'
         ]
-        EHlist = EH.values_list(*eventH_query).iterator(chunk_size=1000)
+        EHlist = EH.values_list(*eventH_query).iterator(chunk_size=100)
         for col_num, data in enumerate(eventH_header):
             eventHsheet.write(0, col_num, data)
 
@@ -1087,7 +1087,7 @@ def export_environment(request):
             'project_creator__full_name',
             'project_qaqc'
         ]
-        PMlist = PM.annotate(geome=AsGeoJSON('geomet')).values_list(*project_query_row)
+        PMlist = PM.annotate(geome=AsGeoJSON('geomet')).values_list(*project_query_row).iterator(chunk_size=100)
 
         for col_num, data in enumerate(project_header_row):
             projectsheet.write(0, col_num, data)
@@ -1117,7 +1117,7 @@ def export_environment(request):
             'created_on',
             'project_metadata__project_name'
         ]
-        EHlist = EH.values_list(*eventH_query)
+        EHlist = EH.values_list(*eventH_query).iterator(chunk_size=100)
         for col_num, data in enumerate(eventH_header):
             eventHsheet.write(0, col_num, data)
 
@@ -1219,7 +1219,7 @@ def export_environment(request):
             'event_metadata__lib_size',
             'event_metadata__additional_information'
         ]
-        Elist = E.annotate(geom=AsGeoJSON('footprintWKT')).values_list(*event_query)
+        Elist = E.annotate(geom=AsGeoJSON('footprintWKT')).values_list(*event_query).iterator(chunk_size=100)
         for col_num, data in enumerate(event_header):
             eventsheet.write(0, col_num, data)
 
@@ -1279,7 +1279,7 @@ def export_environment(request):
             'seqData_numberOfSequences',
             'ASV_URL'
         ]
-        Slist = S.values_list(*sequence_query)
+        Slist = S.values_list(*sequence_query).iterator(chunk_size=100)
         for col_num, data in enumerate(sequence_header):
             sequencesheet.write(0, col_num, data)
 
@@ -1317,7 +1317,7 @@ def export_environment(request):
             'other_catalog_numbers',
             'recorded_by'
         ]
-        Olist = O.values_list(*occur_query)
+        Olist = O.values_list(*occur_query).iterator(chunk_size=100)
         for col_num, data in enumerate(occur_header):
             occursheet.write(0, col_num, data)
 
@@ -1355,7 +1355,7 @@ def export_environment(request):
             'env_numeric_value',
             'env_text_value'
         ]
-        Envlist = Env.values_list(*envir_query)
+        Envlist = Env.values_list(*envir_query).iterator(chunk_size=100)
         for col_num, data in enumerate(envir_header):
             envirsheet.write(0, col_num, data)
 
@@ -1430,7 +1430,7 @@ def export_sequences(request):
             'project_creator__full_name',
             'project_qaqc'
         ]
-        PMlist = PM.annotate(geome=AsGeoJSON('geomet')).values_list(*project_query_row)
+        PMlist = PM.annotate(geome=AsGeoJSON('geomet')).values_list(*project_query_row).iterator(chunk_size=100)
 
         for col_num, data in enumerate(project_header_row):
             projectsheet.write(0, col_num, data)
@@ -1460,7 +1460,7 @@ def export_sequences(request):
             'created_on',
             'project_metadata__project_name'
         ]
-        EHlist = EH.values_list(*eventH_query)
+        EHlist = EH.values_list(*eventH_query).iterator(chunk_size=100)
         for col_num, data in enumerate(eventH_header):
             eventHsheet.write(0, col_num, data)
 
@@ -1562,7 +1562,7 @@ def export_sequences(request):
             'event_metadata__lib_size',
             'event_metadata__additional_information'
         ]
-        Elist = E.annotate(geom=AsGeoJSON('footprintWKT')).values_list(*event_query)
+        Elist = E.annotate(geom=AsGeoJSON('footprintWKT')).values_list(*event_query).iterator(chunk_size=100)
         for col_num, data in enumerate(event_header):
             eventsheet.write(0, col_num, data)
 
@@ -1622,7 +1622,7 @@ def export_sequences(request):
             'seqData_numberOfSequences',
             'ASV_URL'
         ]
-        Slist = S.values_list(*sequence_query)
+        Slist = S.values_list(*sequence_query).iterator(chunk_size=100)
         for col_num, data in enumerate(sequence_header):
             sequencesheet.write(0, col_num, data)
 
@@ -1726,7 +1726,7 @@ def export_events(request):
             'project_qaqc',
             'project_contact',
         ]
-        PMlist = PM.annotate(geome=AsGeoJSON('geomet')).values_list(*project_query_row)
+        PMlist = PM.annotate(geome=AsGeoJSON('geomet')).values_list(*project_query_row).iterator(chunk_size=100)
 
         for col_num, data in enumerate(project_header_row):
             projectsheet.write(0, col_num, data)
@@ -1756,7 +1756,7 @@ def export_events(request):
             'created_on',
             'project_metadata__project_name'
         ]
-        EHlist = EH.values_list(*eventH_query)
+        EHlist = EH.values_list(*eventH_query).iterator(chunk_size=100)
         for col_num, data in enumerate(eventH_header):
             eventHsheet.write(0, col_num, data)
 
@@ -1858,7 +1858,7 @@ def export_events(request):
             'event_metadata__lib_size',
             'event_metadata__additional_information'
         ]
-        Elist = E.annotate(geom=AsGeoJSON('footprintWKT')).values_list(*event_query)
+        Elist = E.annotate(geom=AsGeoJSON('footprintWKT')).values_list(*event_query).iterator(chunk_size=100)
         for col_num, data in enumerate(event_header):
             eventsheet.write(0, col_num, data)
 
@@ -1918,7 +1918,7 @@ def export_events(request):
             'seqData_numberOfSequences',
             'ASV_URL'
         ]
-        Slist = S.values_list(*sequence_query)
+        Slist = S.values_list(*sequence_query).iterator(chunk_size=100)
         for col_num, data in enumerate(sequence_header):
             sequencesheet.write(0, col_num, data)
 
@@ -1956,7 +1956,7 @@ def export_events(request):
             'other_catalog_numbers',
             'recorded_by'
         ]
-        Olist = O.values_list(*occur_query)
+        Olist = O.values_list(*occur_query).iterator(chunk_size=100)
         for col_num, data in enumerate(occur_header):
             occursheet.write(0, col_num, data)
 
@@ -1993,7 +1993,7 @@ def export_events(request):
             'env_numeric_value',
             'env_text_value'
         ]
-        Envlist = Env.values_list(*envir_query)
+        Envlist = Env.values_list(*envir_query).iterator(chunk_size=100)
         for col_num, data in enumerate(envir_header):
             envirsheet.write(0, col_num, data)
 
@@ -2026,7 +2026,7 @@ def export_events(request):
             'parent_geog__parent_geog__parent_geog__parent_geog__parent_geog__parent_geog__parent_geog__name',
             'parent_geog__parent_geog__parent_geog__parent_geog__parent_geog__parent_geog__parent_geog__parent_geog__name'
         ]
-        Glist = G.values_list(*geog_query)
+        Glist = G.values_list(*geog_query).iterator(chunk_size=100)
         for col_num, data in enumerate(geog_header):
             geomsheet.write(0, col_num, data)
 
@@ -2047,7 +2047,7 @@ def export_events(request):
             'year',
             'associated_projects__project_name'
         ]
-        Rlist = R.values_list(*ref_query)
+        Rlist = R.values_list(*ref_query).iterator(chunk_size=100)
         for col_num, data in enumerate(ref_header):
             refsheet.write(0, col_num, data)
 
@@ -2098,7 +2098,7 @@ def export_events(request):
             'parent_taxa__parent_taxa__parent_taxa__parent_taxa__parent_taxa__parent_taxa__parent_taxa__parent_taxa__parent_taxa__parent_taxa__parent_taxa__parent_taxa__parent_taxa__parent_taxa__parent_taxa__name',
             'parent_taxa__parent_taxa__parent_taxa__parent_taxa__parent_taxa__parent_taxa__parent_taxa__parent_taxa__parent_taxa__parent_taxa__parent_taxa__parent_taxa__parent_taxa__parent_taxa__parent_taxa__parent_taxa__name'
         ]
-        Tlist = T.values_list(*taxa_query)
+        Tlist = T.values_list(*taxa_query).iterator(chunk_size=100)
         for col_num, data in enumerate(taxa_header):
             taxasheet.write(0, col_num, data)
 
