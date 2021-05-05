@@ -2133,7 +2133,7 @@ class ProjectMetadataListView(generic.ListView):
         if form.is_valid():
             search_term = form.cleaned_data.get('q')
             if search_term:  # return queryset if there is no search term
-                vector = SearchVector('tsv_idx_col')
+                vector = SearchVector('abstract', 'project_name')
                 query = SearchQuery(search_term)
                 # filter for ProjectMetadata which is public AND (project_name contains search term or abstract
                 # contains search term)
