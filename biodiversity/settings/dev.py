@@ -16,6 +16,10 @@ ALLOWED_HOSTS = ['*']
 
 BASE_URL = 'https://127.0.0.1:8000'
 
+GEOSERVER_HOST = 'http://sandbox.bebif.be/geoserver/antabif/wms?'
+
+GEOSERVER_NAMESPACE = 'antabif'
+
 try:
     from .local import *
 except ImportError:

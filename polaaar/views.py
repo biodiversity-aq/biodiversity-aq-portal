@@ -39,7 +39,9 @@ def home(request):
     else:
         amplicon_img = False
     return render(request, 'polaaar/polaaar_home.html',
-                  {'geoserver_host': settings.GEOSERVER_HOST, 'amplicon_img': amplicon_img})
+                  {'geoserver_host': settings.GEOSERVER_HOST,
+                   'geoserver_namespace': settings.GEOSERVER_NAMESPACE,
+                   'amplicon_img': amplicon_img})
 
 #########################################################
 ### DJANGO Search views
@@ -2214,6 +2216,7 @@ def project_metadata_detail(request, pk):
         context['min_lat'] = min_lat
         context['ref'] = ref
         context['geoserver_host'] = settings.GEOSERVER_HOST
+        context['geoserver_namespace'] = settings.GEOSERVER_NAMESPACE
         cache.set(cache_key, context)  # cache the context if not found
     else:
         context = project_cache
