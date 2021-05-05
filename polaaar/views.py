@@ -585,8 +585,8 @@ def export_projects(request):
         T = Taxa.objects.filter(occurrence__event__event_hierarchy__project_metadata__id__in=IDS).filter(Q(
             occurrence__event__event_hierarchy__project_metadata__is_public=True))
 
-        output = io.BytesIO()
-        workbook = xlsxwriter.Workbook(output, {'constant_memory': True})
+        temp_file = tempfile.NamedTemporaryFile()
+        workbook = xlsxwriter.Workbook(temp_file.name, {'constant_memory': True})
         projectsheet = workbook.add_worksheet("Project metadata")
         eventHsheet = workbook.add_worksheet("Event Hierarchy")
         eventsheet = workbook.add_worksheet("Events")
@@ -1010,15 +1010,14 @@ def export_projects(request):
 
         ################################################################################
         workbook.close()
-        output.seek(0)
         curdate = datetime.datetime.now().strftime("%Y-%m-%d")
         filename = 'POLA3R_project_metadata_' + curdate + '.xlsx'
         response = HttpResponse(
-            output,
+            temp_file,
             content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
         )
         response['Content-Disposition'] = 'attachment; filename=%s' % filename
-        output.close()
+        temp_file.close()
         return (response)
 
 
@@ -1049,9 +1048,8 @@ def export_environment(request):
 
         Env = env_qs
         ###########################################################################################################
-
-        output = io.BytesIO()
-        workbook = xlsxwriter.Workbook(output, {'constant_memory': True})
+        temp_file = tempfile.NamedTemporaryFile()
+        workbook = xlsxwriter.Workbook(temp_file.name, {'constant_memory': True})
         projectsheet = workbook.add_worksheet("Project metadata")
         eventHsheet = workbook.add_worksheet("Event Hierarchy")
         eventsheet = workbook.add_worksheet("Events")
@@ -1367,15 +1365,14 @@ def export_environment(request):
 
         ################################################################################
         workbook.close()
-        output.seek(0)
         curdate = datetime.datetime.now().strftime("%Y-%M-%d")
         filename = 'POLA3R_environmental_' + curdate + '.xlsx'
         response = HttpResponse(
-            output,
+            temp_file,
             content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
         )
         response['Content-Disposition'] = 'attachment; filename=%s' % filename
-        output.close()
+        temp_file.close()
         return (response)
 
 
@@ -1396,8 +1393,8 @@ def export_sequences(request):
         S = qs
 
         ########################################################################
-        output = io.BytesIO()
-        workbook = xlsxwriter.Workbook(output, {'constant_memory': True})
+        temp_file = tempfile.NamedTemporaryFile()
+        workbook = xlsxwriter.Workbook(temp_file.name, {'constant_memory': True})
         projectsheet = workbook.add_worksheet("Project metadata")
         eventHsheet = workbook.add_worksheet("Event Hierarchy")
         eventsheet = workbook.add_worksheet("Events")
@@ -1636,15 +1633,14 @@ def export_sequences(request):
                 #######################################################################################
 
         workbook.close()
-        output.seek(0)
         curdate = datetime.datetime.now().strftime("%Y-%M-%d")
         filename = 'POLA3R_sequences_metadata_' + curdate + '.xlsx'
         response = HttpResponse(
-            output,
+            temp_file,
             content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
         )
         response['Content-Disposition'] = 'attachment; filename=%s' % filename
-        output.close()
+        temp_file.close()
         return response
 
 
@@ -1687,8 +1683,8 @@ def export_events(request):
             .order_by('name')
         #####################################################################################################################
 
-        output = io.BytesIO()
-        workbook = xlsxwriter.Workbook(output, {'constant_memory': True})
+        temp_file = tempfile.NamedTemporaryFile()
+        workbook = xlsxwriter.Workbook(temp_file.name, {'constant_memory': True})
         projectsheet = workbook.add_worksheet("Project metadata")
         eventHsheet = workbook.add_worksheet("Event Hierarchy")
         eventsheet = workbook.add_worksheet("Events")
@@ -2112,15 +2108,14 @@ def export_events(request):
 
         ################################################################################
         workbook.close()
-        output.seek(0)
         curdate = datetime.datetime.now().strftime("%Y-%m-%d")
         filename = 'POLA3R_events_' + curdate + '.xlsx'
         response = HttpResponse(
-            output,
+            temp_file,
             content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
         )
         response['Content-Disposition'] = 'attachment; filename=%s' % filename
-        output.close()
+        temp_file.close()
         return response
 
 
