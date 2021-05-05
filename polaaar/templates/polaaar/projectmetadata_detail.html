@@ -258,8 +258,8 @@
             })
             tileLayer.addTo(map);
 
-            let projectLayer = L.tileLayer.wms('{{ geoserver_host }}/antabif/wms?', {
-                layers: 'antabif:polaaar_event',
+            let projectLayer = L.tileLayer.wms('{{ geoserver_host }}', {
+                layers: '{{ geoserver_namespace }}:polaaar_event',
                 format: 'image/png',
                 transparent: true,
                 cql_filter: 'project_metadata_id={{ project.id }}'

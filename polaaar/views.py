@@ -1,3 +1,5 @@
+import tempfile
+
 from django.contrib.postgres.search import SearchVector, SearchRank, SearchQuery
 from django.core.cache import cache
 from django.core.serializers import serialize
@@ -37,7 +39,9 @@ def home(request):
     else:
         amplicon_img = False
     return render(request, 'polaaar/polaaar_home.html',
-                  {'geoserver_host': settings.GEOSERVER_HOST, 'amplicon_img': amplicon_img})
+                  {'geoserver_host': settings.GEOSERVER_HOST,
+                   'geoserver_namespace': settings.GEOSERVER_NAMESPACE,
+                   'amplicon_img': amplicon_img})
 
 #########################################################
 ### DJANGO Search views
@@ -231,8 +235,9 @@ def GetProjectFiles(request, pk):
         zip_subdir = "%s_raw-files" % pfnm
         zip_filename = "%s.zip" % zip_subdir
 
-        # Open StringIO to grab in-memory ZIP contents
-        s = io.BytesIO()
+        # Temporary directory to write zip file
+        tmpdir = tempfile.mkdtemp()
+        s = os.path.join(tmpdir, 'archive.zip')
 
         # The zip compressor
         zf = zipfile.ZipFile(s, "w")
@@ -247,7 +252,7 @@ def GetProjectFiles(request, pk):
             # Must close zip for all contents to be written
             zf.close()
         # Grab ZIP file from in-memory, make response with correct MIME-type
-        resp = HttpResponse(s.getvalue(), content_type="application/x-zip-compressed")
+        resp = HttpResponse(s, content_type="application/x-zip-compressed")
         # ..and correct content-disposition
         resp['Content-Disposition'] = 'attachment; filename=%s' % zip_filename
         return resp
@@ -581,7 +586,7 @@ def export_projects(request):
             occurrence__event__event_hierarchy__project_metadata__is_public=True))
 
         output = io.BytesIO()
-        workbook = xlsxwriter.Workbook(output)
+        workbook = xlsxwriter.Workbook(output, {'constant_memory': True})
         projectsheet = workbook.add_worksheet("Project metadata")
         eventHsheet = workbook.add_worksheet("Event Hierarchy")
         eventsheet = workbook.add_worksheet("Events")
@@ -1046,7 +1051,7 @@ def export_environment(request):
         ###########################################################################################################
 
         output = io.BytesIO()
-        workbook = xlsxwriter.Workbook(output)
+        workbook = xlsxwriter.Workbook(output, {'constant_memory': True})
         projectsheet = workbook.add_worksheet("Project metadata")
         eventHsheet = workbook.add_worksheet("Event Hierarchy")
         eventsheet = workbook.add_worksheet("Events")
@@ -1392,7 +1397,7 @@ def export_sequences(request):
 
         ########################################################################
         output = io.BytesIO()
-        workbook = xlsxwriter.Workbook(output)
+        workbook = xlsxwriter.Workbook(output, {'constant_memory': True})
         projectsheet = workbook.add_worksheet("Project metadata")
         eventHsheet = workbook.add_worksheet("Event Hierarchy")
         eventsheet = workbook.add_worksheet("Events")
@@ -1683,7 +1688,7 @@ def export_events(request):
         #####################################################################################################################
 
         output = io.BytesIO()
-        workbook = xlsxwriter.Workbook(output)
+        workbook = xlsxwriter.Workbook(output, {'constant_memory': True})
         projectsheet = workbook.add_worksheet("Project metadata")
         eventHsheet = workbook.add_worksheet("Event Hierarchy")
         eventsheet = workbook.add_worksheet("Events")
@@ -2133,7 +2138,7 @@ class ProjectMetadataListView(generic.ListView):
         if form.is_valid():
             search_term = form.cleaned_data.get('q')
             if search_term:  # return queryset if there is no search term
-                vector = SearchVector('project_name', 'abstract')
+                vector = SearchVector('tsv_idx_col')
                 query = SearchQuery(search_term)
                 # filter for ProjectMetadata which is public AND (project_name contains search term or abstract
                 # contains search term)
@@ -2211,6 +2216,7 @@ def project_metadata_detail(request, pk):
         context['min_lat'] = min_lat
         context['ref'] = ref
         context['geoserver_host'] = settings.GEOSERVER_HOST
+        context['geoserver_namespace'] = settings.GEOSERVER_NAMESPACE
         cache.set(cache_key, context)  # cache the context if not found
     else:
         context = project_cache
