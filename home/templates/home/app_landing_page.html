@@ -9,11 +9,11 @@
 
         @media (min-width: 800px) and (max-width: 850px) {
             .navbar:not(.top-nav-collapse) {
-                {% if page.colour_theme %}
-                    background-color: {{ page.colour_theme }} !important;
-                {% else %}
-                    background: #0099CC !important;
-                {% endif %}
+            {% if page.colour_theme %}
+                background-color: {{ page.colour_theme }} !important;
+            {% else %}
+                background: #0099CC !important;
+            {% endif %}
             }
         }
 
@@ -95,7 +95,7 @@
                         <div class="col mb-4">
                             <div class="card h-100 hoverable"> <!-- h-100: same height for each card, height 100% -->
                                 <!-- Card image -->
-                                <div class="view overlay" style="background: white;">
+                                <div style="background: white;">
                                     <a href="{{ pinned_page.value.url }}">
                                         {% image pinned_page.value.specific.cover height-200 as cover_img %}
                                         <img src="{{ cover_img.url }}" alt="{{ cover_img.alt }}"
@@ -147,17 +147,14 @@
                                 <div class="card h-100 hoverable">
                                     <!-- h-100: same height for each card, height 100% -->
                                     <!-- Card image -->
-                                    <div class="view overlay">
-                                        <a href="{{ recent_child_page.specific.url }}">
-                                            {% if recent_child_page.specific.cover %}
-                                                {% image recent_child_page.specific.cover height-200 as child_cover_img %}
-                                                <img src="{{ child_cover_img.url }}" alt="{{ child_cover_img.alt }}"
-                                                     height="{{ child_cover_img.height }}"
+                                    <a href="{{ recent_child_page.specific.url }}">
+                                        {% if recent_child_page.specific.cover %}
+                                            {% image recent_child_page.specific.cover height-200 as child_cover_img %}
+                                            <img src="{{ child_cover_img.url }}" alt="{{ child_cover_img.alt }}"
+                                                 height="{{ child_cover_img.height }}"
                                                  class="center fix-height-card-cover"/>
-                                            {% endif %}
-                                            <div class="mask rgba-white-slight"></div>
-                                        </a>
-                                    </div>
+                                        {% endif %}
+                                    </a>
                                     <div class="card-body">
                                         <!-- Card title -->
                                         <div>

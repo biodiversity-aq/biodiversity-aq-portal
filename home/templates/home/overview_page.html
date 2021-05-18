@@ -35,11 +35,13 @@
                         <div class="col mb-4">
                             <div class="card h-100"> <!-- h-100: same height for each card, height 100% -->
                                 <!-- Card image -->
-                                <a href="{{ pinned_page.value.url }}">
-                                    {% image pinned_page.value.specific.cover height-200 as cover_img %}
-                                    <img src="{{ cover_img.url }}" alt="{{ cover_img.alt }}"
-                                         height="{{ cover_img.height }}" class="center fix-height-card-cover"/>
-                                </a>
+                                <div>
+                                    <a href="{{ pinned_page.value.url }}">
+                                        {% image pinned_page.value.specific.cover height-200 as cover_img %}
+                                        <img src="{{ cover_img.url }}" alt="{{ cover_img.alt }}"
+                                             height="{{ cover_img.height }}" class="center fix-height-card-cover"/>
+                                    </a>
+                                </div><!-- /.Card image -->
                                 <!-- Card body -->
                                 <div class="card-body">
                                     <!-- Card title -->
