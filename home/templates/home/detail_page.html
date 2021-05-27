@@ -28,10 +28,10 @@
 {% block scrolling_navbar %}scrolling-navbar{% endblock %}
 
 {% block banner %}
-    {% image page.cover original as cover_img %}
+    {% image page.cover max-1200x600 as cover_img %}
     <div class="view"
          style="background-image: url('{{ cover_img.url }}'); background-repeat: no-repeat; background-size: cover;
-                 height: 50%; background-position: center center;">
+                 height: 60%; background-position: center center;">
         <!-- Mask & flexbox options-->
         <div class="mask rgba-black-light d-flex flex-column justify-content-center align-items-center">
             <!-- Content -->
