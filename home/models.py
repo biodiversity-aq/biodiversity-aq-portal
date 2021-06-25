@@ -1,6 +1,9 @@
+import datetime
+
 from django.db import models
 from django.http import Http404
 from django.shortcuts import redirect, render
+from django.utils.timezone import now
 
 from wagtail.admin.edit_handlers import PageChooserPanel, MultiFieldPanel, InlinePanel, FieldPanel, StreamFieldPanel
 from wagtail.contrib.table_block.blocks import TableBlock
@@ -20,15 +23,14 @@ from modelcluster.models import ClusterableModel
 from modelcluster.contrib.taggit import ClusterTaggableManager
 from taggit.models import TaggedItemBase
 
-
 COLOUR_CHOICES = [
-        ('#0099CC', 'Default blue'),
-        ('#3952a4', 'Dark blue'),
-        ('#003a4e', 'Dark green'),
-        ('#006f71', 'Teal'),
-        ('#ec6633', 'Orange'),
-        ('#d51e47', 'Red'),
-    ]
+    ('#0099CC', 'Default blue'),
+    ('#3952a4', 'Dark blue'),
+    ('#003a4e', 'Dark green'),
+    ('#006f71', 'Teal'),
+    ('#ec6633', 'Orange'),
+    ('#d51e47', 'Red'),
+]
 
 APP_CHOICES = [
     ('home', 'General pages for biodiversity.aq'),
@@ -65,6 +67,8 @@ class BaseMenuPage(MenuPage):
         help_text='If true, this page will appear in the "Recent" section of its parent if it is an AppLandingPage '
                   'order by last published date'
     )
+    displayed_publish_date = models.DateField(default=datetime.datetime.now().date(), null=True, blank=True,
+                                              help_text='Will be displayed at the end of the page.')
 
     content_panels = Page.content_panels + [
         FieldPanel('application'),
@@ -73,6 +77,7 @@ class BaseMenuPage(MenuPage):
             ImageChooserPanel('cover'),
             FieldPanel('short_description'),
         ]),
+        FieldPanel('displayed_publish_date'),
         FieldPanel('show_in_recent'),
         StreamFieldPanel('body'),
     ]
@@ -199,7 +204,7 @@ class DetailIndexPage(Page):
     content_panels = Page.content_panels + [
         FieldPanel('application'),
         FieldPanel('colour_theme'),
-        ]
+    ]
 
     template = 'home/detail_page_index.html'
 
@@ -423,5 +428,3 @@ class Footer(models.Model):
         StreamFieldPanel('logo'),
         StreamFieldPanel('text'),
     ]
-
-
