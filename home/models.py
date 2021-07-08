@@ -92,7 +92,7 @@ class BaseMenuPage(MenuPage):
         """
         context = super().get_context(request)
         this_page = context.get('self')
-        descendants = this_page.get_descendants().live().order_by('-last_published_at')
+        descendants = this_page.get_descendants().live().order_by('-displayed_publish_date')
         show_in_recent_descendants = []
         for descendant in descendants:
             if hasattr(descendant.specific, "show_in_recent"):
