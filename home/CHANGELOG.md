@@ -2,7 +2,11 @@
 
 ## [Unreleased]
 
+## [1.1.1](https://git.bebif.be/antabif/biodiversityaq/-/tags/v1.1.1) - 2021-07-08
+
 - use log files for logging when level is WARNING and above.
+- update Southern Ocean Diet and Energetics database content.
+- children of BaseMenuPage now has a custom published date that can be displayed
 
 ## [1.1.0](https://git.bebif.be/antabif/biodiversityaq/-/tags/v1.1.0) - 2020-08-10
 
