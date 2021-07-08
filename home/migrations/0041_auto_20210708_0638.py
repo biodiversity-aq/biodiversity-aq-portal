@@ -9,7 +9,7 @@ def update_display_published_date(queryset):
         page.save()
 
 
-def run_update_display_pub_date():
+def run_update_display_pub_date(apps, schema_editor):
     """
     Update all children of BaseMenuPage (abstract class) so that displayed_publish_date == last_published_at
     """
